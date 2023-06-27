@@ -1,0 +1,135 @@
+@import "https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,600,600i,700,700i%7CQuicksand:300,400,500,700";
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Inter' !important;
+    font-weight: 600;    
+}
+
+.mat-form-field {  
+    font-family: 'Inter' !important;      
+    font-weight: 550;   
+    font-size: 1em;    
+    color: #2c2a28 !important;        
+}
+
+.header-title {
+    color: #000;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+    position: relative;
+    padding-bottom: 10px;
+    display: inline-block !important;
+    white-space: nowrap;   
+ }
+
+ .sidebar a{
+    color:#667085 !important;
+    font-size: 14px !important;
+ }
+
+ .nav-sidebar>.nav-item.menu-open>.nav-link {
+    background-color: transparent !important;
+ }
+
+ .nav-link:not(.active):hover {
+    background-color: transparent !important;
+ }
+
+ .nav-treeview>.nav-item>.nav-link:focus{
+    background-color: #419FC7 !important;
+    color: white !important;   
+ }
+ 
+ .header-title::after {
+    border-bottom: 3px solid #FAA613;
+    content: "";
+    display: block;
+    width: 65px;
+ }
+
+ .subHeader{
+    font-weight: 600;
+    background-color: #607D8B;
+    padding: 6px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.btn-label {position: relative;left: -8px;display: inline-block;
+    padding: 4px 12px;background: rgba(0,0,0,0.15);border-radius: 3px 0 0 3px;}
+.btn-labeled {padding-top: 0;padding-bottom: 0;}
+.btn { margin-bottom:10px; }
+
+mat-icon {
+    font-family: 'Material Icons' !important;  
+}
+
+ul.nav.nav-treeview {
+    background-color: #fff !important;
+}
+
+.pending{
+    background-color: crimson; color: #fff; padding: 0.3rem; padding-left: 1rem;padding-right: 1rem; border-radius: 0.5rem;
+}
+
+.completed{
+    background-color: seagreen; color: #fff;padding: 0.2rem; padding-left: 1rem;padding-right: 1rem;
+}
+
+.cusbox{
+    border: 1px solid rgba(0,0,0,.12);
+}
+
+.input_right{
+    text-align: right !important;
+} 
+
+.amountFieldColor{
+    background-color: rgb(239 238 238 / 49%);
+}
+.mat-form-field-appearance-outline .mat-form-field-infix {
+    //padding: 0.4em 0 0.4em 0 ;
+    height: 42px;
+}
+.mat-form-field-infix {
+    border-top: 0.3em solid transparent;
+}
+.mat-raised-button:not([class*=mat-elevation-z]){
+    box-shadow: none;
+}
+.mat-form-field-wrapper{
+    padding: 0 !important;
+}
+// .displayIcon::ng-deep .ng-placeholder::before ::after{
+//     content: "gcud";
+// }
+.apexcharts-legend {
+    inset: auto !important;
+    top:0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+.mat-select-value{
+    font-weight: 500 ;
+    color: #667085 ;
+    font-size: 14px ;
+}
+
+.brand-link{
+border-bottom: 0 !important;
+}
+
+svg{
+    vertical-align: bottom
+}
+
+
+  
+   .mat-select-arrow {
+     opacity: 0;
+   }

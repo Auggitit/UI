@@ -1,0 +1,45 @@
+<svg  viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect  fill="#F5F5F5"/>
+<g id="Sales Details" clip-path="url(#clip0_0_1)">
+<rect width="1440" height="1428" transform="translate(-797 -376)" fill="#F9F9FC"/>
+<g id="Main">
+<g id="Body">
+<g id="Row">
+<g id="Full Width_Table Example" filter="url(#filter0_d_0_1)">
+<g clip-path="url(#clip1_0_1)">
+<g id="Header">
+<rect width="1128" height="77" transform="translate(-509 -30)" fill="white"/>
+<g id="dropdown">
+<rect x="-7.5" y="-11" width="108" height="39" rx="7.5" fill="white"/>
+<g id="flag-line">
+<path id="Vector" d="M8.25467 2.5C8.50713 2.5 8.738 2.64267 8.85093 2.86853L9.33333 3.83333H13.3333C13.7015 3.83333 14 4.13181 14 4.5V11.8333C14 12.2015 13.7015 12.5 13.3333 12.5H9.07867C8.8262 12.5 8.59533 12.3573 8.4824 12.1315L8 11.1667H3.33333V15.1667H2V2.5H8.25467ZM7.8426 3.83333H3.33333V9.83333H8.82407L9.49073 11.1667H12.6667V5.16667H8.50927L7.8426 3.83333Z" fill="#667085"/>
+</g>
+<rect x="-7.5" y="-11" width="108" height="39" rx="7.5" stroke="#E0E2E7"/>
+</g>
+</g>
+</g>
+<rect x="-508.5" y="-29.5" width="1127" height="1054" rx="7.5" stroke="#E0E2E7" shape-rendering="crispEdges"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_0_1" x="-511" y="-30.5" width="1132" height="1059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1.5"/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0627 0 0 0 0 0.0942333 0 0 0 0 0.1573 0 0 0 0.1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+</filter>
+<clipPath id="clip0_0_1">
+<rect width="1440" height="1428" fill="white" transform="translate(-797 -376)"/>
+</clipPath>
+<clipPath id="clip1_0_1">
+<rect x="-509" y="-30" width="1128" height="1055" rx="8" fill="white"/>
+</clipPath>
+</defs>
+</svg>

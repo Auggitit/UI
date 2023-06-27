@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between">
+      <div class="d-flex flex-column">
+        <p style="color: #333843; font-size: 18px; font-weight: 500">
+          {{ title }}
+        </p>
+        <p style="color: #667085">{{ subTitle }}</p>
+      </div>
+      <i class="bi bi-three-dots-vertical"></i>
+    </div>
+
+    <div style="height: 166px">
+      <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [plotOptions]="chartOptions.plotOptions"
+        [labels]="chartOptions.labels"
+        [fill]="chartOptions.fill"
+      ></apx-chart>
+    </div>
+    <div>
+      <p style="text-align: center">
+        You succeed earn <span style="font-weight: 700">₹240</span> today, its
+        higher than yesterday
+      </p>
+      <div class="d-flex flex-wrap justify-content-center" style="gap: 14px">
+        <ng-container *ngFor="let item of values">
+          <div class="d-flex flex-column align-items-center">
+            <p style="font-size: 12px">{{ item.title }}</p>
+            <div class="d-flex justify-content-center">
+              <p style="text-align: center; font-size: 24px; font-weight: 700">
+                {{ item.value }}
+              </p>
+              <i class="bi bi-arrow-down" [style.color]="item.color"></i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

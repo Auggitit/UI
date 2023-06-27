@@ -1,0 +1,211 @@
+<div class="content-wrapper">
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="pb-3">
+      <app-reports-header
+        title="SALES SUMMARY"
+        [reportFormGroupName]="form"
+        [filterByOptions]="filterByOptions"
+        [saveTypesOptions]="saveAsOptions"
+        [filterData]="'filterData'"
+        [SelectSaveOptions]="'SelectSaveOptions'"
+      ></app-reports-header>
+    </div>
+    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
+        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap">
+      <div class="col-4 col-4 col-4 col-4 pl-0">
+        <app-target-and-achievement
+          title="Target & Achievement"
+          subTitle="This Year"
+        ></app-target-and-achievement>
+      </div>
+      <div class="col-8 col-8 col-8 col-8 pr-0">
+        <app-mat-area-graph
+          [chart-options]="chartOptions"
+          title="Sales"
+          subTitle="Sales Order Summary"
+        ></app-mat-area-graph>
+      </div>
+    </div>
+    <div class="col-12 p-0 card">
+      <div class="pl-2 pt-3 pb-3">
+        <div class="row align-items-center pl-3">
+          <p style="font-size: 18px; padding-right: 8px; margin: 0">
+            Recent Sales Orders
+          </p>
+          <p
+            style="
+              color: #0d894f;
+              background-color: #e7f4ee;
+              border-radius: 100px;
+              padding: 8px;
+              margin: 0;
+            "
+          >
+            +2 Orders
+          </p>
+          <span>
+          <app-table-filters
+            [vendorDropDownData]="vendorDropDownData"
+            [StatusOptions]="reportStatusOptions"
+            [tableFiltersGroupName]="form"
+            [searchSuggestionsList]="searchSuggestionsList"
+            [reportStatus]="'reportStatus'"
+            [vendorcode]="'vendorcode'"
+          ></app-table-filters>
+        </span>
+        </div>
+      </div>
+      <app-mat-table
+        [columns]="columns"
+        [filteredSalesOrderData]="filteredSalesOrderData"
+        [paginationIndex]="paginationIndex"
+        [pageCount]="pageCount"
+      >
+        <ng-template let-item>
+          <tr *ngFor="let data of item; let i = index">
+            <td
+              scope="row"
+              class="d-flex pl-3"
+              style="
+                border-top: 1px solid #f0f1f3;
+                color: #667085;
+                min-width: 86px;
+                max-width: 86px;
+                padding-top: 20px;
+              "
+            >
+              <input
+                type="checkbox"
+                id="customCheck1"
+                style="min-height: 18px; min-width: 18px"
+              />
+              <p class="m-0 pl-2" scope="row">
+                {{ i + 1 + paginationIndex * pageCount }}
+              </p>
+            </td>
+            <td
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 95px;
+                max-width: 95px;
+              "
+            >
+              <a href="" style="color: #13b2e4">{{ data.sono }}</a>
+            </td>
+            <td
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 106px;
+                max-width: 106px;
+              "
+            >
+              <a href="" style="color: #13b2e4">{{ data.sono }}</a>
+            </td>
+            <td
+              scope="col"
+              style="
+                min-width: 134px;
+                max-width: 134px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              <p class="m-0" style="color: #667085">
+                {{ data.vendorname }}
+              </p>
+              <a href="" style="color: #13b2e4">{{ data.sono }}</a>
+            </td>
+            <td
+              scope="col"
+              style="
+                min-width: 155px;
+                max-width: 155px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              <p class="m-0" style="color: #333843">
+                {{ data.solistDetails[0].pname }}
+              </p>
+              <p style="font-weight: 400; color: #667085">
+                + {{ data.solistDetails.length }} other products
+              </p>
+            </td>
+            <td
+              scope="col"
+              style="
+                color: #667085;
+                min-width: 171px;
+                max-width: 171px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              {{ data.sodate }}
+            </td>
+            <td
+              scope="col"
+              style="
+                color: #667085;
+                min-width: 144px;
+                max-width: 144px;
+                border-top: 1px solid #f0f1f3;
+                padding-bottom: 0;
+              "
+            >
+              <p class="mb-0">Order - {{ data.ordered }}</p>
+              <p class="mb-0">Received - {{ data.received }}</p>
+              <p class="mb-0">Back Order - 30</p>
+            </td>
+            <td
+              scope="col"
+              style="
+                color: #667085;
+                min-width: 133px;
+                max-width: 133px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              <p class="mb-0">Price - {{ data.orderedvalue }}</p>
+              <p class="mb-0">GST- 3000</p>
+              <p class="mb-0">
+                Total- {{ data.solistDetails.length * data.orderedvalue }}
+              </p>
+            </td>
+            <td
+              scope="col"
+              style="
+                color: #667085;
+                min-width: 114px;
+                max-width: 114px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              <div *ngIf="data.pending > 0">
+                <span
+                  style="
+                    background-color: #fdf1e8;
+                    padding: 8px;
+                    border-radius: 100px;
+                    color: #e46a11;
+                  "
+                  >Not Paid</span
+                >
+              </div>
+              <div *ngIf="data.pending == 0">
+                <span
+                  class="completed"
+                  style="background-color: #e7f4ee; color: #0d894f"
+                  >Advanced</span
+                >
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </app-mat-table>
+    </div>
+  </div>
+</div>

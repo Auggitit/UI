@@ -1,0 +1,28 @@
+<svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="16" height="20" fill="#F5F5F5"/>
+<g id="Sales Details" clip-path="url(#clip0_0_1)">
+<rect width="1440" height="1428" transform="translate(-1096 -114)" fill="#F9F9FC"/>
+<g id="Main">
+<g id="Group 11111">
+<g id="Component 17">
+<rect id="Rectangle 2" x="-11.5" y="-10.5" width="144" height="39" rx="7.5" stroke="#E0E2E7"/>
+<g id="Group 8857">
+<path id="Vector" d="M15.1858 16.1919V17.1852C15.1858 17.6616 14.9965 18.1185 14.6596 18.4554C14.3228 18.7922 13.8659 18.9815 13.3895 18.9815H2.61172C2.13532 18.9815 1.67842 18.7922 1.34155 18.4554C1.00468 18.1185 0.81543 17.6616 0.81543 17.1852V2.81485C0.81543 2.33844 1.00468 1.88155 1.34155 1.54468C1.67842 1.20781 2.13532 1.01855 2.61172 1.01855H11.695L15.1858 4.50929V8.60863" stroke="#8793A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="Group 8856">
+<path id="Vector_2" d="M5.98877 11.0732L12.2758 11.0732" stroke="#8793A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="Vector_3">
+<path d="M9.13232 14.217L12.2758 11.0734L9.13232 7.92993" fill="#667085"/>
+<path d="M9.13232 14.217L12.2758 11.0734L9.13232 7.92993" stroke="#8793A6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_1">
+<rect width="1440" height="1428" fill="white" transform="translate(-1096 -114)"/>
+</clipPath>
+</defs>
+</svg>

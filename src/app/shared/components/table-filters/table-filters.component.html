@@ -1,0 +1,76 @@
+<div class="d-flex flex-wrap align-items-center">
+  <form [formGroup]="tableFiltersGroupName">
+    <mat-form-field
+      appearance="outline"
+      style="width: 210px; margin: 0; padding-left: 8px"
+    >
+      <mat-label style="font-size: 14px; color: #667085; font-weight: 400"
+        >Date Range</mat-label
+      >
+      <mat-date-range-input
+        style="font-size: 14px; color: #667085; font-weight: 400"
+        [rangePicker]="picker"
+      >
+        <input
+          matStartDate
+          formControlName="startDate"
+          placeholder="Start Date"
+          readonly
+        />
+        <input
+          matEndDate
+          formControlName="endDate"
+          placeholder="End Date"
+          readonly
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle
+        style="color: #667085"
+        matSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </form>
+  <app-mat-select-box
+    selectWidth="160px"
+    class="pl-1 pr-1"
+    [formOptions]="StatusOptions"
+    [controlName]="'reportStatus'"
+    [label]="'Status'"
+    [groupName]="tableFiltersGroupName"
+    [formAppearance]="'outline'"
+    [iconNeeded]="true"
+    Icon="flagLine"
+  ></app-mat-select-box>
+  <!-- <app-mat-select-box
+    selectWidth="143px"
+    class="pl-1 pr-1"
+    [formOptions]="vendorDropDownData"
+    [controlName]="'vendorcode'"
+    [label]="'Vendor Name'"
+    [groupName]="tableFiltersGroupName"
+    [formAppearance]="'outline'"
+  ></app-mat-select-box> -->
+  <app-input-auto-complete
+    [optionsList]="vendorDropDownData"
+    [groupName]="tableFiltersGroupName"
+    [controlName]="vendorcode"
+    inputWidth="180px"
+  ></app-input-auto-complete>
+  <app-mat-select-box
+    selectWidth="180px"
+    [formOptions]="vendorDropDownData"
+    [controlName]="'vendorcode'"
+    [label]="'Sales Person'"
+    [groupName]="tableFiltersGroupName"
+    [formAppearance]="'outline'"
+    [iconNeeded]="isIconNeeded"
+    Icon="bankCardLine"
+  ></app-mat-select-box>
+  <app-search-box
+    searchBoxWidth="170px"
+  >
+    
+  </app-search-box>
+</div>

@@ -1,0 +1,30 @@
+<div
+  class="shadow-sm border border-1 border-{#E0E2E7} p-4 bg-white"
+  style="height: 160px; border-radius: 8px"
+>
+  <div
+    class="btn-lg success rounded-circle"
+    [style]="contentToDisplay.iconBackStyles"
+  >
+    <i
+      class="{{ contentToDisplay.icon }}"
+      [style]="contentToDisplay.cardIconStyles"
+    >
+    </i>
+  </div>
+
+  <p class="font-weight-normal pt-2" style="font-size: 16px; color: #667085">
+    {{ contentToDisplay.title }}
+  </p>
+  <div style="display: flex">
+    <p class="mb-0" style="color: #333843; font-size: 24px">
+      {{ contentToDisplay.count }}
+    </p>
+    <span  class="pl-2">
+      <p class="badge" [style]="contentToDisplay.badgeStyles" 
+        style="border-radius: 8px;padding: 4px " >
+        {{ contentToDisplay.badgeValue }}
+      </p>
+    </span>
+  </div>
+</div>

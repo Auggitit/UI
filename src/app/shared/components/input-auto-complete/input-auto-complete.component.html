@@ -1,0 +1,26 @@
+<form *ngIf="groupName" [formGroup]="groupName">
+  <mat-form-field appearance="outline" [ngStyle]="{ width: inputWidth }">
+    <input
+      matInput
+      type="text"
+      placeholder="Vendor"
+      [matAutocomplete]="searchAutoComplete"
+      [formControl]="vendorAutoCompleteValue"
+    />
+    <span matPrefix>
+      <mat-icon
+        style="height: 21px; width: 21px; margin-right: 10px"
+        svgIcon="vendorIcon"
+      ></mat-icon
+    ></span>
+    <span matSuffix> <mat-icon svgIcon="arrowDown"></mat-icon></span>
+  </mat-form-field>
+  <mat-autocomplete
+    (optionSelected)="onOptionSelected($event)"
+    #searchAutoComplete="matAutocomplete"
+  >
+    <mat-option *ngFor="let item of filteredSearchValues" [value]="item.name">
+      {{ item.name }}
+    </mat-option>
+  </mat-autocomplete>
+</form>

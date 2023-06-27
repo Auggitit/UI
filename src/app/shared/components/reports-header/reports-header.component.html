@@ -1,0 +1,38 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center">
+  <app-mat-header title="{{ title }}"></app-mat-header>
+  <div class="d-flex flex-wrap align-items-center">
+    <app-mat-select-box
+      [formOptions]="filterByOptions"
+      [controlName]="filterData"
+      [groupName]="reportFormGroupName"
+      selectWidth="103px"
+    ></app-mat-select-box>
+    <app-mat-button
+      buttonColor="#F9F9FC"
+      icon="bi bi-download"
+      paddingValue="0px 13px"
+      borderValues="1px solid #E0E2E7"
+      buttonHeight="40px"
+    >
+    </app-mat-button>
+    <app-mat-select-box
+      [formOptions]="saveTypesOptions"
+      [controlName]="SelectSaveOptions"
+      [iconNeeded]="isIconNeeded"
+      Icon="Export"
+      [groupName]="reportFormGroupName"
+      selectWidth="145px"
+    ></app-mat-select-box>
+    <app-mat-button
+      title="Create New order"
+      buttonColor="#419FC7"
+      textColor="#FFFFFF"
+      titleFontSize="14px"
+      titleFontWeight="600"
+      iconColor="white"
+      icon="bi bi-plus"
+      buttonHeight="40px"
+    >
+    </app-mat-button>
+  </div>
+</div>
