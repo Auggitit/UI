@@ -1,0 +1,17 @@
+<svg  viewBox="0 0 13 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#F5F5F5"/>
+<g id="Sales Order Summary" clip-path="url(#clip0_0_1)">
+<rect width="1440" height="1832" transform="translate(-1052 -113)" fill="#F9F9FC"/>
+<g id="Main">
+<g id="Component 17">
+<rect id="Rectangle 3" x="-0.5" y="0.5" width="41" height="39" rx="7.5" transform="matrix(-1 0 0 1 26 -11)" stroke="#E0E2E7"/>
+<path id="Vector" d="M8.4375 6.54545V7.04545H8.9375H11.7988L6.5 12.3813L1.20118 7.04545H4.0625H4.5625V6.54545V0.5H8.4375V6.54545ZM12.5 15.2273V17.5H0.5V15.2273H12.5Z" stroke="#667085"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_1">
+<rect width="1440" height="1832" fill="white" transform="translate(-1052 -113)"/>
+</clipPath>
+</defs>
+</svg>

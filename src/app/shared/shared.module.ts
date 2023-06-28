@@ -7,7 +7,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
+import { 
+          MatDialogModule,
+          MatDialog,
+          MatDialogRef,
+          MAT_DIALOG_DATA
+} from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
@@ -30,6 +35,8 @@ import { MatTableComponent } from './components/mat-table/mat-table.component';
 import { InputAutoCompleteComponent } from './components/input-auto-complete/input-auto-complete.component';
 import { TableFiltersComponent } from './components/table-filters/table-filters.component';
 import { SearchBoxComponent } from './components/search-box/search-box.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog-box/confirmation-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +50,7 @@ import { SearchBoxComponent } from './components/search-box/search-box.component
     InputAutoCompleteComponent,
     TableFiltersComponent,
     SearchBoxComponent,
+    ConfirmationDialogBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -67,6 +75,8 @@ import { SearchBoxComponent } from './components/search-box/search-box.component
     FormsModule,
     NgApexchartsModule,
     ReactiveFormsModule,
+    MatMenuModule,
+
   ],
   exports: [
     MatSelectBoxComponent,
@@ -79,6 +89,8 @@ import { SearchBoxComponent } from './components/search-box/search-box.component
     MatFormFieldModule,
     InputAutoCompleteComponent,
     TableFiltersComponent,
+    MatMenuModule,
+    MatDialogModule
   ],
 })
 export class SharedModule {}

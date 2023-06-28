@@ -17,7 +17,8 @@ import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
         'border-radius': '8px',
         border: borderValues,
         marginLeft: '4px',
-        marginRight: '4px'
+        marginRight: '4px',
+        width:buttonWidth
       }"
       (click)="onClick($event)"
     >
@@ -26,6 +27,12 @@ import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
         class="{{ icon }} fa-lg "
         style="color:{{ iconColor }}"
       ></i>
+
+      <mat-icon 
+        style="width: 14px;vertical-align:revert;line-height:30px;" 
+        *ngIf="svgIconToDisplay" 
+        [svgIcon]="svgIconToDisplay">
+      </mat-icon>
       {{ title }}
     </button>
   `,
@@ -38,11 +45,14 @@ export class MatButtonComponent implements OnInit {
   @Input() titleFontSize: string = '14px';
   @Input() titleFontWeight: number | string = 500;
   @Input() icon!: string;
-  @Input() paddingValue: string = '0px 10px';
+  @Input() paddingValue: string = '0px 15px 0px 10px';
   @Input() maximumWidth: string = '200px';
   @Input() buttonHeight: string = '80px';
   @Input() iconColor: string = '#667085';
   @Input() borderValues: string = '0px';
+  @Input() svgIconToDisplay!:string;
+  @Input() buttonWidth!:string;
+
 
   constructor() {}
 

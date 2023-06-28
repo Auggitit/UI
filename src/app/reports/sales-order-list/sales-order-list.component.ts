@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
 import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component'
 import {
   dateFilterOptions,
   dropDownData,
@@ -38,7 +40,7 @@ export class SalesOrderListComponent implements OnInit {
     { title: 'Action' },
   ];
 
-  constructor(private salesapi: SalesService, private fb: FormBuilder) {
+  constructor(private salesapi: SalesService, private fb: FormBuilder,public dialog: MatDialog) {
     this.salesOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[0].id],
@@ -215,5 +217,34 @@ export class SalesOrderListComponent implements OnInit {
         );
       }
     });
+  }
+  onClickEdit(){
+    console.log("Clicked Edit");
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent,
+       {data:{
+          iconToDisplay:"EditData",
+          contentText:"Do You Want To Modify Data ?"
+        }});
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+  onClickDelete(){
+    console.log("Clicked Delete")
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent,
+       {data:{
+          iconToDisplay:"DeleteFile",
+          contentText:"Do You Want To Delete Data ?"
+        }});
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+  onClickViewMore(){
+    console.log("Clicked View More")
   }
 }

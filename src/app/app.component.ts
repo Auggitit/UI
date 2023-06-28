@@ -39,5 +39,17 @@ export class AppComponent {
       "Export",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/Export.svg")
     );
+    this.matIconRegistry.addSvgIcon(
+      "Download",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/DownloadVector.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "DeleteFile",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/delete-file.svg")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "EditData",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/data-edit.svg")
+    );
   }
 }

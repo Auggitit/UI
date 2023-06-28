@@ -197,6 +197,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#419FC733',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+7.5%',
+        neededRupeeSign: false
       },
       {
         icon: 'bi bi-cart-check',
@@ -207,6 +208,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+1.5%',
+        neededRupeeSign: false
       },
       {
         icon: 'bi bi-cart-dash',
@@ -217,6 +219,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
         badgeValue: '-2%',
+        neededRupeeSign: false
       },
       {
         icon: 'bi bi-cart-x',
@@ -227,6 +230,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
         badgeValue: '-13%',
+        neededRupeeSign: false
       },
       {
         icon: 'bi bi-wallet',
@@ -242,6 +246,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+23%',
+        neededRupeeSign: true
       },
     ];
 
@@ -290,6 +295,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         if (key === selectedYear || key === previousYear) {
           productSales.push({
             name: key == selectedYear ? 'This year' : 'Last Year',
+            color: key == selectedYear ? '#419FC7' : '#E46A11',
             data: item,
           });
         }
@@ -342,6 +348,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         if (key === ThisMonth || key === LastMonth) {
           productSales.push({
             name: key == ThisMonth ? 'This Month' : 'Last Month',
+            color: key == ThisMonth ? '#419FC7' : '#E46A11',
             data: item,
           });
         }
@@ -411,6 +418,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         // if (key === ThisMonth || key === LastMonth) {
         productSales.push({
           name: key,
+          color: key == 'This Week' ? '#419FC7' : '#E46A11',
           data: item,
         });
         // }
@@ -439,13 +447,10 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         let formatedDate = splited[1] + '/' + splited[0] + '/' + splited[2];
         let splitHour: any = sodate.split(' ')[1].split('-');
         let getHour = splitHour.join().split(' ')[0].split('.');
-        let Yesterday = new Date();
 
         const Today =
           new Date(formatedDate).toISOString().split('T')[0] ===
-            new Date().toISOString().split('T')[0] ||
-          new Date(formatedDate).toISOString().split('T')[0] ===
-            new Date(Yesterday).toISOString().split('T')[0];
+          new Date().toISOString().split('T')[0];
 
         if (Today) {
           if (!chartMapData.has('Today')) {
@@ -475,18 +480,19 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           }
         }
       }
-      if (!chartMapData.has('Today')) {
-        let arr: number[] = Array(24).fill(0);
-        chartMapData.set('Today', arr);
-      }
       if (!chartMapData.has('Yesterday')) {
         let arr: number[] = Array(24).fill(0);
         chartMapData.set('Yesterday', arr);
+      }
+      if (!chartMapData.has('Today')) {
+        let arr: number[] = Array(24).fill(0);
+        chartMapData.set('Today', arr);
       }
 
       chartMapData.forEach((item, key) => {
         productSales.push({
           name: key,
+          color: key === 'Today' ? '#419FC7' : '#E46A11',
           data: item,
         });
       });
