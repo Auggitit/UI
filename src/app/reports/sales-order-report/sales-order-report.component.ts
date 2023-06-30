@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
 import { SalesService } from 'src/app/services/sales.service';
@@ -13,6 +19,9 @@ import {
   statusOptions,
 } from '../stub/salesOrderStub';
 import { Subscription } from 'rxjs';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 export interface VendorDropDown {
   id: string;
   name: string;
@@ -23,6 +32,7 @@ export interface VendorDropDown {
   styleUrls: ['./sales-order-report.component.scss'],
 })
 export class SalesOrderReportComponent implements OnInit, OnDestroy {
+  @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
   salesOrderData!: any[];
   filteredSalesOrderData: any[] = [];
@@ -197,7 +207,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#419FC733',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+7.5%',
-        neededRupeeSign: false
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-check',
@@ -208,7 +218,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+1.5%',
-        neededRupeeSign: false
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
@@ -219,7 +229,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
         badgeValue: '-2%',
-        neededRupeeSign: false
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
@@ -230,7 +240,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
         badgeValue: '-13%',
-        neededRupeeSign: false
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
@@ -246,7 +256,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '+23%',
-        neededRupeeSign: true
+        neededRupeeSign: true,
       },
     ];
 
@@ -556,5 +566,71 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.formSubscription.unsubscribe();
+  }
+
+  downloadAsPDF() {
+    var data = this.contentToSave.nativeElement;
+    let timeDuration: string =
+      this.filterByOptions[this.form.value.filterData].name;
+    html2canvas(data, { scale: 2 }).then((canvas) => {
+      const contentDataURL = canvas.toDataURL('image/png');
+      let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
+      pdf.addImage(contentDataURL, 'PNG', 50, 70, 510, 280);
+      pdf.addPage();
+      //pdf.text("Recent Sales Order",50,70);
+      //pdf.autoTable({html:'#salesOrdersTable'})
+      let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+      console.log("Fil dat dabhg",tableData)
+      var tableContent = [
+        ['SL.No', 'Product Name', 'Price', 'Model'],
+        [1, 'I-phone', 75000, '2021'],
+        [2, 'Realme', 25000, '2022'],
+        [3, 'Oneplus', 30000, '2021'],
+      ];
+
+      pdf.setLineWidth(2);
+      pdf.text('Recent Sales Order', 240, 50);
+      autoTable(pdf, {
+        body: tableData,
+        columns:[
+          {
+            header:'Order ID',
+            dataKey: 'sono'
+          },
+          {
+            header:'Ref ID',
+            dataKey: 'vendorcode'
+          },
+          {
+            header:'Vendor Detail',
+            dataKey: 'vendorname'
+          },
+          {
+            header:'Product Detail',
+            dataKey: 'sono'
+          },
+          {
+            header:'Data & Time',
+            dataKey: 'sodate'
+          },
+          {
+            header:'Quantity',
+            dataKey: 'sono'
+          },
+          {
+            header:'Price',
+            dataKey: 'sono'
+          },
+          {
+            header:'Status',
+            dataKey: 'sono'
+          },
+        ],
+        startY: 70,
+        theme: 'grid',
+      });
+      pdf.save('Sales Report.pdf');
+    });
   }
 }

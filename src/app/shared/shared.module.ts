@@ -37,6 +37,7 @@ import { TableFiltersComponent } from './components/table-filters/table-filters.
 import { SearchBoxComponent } from './components/search-box/search-box.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/export-pdf-dialog-box.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog
     TableFiltersComponent,
     SearchBoxComponent,
     ConfirmationDialogBoxComponent,
+    ExportPdfDialogBoxComponent,
   ],
   imports: [
     CommonModule,

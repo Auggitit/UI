@@ -5,24 +5,26 @@
       [formOptions]="filterByOptions"
       [controlName]="filterData"
       [groupName]="reportFormGroupName"
-      selectWidth="103px"
+      selectWidth="145px"
     ></app-mat-select-box>
-    <app-mat-button
-      buttonColor="#F9F9FC"
-      svgIconToDisplay="Download"
-      paddingValue="0px 13px"
-      borderValues="1px solid #E0E2E7"
-      buttonHeight="40px"
-    >
-    </app-mat-button>
+
     <app-mat-select-box
       [formOptions]="saveTypesOptions"
       [controlName]="SelectSaveOptions"
-      [iconNeeded]="isIconNeeded"
-      Icon="Export"
       [groupName]="reportFormGroupName"
-      selectWidth="145px"
+      selectWidth="130px"
+      IconHeightWidth="23px"
+      label="Download As"
     ></app-mat-select-box>
+    <app-mat-button
+    buttonColor="#F9F9FC"
+    svgIconToDisplay="Download"
+    paddingValue="0px 13px"
+    borderValues="1px solid #E0E2E7"
+    buttonHeight="40px"
+    (click)="clickDownload($event)"
+  >
+  </app-mat-button>
     <app-mat-button
       title="Create New Order"
       buttonColor="#419FC7"

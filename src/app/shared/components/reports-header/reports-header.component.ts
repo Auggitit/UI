@@ -4,6 +4,8 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { FormControlName, FormGroup } from '@angular/forms';
 
@@ -18,6 +20,7 @@ export class ReportsHeaderComponent implements OnInit, OnChanges {
   @Input() reportFormGroupName!: FormGroup;
   @Input() SelectSaveOptions!: FormControlName | any;
   @Input() filterData!: FormControlName | any;
+  @Output() onClickDownload= new EventEmitter();
 
   isIconNeeded: boolean = true;
 
@@ -26,4 +29,10 @@ export class ReportsHeaderComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngOnInit(): void {}
+
+  clickDownload(event:any){
+    console.log(event);
+    this.onClickDownload.emit(event)
+
+  }
 }

@@ -29,10 +29,10 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
         <mat-icon
           *ngIf="iconNeeded"
           [ngStyle]="{
-            'padding-right': '8px',
+            'padding-right': paddingIconRight,
             color: '#667085',
-            height: '24px',
-            width: '24px'
+            height: IconHeightWidth,
+            width: IconHeightWidth
           }"
           svgIcon="{{ Icon }}"
         ></mat-icon>
@@ -66,6 +66,8 @@ export class MatSelectBoxComponent implements OnInit, OnChanges {
   @Input() iconNeeded: boolean = false;
   @Input() Icon: string = '';
   @Input() selectWidth: string = '100%';
+  @Input() IconHeightWidth: string='24px';
+  @Input() paddingIconRight:string='8px';
 
   constructor() {}
 

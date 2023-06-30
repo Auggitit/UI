@@ -5,11 +5,11 @@ export interface dropDownData {
 
 export const exportOptions = [
   {
-    name: 'Export',
+    name: 'PDF',
     id: 0,
   },
   {
-    name: 'Save',
+    name: 'Excel',
     id: 1,
   },
 ];

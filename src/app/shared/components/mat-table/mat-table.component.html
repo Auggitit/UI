@@ -1,12 +1,13 @@
-<table class="table-responsive col-12 p-0" style="display:revert">
+<div class="table-responsive">
+<table class="table col-12 p-0 " >
   <thead style="color: #333843; background-color: #f9f9fc">
     <th
       class="d-flex align-items-center font-weight-normal"
       style="
         padding-left: 35px;
-        font-size: 14px;
-        min-width: 100px;
-        max-width: 100px;
+        font-size: 12px;
+        min-width: 90px;
+        max-width: 90px;
         min-height: 56px;
         border-top: 1px solid #f0f1f3;
         border-bottom: 1px solid #f0f1f3;
@@ -24,6 +25,7 @@
       <th
         
         style="
+          font-size: 12px;
           border-top: 1px solid #f0f1f3;
           min-height: 56px;
           border-bottom: 1px solid #f0f1f3;
@@ -42,7 +44,7 @@
       </th>
     </ng-container>
   </thead>
-  <tbody style="font-size: 14px">
+  <tbody style="font-size: 12px">
     <ng-template
       [ngTemplateOutlet]="tableRowRef"
       [ngTemplateOutletContext]="{
@@ -51,6 +53,7 @@
     ></ng-template>
   </tbody>
 </table>
+</div>
 <div
   class="d-flex justify-content-between col-12 p-3 pt-20"
   style="border-top: 1px solid #f0f1f3"

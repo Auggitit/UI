@@ -13,6 +13,8 @@ body {
   font-weight: 600;
 }
 
+
+
 .mat-form-field {
   font-family: "Inter" !important;
   font-weight: 550;
@@ -41,15 +43,31 @@ body {
   background-color: transparent !important;
 }
 
+.nav-item{
+    font-weight:  600;
+    padding: 5px 0px;
+}
 .nav-link:not(.active):hover {
   background-color: transparent !important;
+  font-weight:  800;
 }
+.nav-link:not(.active):focus {
+    background-color: transparent !important;
+    font-weight:  800;
+  }
 
 .nav-treeview > .nav-item > .nav-link:focus {
   background-color: #419fc7 !important;
   color: white !important;
 }
 
+i{
+    font-weight: 600 !important;
+}
+.bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
+    font-weight: 600 !important;
+    font-size: 14px;
+}
 .header-title::after {
   border-bottom: 3px solid #faa613;
   content: "";
@@ -177,5 +195,13 @@ button.mat-menu-item {
 
 
 tr.ng-star-inserted{
-    height: 90px !important;
+    height: 100px !important;
+}
+
+.table td, .table th {
+  vertical-align: inherit;
+  padding: 0px;
+}
+.table thead th {
+  vertical-align: inherit;
 }

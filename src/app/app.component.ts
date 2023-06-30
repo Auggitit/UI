@@ -51,5 +51,13 @@ export class AppComponent {
       "EditData",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/data-edit.svg")
     );
+    this.matIconRegistry.addSvgIcon(
+      "Xls",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/xls.png")
+    );
+    this.matIconRegistry.addSvgIcon(
+      "Pdf",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/pdf.png")
+    );
   }
 }

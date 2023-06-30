@@ -192,6 +192,7 @@ export class SalesOrderListComponent implements OnInit {
         badgeValue: '+23%',
       },
     ];
+    console.log("data in table", this.filteredSalesOrderData)
   }
 
   loadData() {

@@ -4,21 +4,24 @@
   style="border-right: 1px solid #f0f1f3"
 >
   <!-- Brand Logo -->
-  <div style="text-align: start">
+  <div style="text-align: start;" class="logo-and-name">
     <a href="index3.html" class="brand-link">
       <img
-        src="assets/auggit_leaf.png"
+        src="assets/LogoAuggitSvg.svg"
         alt="AdminLTE Logo"
-        class="brand-image img-circle elevation-3"
-        style="opacity: 0.8"
+        style=" width:100%"
       />
-      <span class="brand-text font-weight-light"
-        ><img
-          src="assets/logo.png"
-          alt="AdminLTE Logo"
-          class="brand-image"
-          style="opacity: 1; float: inherit"
-      /></span>
+     
+    </a>
+  </div>
+  <div style="text-align: start;" class="logo-alone">
+    <a href="index3.html" class="brand-link">
+      <img
+        src="assets/auggit_leaf.svg"
+        alt="AdminLTE Logo"
+        style=" width:100%"
+      />
+     
     </a>
   </div>
 
@@ -56,8 +59,8 @@
                with font-awesome or any other icon font library -->
         <li class="nav-item">
           <a href="#" class="nav-link">
-            <i class="bi bi-grid"></i>
-            <p>
+            <i class="bi bi-grid" ></i>
+            <p class="sideBarItemText">
               Dashboard
               <!-- <i class="right fas fa-angle-right"></i> -->
             </p>
@@ -66,7 +69,7 @@
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="bi bi-bag"></i>
-            <p>
+            <p class="sideBarItemText">
               Master
               <i class="right fas fa-angle-right"></i>
             </p>
@@ -75,7 +78,7 @@
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>
+                <p class="sideBarItemText">
                   Account Master
                   <!-- <i class="right fas fa-angle-right"></i> -->
                 </p>
@@ -84,25 +87,25 @@
                 <li class="nav-item">
                   <a routerLink="ledgerlist" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Ledger</p>
+                    <p class="sideBarItemText">Ledger</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="vendorlist" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Vendor</p>
+                    <p class="sideBarItemText">Vendor</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="customerlist" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Customer</p>
+                    <p class="sideBarItemText">Customer</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="ledgergroup" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Ledger Group</p>
+                    <p class="sideBarItemText">Ledger Group</p>
                   </a>
                 </li>
               </ul>
@@ -111,7 +114,7 @@
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>
+                <p class="sideBarItemText">
                   Inventory Master
                   <!-- <i class="right fas fa-angle-right"></i> -->
                 </p>
@@ -120,25 +123,25 @@
                 <li class="nav-item">
                   <a routerLink="stockitem" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Stock Item</p>
+                    <p class="sideBarItemText">Stock Item</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="stockitemgroup" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Stock Group</p>
+                    <p class="sideBarItemText">Stock Group</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="stockitemcategory" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Stock Category</p>
+                    <p class="sideBarItemText">Stock Category</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="uom" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>uom</p>
+                    <p class="sideBarItemText">uom</p>
                   </a>
                 </li>
               </ul>
@@ -147,7 +150,7 @@
             <li class="nav-item">
               <a href="#" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>
+                <p class="sideBarItemText">
                   Other Master
                   <!-- <i class="right fas fa-angle-right"></i> -->
                 </p>
@@ -156,13 +159,13 @@
                 <li class="nav-item">
                   <a routerLink="country" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>Country Master</p>
+                    <p class="sideBarItemText">Country Master</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a routerLink="state" class="nav-link">
                     <!-- <i class="far fa-dot-circle nav-icon"></i> -->
-                    <p>State Master</p>
+                    <p class="sideBarItemText">State Master</p>
                   </a>
                 </li>
               </ul>
@@ -173,7 +176,7 @@
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="bi bi-cart"></i>
-            <p>
+            <p class="sideBarItemText">
               Purchase Process
               <!-- <i class="right fas fa-angle-right"></i> -->
             </p>
@@ -182,25 +185,25 @@
             <li class="nav-item">
               <a routerLink="polist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>PO</p>
+                <p class="sideBarItemText">PO</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="poservicelist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>SERVICE PO</p>
+                <p class="sideBarItemText">SERVICE PO</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="grnlist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>GRN</p>
+                <p class="sideBarItemText">GRN</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="servicegrnlist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>SERVICE GRN</p>
+                <p class="sideBarItemText">SERVICE GRN</p>
               </a>
             </li>
           </ul>
@@ -209,7 +212,7 @@
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="bi bi-shop"></i>
-            <p>
+            <p class="sideBarItemText">
               Sales & Distribution
               <!-- <i class="right fas fa-angle-right"></i> -->
             </p>
@@ -218,37 +221,37 @@
             <li class="nav-item">
               <a routerLink="solist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Sales Order</p>
+                <p class="sideBarItemText">Sales Order</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="sales-order-list" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Sales Order list</p>
+                <p class="sideBarItemText">Sales Order list</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="so-report" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Sales Order Report</p>
+                <p class="sideBarItemText">Sales Order Report</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="soservicelist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Service Sales Order</p>
+                <p class="sideBarItemText">Service Sales Order</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="saleslist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Sales</p>
+                <p class="sideBarItemText">Sales</p>
               </a>
             </li>
             <li class="nav-item">
               <a routerLink="servicesaleslist" class="nav-link">
                 <!-- <i class="far fa-circle nav-icon"></i> -->
-                <p>Service Sales</p>
+                <p class="sideBarItemText">Service Sales</p>
               </a>
             </li>
           </ul>

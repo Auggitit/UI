@@ -1,4 +1,4 @@
-<div class="content-wrapper">
+<div class="content-wrapper" >
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
@@ -8,11 +8,15 @@
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
         [SelectSaveOptions]="'SelectSaveOptions'"
+        (onClickDownload)="downloadAsPDF()"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+    <div id="contentToSave" #contentToSave>
+    <div  class="d-flex flex-wrap pb-4" style="max-width: 100%">
       <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        <app-content-cards 
+        
+          [contentToDisplay]="item"></app-content-cards>
       </div>
     </div>
     <div class="d-flex flex-wrap">
@@ -30,6 +34,7 @@
         ></app-mat-area-graph>
       </div>
     </div>
+  </div>
     <div class="col-12 p-0 card">
       <div class="pl-2 pt-3 pb-3">
         <div class="row align-items-center pl-3">
@@ -66,7 +71,11 @@
           </span>
         </div>
       </div>
+      
+    <script src="libs/jspdf.umd.js"></script>
+    <script src="../dist/jspdf.plugin.autotable.js"></script>
       <app-mat-table
+      id="salesOrdersTable"
         [columns]="columns"
         [filteredSalesOrderData]="filteredSalesOrderData"
         [paginationIndex]="paginationIndex"
@@ -78,12 +87,13 @@
               scope="row"
               class="d-flex pl-3"
               style="
-                min-width: 86px;
-                max-width: 86px;
+                min-width: 90px;
+                max-width: 90px;
                 align-items: center;
                 justify-content: left;
                 height: inherit;
                 padding-left: 35px;
+                margin-right: -20px;
               "
             >
               <input
@@ -99,8 +109,8 @@
               scope="row"
               style="
                 border-top: 1px solid #f0f1f3;
-                min-width: 95px;
-                max-width: 95px;
+                min-width: 100px;
+                max-width: 100px;
               "
             >
               <a href="" style="color: #13b2e4; font-weight: 600">{{
@@ -234,3 +244,4 @@
     </div>
   </div>
 </div>
+
