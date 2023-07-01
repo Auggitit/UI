@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
-import { SalesService } from 'src/app/services/sales.service';
 import {
   TodayChartCategories,
   WeekChartCategories,
@@ -18,10 +17,11 @@ import {
   monthChartCategories,
   statusOptions,
 } from '../stub/salesOrderStub';
-import { Subscription } from 'rxjs';
+import { Subscription, startWith } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { SalesService } from './../../services/sales.service';
 export interface VendorDropDown {
   id: string;
   name: string;
@@ -569,68 +569,100 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   }
 
   downloadAsPDF() {
-    var data = this.contentToSave.nativeElement;
-    let timeDuration: string =
-      this.filterByOptions[this.form.value.filterData].name;
-    html2canvas(data, { scale: 2 }).then((canvas) => {
-      const contentDataURL = canvas.toDataURL('image/png');
-      let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
-      pdf.addImage(contentDataURL, 'PNG', 50, 70, 510, 280);
-      pdf.addPage();
-      //pdf.text("Recent Sales Order",50,70);
-      //pdf.autoTable({html:'#salesOrdersTable'})
-      let tableData = this.filteredSalesOrderData.flatMap((item) => item);
-      console.log("Fil dat dabhg",tableData)
-      var tableContent = [
-        ['SL.No', 'Product Name', 'Price', 'Model'],
-        [1, 'I-phone', 75000, '2021'],
-        [2, 'Realme', 25000, '2022'],
-        [3, 'Oneplus', 30000, '2021'],
-      ];
+    if (this.form.value.SelectSaveOptions === 0) {
+      let topValue = 0;
+      var data = this.contentToSave.nativeElement;
+      let timeDuration: string =
+        this.filterByOptions[this.form.value.filterData].name;
+      html2canvas(data, { scale: 2 }).then((canvas) => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        let pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 70, 510, 280);
+        pdf.addPage();
 
-      pdf.setLineWidth(2);
-      pdf.text('Recent Sales Order', 240, 50);
-      autoTable(pdf, {
-        body: tableData,
-        columns:[
-          {
-            header:'Order ID',
-            dataKey: 'sono'
-          },
-          {
-            header:'Ref ID',
-            dataKey: 'vendorcode'
-          },
-          {
-            header:'Vendor Detail',
-            dataKey: 'vendorname'
-          },
-          {
-            header:'Product Detail',
-            dataKey: 'sono'
-          },
-          {
-            header:'Data & Time',
-            dataKey: 'sodate'
-          },
-          {
-            header:'Quantity',
-            dataKey: 'sono'
-          },
-          {
-            header:'Price',
-            dataKey: 'sono'
-          },
-          {
-            header:'Status',
-            dataKey: 'sono'
-          },
-        ],
-        startY: 70,
-        theme: 'grid',
+        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+        console.log('Fil dat dabhg', tableData);
+
+        pdf.setLineWidth(2);
+        pdf.text('Recent Sales Order', 240, (topValue += 50));
+        pdf.setFontSize(12);
+        let startDate: String = this.form.value?.startDate.toString();
+        let endDate: String = this.form.value?.endDate.toString();
+        console.log('=======Form Values========', this.form.value);
+        if (this.form.value.startDate != '')
+          pdf.text(
+            'From :' +
+              startDate.substring(4, 14) +
+              ' To : ' +
+              endDate.substring(4, 14),
+            50,
+            (topValue += 70)
+          );
+        if (this.form.value.reportStatus != '')
+          pdf.text(
+            'Status : ' +
+              this.reportStatusOptions[this.form.value.reportStatus].name,
+            50,
+            (topValue += 20)
+          );
+          if (this.form.value.vendorcode != '')
+          pdf.text(
+            'Vendor Name : ' +
+              tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+          if (this.form.value.vendorcode != '')
+          pdf.text(
+            'Sales Person : ' +
+              tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        autoTable(pdf, {
+          body: tableData,
+          columns: [
+            {
+              header: 'Order ID',
+              dataKey: 'sono',
+            },
+            {
+              header: 'Ref ID',
+              dataKey: 'vendorcode',
+            },
+            {
+              header: 'Vendor Detail',
+              dataKey: 'vendorname',
+            },
+            {
+              header: 'Product Detail',
+              dataKey: 'sono',
+            },
+            {
+              header: 'Data & Time',
+              dataKey: 'sodate',
+            },
+            {
+              header: 'Quantity',
+              dataKey: 'sono',
+            },
+            {
+              header: 'Price',
+              dataKey: 'sono',
+            },
+            {
+              header: 'Status',
+              dataKey: 'sono',
+            },
+          ],
+          startY: (topValue += 30),
+          theme: 'striped',
+        });
+        pdf.save('Sales Report.pdf');
       });
-      pdf.save('Sales Report.pdf');
-    });
+    } else {
+      //Code for Excel Format Download
+    }
   }
 }
