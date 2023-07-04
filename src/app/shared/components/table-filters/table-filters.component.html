@@ -68,9 +68,11 @@
     [iconNeeded]="isIconNeeded"
     Icon="bankCardLine"
   ></app-mat-select-box>
-  <app-search-box
-    searchBoxWidth="170px"
-  >
-    
-  </app-search-box>
+  <app-search-box searchBoxWidth="170px"> </app-search-box>
+  <app-table-column-display-filter
+      [ColumnFilterFormGroup]="tableFiltersGroupName"
+      [columnFilterName]="filterColumnName"
+      [listOfTableColumns]="columnList"
+      >
+  </app-table-column-display-filter>
 </div>

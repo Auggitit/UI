@@ -67,6 +67,8 @@
               [searchSuggestionsList]="searchSuggestionsList"
               [reportStatus]="'reportStatus'"
               [vendorcode]="'vendorcode'"
+              [filterColumnName]="'columnFilter'"
+              [columnList]="columns"
             ></app-table-filters>
           </span>
         </div>
@@ -106,6 +108,7 @@
               </p>
             </td>
             <td
+              *ngIf="columns[0].needToShow"
               scope="row"
               style="
                 border-top: 1px solid #f0f1f3;
@@ -118,6 +121,7 @@
               }}</a>
             </td>
             <td
+              *ngIf="columns[1].needToShow"
               scope="row"
               style="
                 border-top: 1px solid #f0f1f3;
@@ -130,6 +134,7 @@
               }}</a>
             </td>
             <td
+              *ngIf="columns[2].needToShow"
               scope="col"
               style="
                 min-width: 134px;
@@ -145,6 +150,7 @@
               }}</a>
             </td>
             <td
+              *ngIf="columns[3].needToShow"
               scope="col"
               style="
                 min-width: 155px;
@@ -160,6 +166,7 @@
               </p>
             </td>
             <td
+            *ngIf="columns[4].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -171,6 +178,7 @@
               {{ data.sodate }}
             </td>
             <td
+            *ngIf="columns[5].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -192,6 +200,7 @@
               </p>
             </td>
             <td
+            *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -210,6 +219,7 @@
               </p>
             </td>
             <td
+            *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;

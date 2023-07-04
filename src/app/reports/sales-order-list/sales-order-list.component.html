@@ -18,7 +18,14 @@
     <div class="col-12 p-0 card">
       <div class="p-3">
         <div class="row align-items-center pl-3">
-          <p style="font-weight:600;font-size: 18px; padding-right: 8px; margin: 0">
+          <p
+            style="
+              font-weight: 600;
+              font-size: 18px;
+              padding-right: 8px;
+              margin: 0;
+            "
+          >
             Recent Sales Orders
           </p>
           <p
@@ -67,7 +74,7 @@
                 id="customCheck1"
                 style="min-height: 18px; min-width: 18px"
               />
-              <p class="m-0 pl-2" scope="row" >
+              <p class="m-0 pl-2" scope="row">
                 {{ i + 1 + paginationIndex * pageCount }}
               </p>
             </td>
@@ -79,7 +86,9 @@
                 max-width: 128px;
               "
             >
-              <a href="" style="font-weight: 600;color: #13b2e4; ">{{ data.orderedvalue }}</a>
+              <a href="" style="font-weight: 600; color: #13b2e4">{{
+                data.orderedvalue
+              }}</a>
             </td>
             <td
               scope="col"
@@ -89,10 +98,10 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="m-0" style="font-weight: 600;color:  #13b2e4">
+              <p class="m-0" style="font-weight: 600; color: #13b2e4">
                 {{ data.vendorname }}
               </p>
-              <a href="" style="color:#667085">{{ data.sono }}</a>
+              <a href="" style="color: #667085">{{ data.sono }}</a>
             </td>
             <td
               scope="col"
@@ -101,7 +110,6 @@
                 max-width: 111px;
                 border-top: 1px solid #f0f1f3;
                 text-align: center;
-                
               "
             >
               {{ data.ordered }}
@@ -154,10 +162,10 @@
               <div *ngIf="data.pending > 0">
                 <span
                   style="
-                    background-color: #FEEDEC;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
-                    color: #E46A11;
+                    color: #e46a11;
                     font-weight: 600;
                   "
                   >Issue</span
@@ -166,7 +174,11 @@
               <div *ngIf="data.pending == 0">
                 <span
                   class="completed"
-                  style="background-color: #e7f4ee; color: #0d894f;font-weight: 600;"
+                  style="
+                    background-color: #e7f4ee;
+                    color: #0d894f;
+                    font-weight: 600;
+                  "
                   >Advanced</span
                 >
               </div>
@@ -181,24 +193,43 @@
                 text-align: center;
               "
             >
-              <i class="bi bi-three-dots-vertical" [matMenuTriggerFor]="threeDotOptions" >              </i>
-              <mat-menu #threeDotOptions="matMenu" style="width:200%">
-                <button 
-                  mat-menu-item 
-                  style="border-bottom: 0.5px solid #959BA433;margin: 0px 10%;width: 80%;"
+              <i
+                class="bi bi-three-dots-vertical"
+                [matMenuTriggerFor]="threeDotOptions"
+              >
+              </i>
+              <mat-menu #threeDotOptions="matMenu" style="width: 200%">
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                  "
                   (click)="onClickEdit()"
-                  >Edit</button>
-                <button 
-                  mat-menu-item 
-                  style="border-bottom: 0.5px solid #959BA433; margin: 0px 10%;width: 80%;color: #EC3900"
+                >
+                  Edit
+                </button>
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
                   (click)="onClickDelete()"
-                  >Delete</button>
-                <button mat-menu-item
-                  (click)="onClickViewMore()"
-                >View More</button>
+                >
+                  Delete
+                </button>
+                <button mat-menu-item (click)="onClickViewMore()">
+                  View More
+                </button>
               </mat-menu>
-            </td></tr></ng-template
-      ></app-mat-table>
+            </td>
+          </tr></ng-template
+        ></app-mat-table
+      >
     </div>
   </div>
 </div>

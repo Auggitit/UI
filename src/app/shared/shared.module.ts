@@ -38,6 +38,7 @@ import { SearchBoxComponent } from './components/search-box/search-box.component
 import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/export-pdf-dialog-box.component';
+import { TableColumnDisplayFilterComponent } from './components/table-column-display-filter/table-column-display-filter.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/
     SearchBoxComponent,
     ConfirmationDialogBoxComponent,
     ExportPdfDialogBoxComponent,
+    TableColumnDisplayFilterComponent,
   ],
   imports: [
     CommonModule,

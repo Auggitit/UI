@@ -19,7 +19,6 @@ export class MatTableComponent implements OnInit {
   totalRows!: number;
   numberOfPageButtonsVisible: number = 5;
   @ContentChild(TemplateRef) tableRowRef!: TemplateRef<any>;
-
   constructor() {}
 
   onClickPrev(): void {
@@ -81,9 +80,14 @@ export class MatTableComponent implements OnInit {
       return paginationIndex - this.numberOfPageButtonsVisible + index + 2;
     } else return index + 1;
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   ngOnChanges(): void {
     this.totalRows = this.filteredSalesOrderData.flatMap((item) => item).length;
+    console.log("Tbale on change Activated")
+
+
   }
 }

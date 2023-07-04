@@ -22,6 +22,8 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { SalesService } from './../../services/sales.service';
+import * as XLSX from 'xlsx';
+
 export interface VendorDropDown {
   id: string;
   name: string;
@@ -52,16 +54,22 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   filterByOptions: dropDownData[] = dateFilterOptions;
   reportStatusOptions: dropDownData[] = statusOptions;
   searchValues!: FormControlName;
+  columnFilter!: FormControlName;
 
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono' },
-    { title: 'Ref ID', sortable: 0, name: 'sono' },
-    { title: 'Vendor Detail', sortable: 0, name: 'vendorname' },
-    { title: 'Product Detail', sortable: 0, name: 'pname' },
-    { title: 'Date & Time', sortable: 0, name: 'sodate' },
-    { title: 'Quantity', sortable: 0, name: 'ordered' },
-    { title: 'Price', sortable: 0, name: 'orderedvalue' },
-    { title: 'Status', sortable: 0, name: 'pending' },
+    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Vendor Detail',
+      sortable: 0,
+      name: 'vendorname',
+      needToShow: true,
+    },
+    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
   ];
 
   chartSpec: Partial<ApexChart> = {
@@ -82,6 +90,21 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       reportStatus: [''],
       SelectSaveOptions: [exportOptions[0].id],
       searchValues: [''],
+      columnFilter:  [
+        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Vendor Detail',
+          sortable: 0,
+          name: 'vendorname',
+          needToShow: true,
+        },
+        { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+      ],
     });
   }
 
@@ -511,14 +534,6 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     if (productSales.length) {
       seriesData = productSales;
     }
-    console.log(productSales, '-------1111111---');
-    console.log(
-      chartMapData,
-      'products map',
-      updatedValue,
-      '-------000000000---'
-    );
-    console.log(seriesData, '--------22222222222');
 
     this.chartOptions = {
       year: selectedYear,
@@ -578,7 +593,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
         pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
-        pdf.addImage(contentDataURL, 'PNG', 50, 70, 510, 280);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
         let tableData = this.filteredSalesOrderData.flatMap((item) => item);
@@ -606,17 +621,15 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             50,
             (topValue += 20)
           );
-          if (this.form.value.vendorcode != '')
+        if (this.form.value.vendorcode != '')
           pdf.text(
-            'Vendor Name : ' +
-              tableData[0]?.vendorname,
+            'Vendor Name : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
-          if (this.form.value.vendorcode != '')
+        if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' +
-              tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -663,6 +676,49 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       });
     } else {
       //Code for Excel Format Download
+      /* var blob = new Blob([html],{type: 'data:application/vnd.ms-excel' });
+      var u = URL.createObjectURL(blob);
+      window.open(u); */
+
+      let element = document.getElementById('salesOrdersTable')!;
+
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      wb.Props = {
+        Title: 'Sales Order Report',
+      };
+      var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
+      var wsCols = [
+        { wch: 7 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 40 },
+        { wch: 50 },
+        { wch: 25 },
+        { wch: 50 },
+        { wch: 50 },
+      ];
+      ws['!cols'] = wsCols;
+      XLSX.utils.sheet_add_aoa(ws, [['Sales Order Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(
+        ws,
+        [
+          [
+            'Sr No',
+            'Order ID',
+            'Ref ID',
+            'Vendor Detail',
+            'Product Detail',
+            'Date & Time',
+            'Quantity',
+            'Price',
+            'Status',
+          ],
+        ],
+        { origin: 'A3' }
+      );
+      XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
+      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.writeFile(wb, 'Report.xlsx');
     }
   }
 }

@@ -59,5 +59,9 @@ export class AppComponent {
       "Pdf",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/pdf.png")
     );
+    this.matIconRegistry.addSvgIcon(
+      "Filter",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/icons/Filter.svg")
+    );
   }
 }
