@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
 import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component'
 import {
@@ -17,6 +17,7 @@ import {
   styleUrls: ['./sales-order-list.component.scss'],
 })
 export class SalesOrderListComponent implements OnInit {
+  form!: FormGroup;
   vendorDropDownData: any[] = [];
   salesOrderData: any[] = [];
   salesOrderForm!: FormGroup;
@@ -28,17 +29,24 @@ export class SalesOrderListComponent implements OnInit {
   filteredSalesOrderData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
-
+  selectAllCheckbox!:FormControlName;
+  selectAll={isSelected:false};
   columns: any[] = [
-    { title: 'Order Value', sortable: 0, name: 'orderedvalue' },
-    { title: 'Vendor', sortable: 0, name: 'vendorname' },
-    { title: 'Order Qty', sortable: 0, name: 'ordered' },
-    { title: 'Received Qty', sortable: 0, name: 'received' },
-    { title: 'Date & Time', sortable: 0, name: 'sodate' },
-    { title: 'Back Order Qty', sortable: 0, name: 'receivedvalue' },
-    { title: 'Status', sortable: 0, name: 'pending' },
-    { title: 'Action' },
+    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Vendor Detail',
+      sortable: 0,
+      name: 'vendorname',
+      needToShow: true,
+    },
+    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
   ];
+
 
   constructor(private salesapi: SalesService, private fb: FormBuilder,public dialog: MatDialog) {
     this.salesOrderForm = this.fb.group({
@@ -48,6 +56,22 @@ export class SalesOrderListComponent implements OnInit {
       endDate: [''],
       vendorcode: [''],
       reportStatus: [''],
+      selectAllCheckbox:[{isSelected:false}],
+      columnFilter:  [
+        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Vendor Detail',
+          sortable: 0,
+          name: 'vendorname',
+          needToShow: true,
+        },
+        { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+      ],
     });
   }
 

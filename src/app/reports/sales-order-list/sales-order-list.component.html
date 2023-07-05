@@ -46,6 +46,8 @@
             [tableFiltersGroupName]="salesOrderForm"
             [reportStatus]="'reportStatus'"
             [vendorcode]="'vendorcode'"
+            [filterColumnName]="'columnFilter'"
+            [columnList]="columns"
           ></app-table-filters>
         </div>
       </div>
@@ -54,6 +56,9 @@
         [filteredSalesOrderData]="filteredSalesOrderData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
+        [selectAllCheckbox]="selectAllCheckbox"
+        [tableGroupName]="form"
+        [isSelectAll]="selectAll"
       >
         <ng-template let-item>
           <tr *ngFor="let data of item; let i = index">
@@ -73,6 +78,8 @@
                 type="checkbox"
                 id="customCheck1"
                 style="min-height: 18px; min-width: 18px"
+                [checked]="selectAll.isSelected"
+     
               />
               <p class="m-0 pl-2" scope="row">
                 {{ i + 1 + paginationIndex * pageCount }}

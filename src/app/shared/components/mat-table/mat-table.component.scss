@@ -10,3 +10,8 @@
         background-color: #13b2e4 !important; 
         color:#ffffff !important;
     }
+    .dataTable {
+        tr.ng-star-inserted{
+            height: 100px !important;
+        }
+    }

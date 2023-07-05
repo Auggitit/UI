@@ -5,6 +5,7 @@ import {
   ContentChild,
   TemplateRef,
 } from '@angular/core';
+import { FormControlName, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-mat-table',
@@ -18,6 +19,9 @@ export class MatTableComponent implements OnInit {
   @Input() pageCount: number = 10;
   totalRows!: number;
   numberOfPageButtonsVisible: number = 5;
+  @Input() selectAllCheckbox!: FormControlName |any;
+  @Input() tableGroupName!: FormGroup;
+  @Input() isSelectAll!:any;
   @ContentChild(TemplateRef) tableRowRef!: TemplateRef<any>;
   constructor() {}
 
@@ -89,5 +93,9 @@ export class MatTableComponent implements OnInit {
     console.log("Tbale on change Activated")
 
 
+  }
+
+  onSelectAll(){
+    this.isSelectAll.isSelected=!this.isSelectAll.isSelected;
   }
 }

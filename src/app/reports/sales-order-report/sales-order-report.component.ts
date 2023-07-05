@@ -55,7 +55,8 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   reportStatusOptions: dropDownData[] = statusOptions;
   searchValues!: FormControlName;
   columnFilter!: FormControlName;
-
+  selectAllCheckbox!:FormControlName;
+  selectAll={isSelected:false};
   columns: any[] = [
     { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
     { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
@@ -90,6 +91,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       reportStatus: [''],
       SelectSaveOptions: [exportOptions[0].id],
       searchValues: [''],
+      selectAllCheckbox:[{isSelected:false}],
       columnFilter:  [
         { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
         { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
@@ -123,10 +125,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadData();
     this.formSubscription = this.form.valueChanges.subscribe((values) => {
+      console.log("--------",values)
       this.getFilterData(values, this.salesOrderData);
     });
   }
-
+ 
   onClickCreateNewOrderButton() {
     // console.log('Create New Order Button Clicked');
   }
