@@ -50,6 +50,12 @@ import { ServiceSalesOrderListComponent } from './reports/service-sales-order-li
 import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
 import { SalesListsComponent } from './reports/sales-lists/sales-lists.component';
 import { SalesReportComponent } from './reports/sales-report/sales-report.component';
+import { SalesServiceListComponent } from './reports/sales-service-list/sales-service-list.component';
+import { SalesServiceReportComponent } from './reports/sales-service-report/sales-service-report.component';
+import { CreditNoteComponent } from './reports/credit-note/credit-note.component';
+import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
+import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
+import { DebitNoteComponent } from './reports/debit-note/debit-note.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -107,14 +113,14 @@ const routes: Routes = [
     path: 'service-sales-order-reports',
     component: ServiceSalesOrderReportComponent,
   },
-  {
-    path: 'sales-list',
-    component: SalesListsComponent,
-  },
-  {
-    path: 'sales-reports',
-    component: SalesReportComponent,
-  },
+  { path: 'sales-list', component: SalesListsComponent },
+  { path: 'sales-reports', component: SalesReportComponent },
+  { path: 'sales-service-list', component: SalesServiceListComponent },
+  { path: 'sales-service-report', component: SalesServiceReportComponent },
+  { path: 'credit-note', component: CreditNoteComponent },
+  { path: 'credit-note-report', component: CreditNoteReportsComponent },
+  { path: 'debit-note', component: DebitNoteComponent },
+  { path: 'debit-note-report', component: DebitNoteReportComponent },
 ];
 
 @NgModule({

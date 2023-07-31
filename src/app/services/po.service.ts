@@ -43,7 +43,13 @@ export class PoService {
       })
     );
   }
-
+  getAllPOs() {
+    return this.http.get<any>(this.URL + 'api/vPODetails').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
   getMaxInvoiceNo(potype: any, branch: any, fycode: any, fy: any) {
     return this.http
       .get<any>(

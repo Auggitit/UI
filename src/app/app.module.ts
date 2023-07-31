@@ -90,6 +90,12 @@ import { ServiceSalesOrderListComponent } from './reports/service-sales-order-li
 import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
 import { SalesListsComponent } from './reports/sales-lists/sales-lists.component';
 import { SalesReportComponent } from './reports/sales-report/sales-report.component';
+import { SalesServiceListComponent } from './reports/sales-service-list/sales-service-list.component';
+import { SalesServiceReportComponent } from './reports/sales-service-report/sales-service-report.component';
+import { CreditNoteComponent } from './reports/credit-note/credit-note.component';
+import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
+import { DebitNoteComponent } from './reports/debit-note/debit-note.component';
+import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
 
 @NgModule({
   declarations: [
@@ -156,6 +162,12 @@ import { SalesReportComponent } from './reports/sales-report/sales-report.compon
     ServiceSalesOrderReportComponent,
     SalesListsComponent,
     SalesReportComponent,
+    SalesServiceListComponent,
+    SalesServiceReportComponent,
+    CreditNoteComponent,
+    CreditNoteReportsComponent,
+    DebitNoteComponent,
+    DebitNoteReportComponent,
   ],
   imports: [
     BrowserModule,
