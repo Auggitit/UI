@@ -34,7 +34,6 @@
   </form>
   <app-mat-select-box
     selectWidth="160px"
-    class="pl-1 pr-1"
     [formOptions]="StatusOptions"
     [controlName]="'reportStatus'"
     [label]="'Status'"
@@ -70,9 +69,9 @@
   ></app-mat-select-box>
   <app-search-box searchBoxWidth="170px"> </app-search-box>
   <app-table-column-display-filter
-      [ColumnFilterFormGroup]="tableFiltersGroupName"
-      [columnFilterName]="filterColumnName"
-      [listOfTableColumns]="columnList"
-      >
+    [ColumnFilterFormGroup]="tableFiltersGroupName"
+    [columnFilterName]="filterColumnName"
+    [listOfTableColumns]="columnList"
+  >
   </app-table-column-display-filter>
 </div>

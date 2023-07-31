@@ -2,8 +2,8 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Sales Order Details"
-        [reportFormGroupName]="salesOrderForm"
+        title="Service Sales Order Details"
+        [reportFormGroupName]="serviceSalesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
@@ -21,8 +21,7 @@
     <div class="col-12 p-0 card">
       <!-- <div class="p-3"> -->
       <div
-        class="d-flex flex-wrap align-items-center p-3"
-        style="justify-content: space-between"
+        class="d-flex flex-wrap align-items-center justify-content-between p-3"
       >
         <div class="d-flex flex-wrap align-items-center">
           <p
@@ -33,7 +32,7 @@
               margin: 0;
             "
           >
-            Recent Sales Orders
+            Recent Service Sales Orders
           </p>
           <p
             style="
@@ -47,10 +46,11 @@
             +2 Orders
           </p>
         </div>
+
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [StatusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="salesOrderForm"
+          [tableFiltersGroupName]="serviceSalesOrderForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
@@ -60,7 +60,7 @@
       <!-- </div> -->
       <app-mat-table
         [columns]="columns"
-        [filteredData]="filteredSalesOrderData"
+        [filteredData]="filteredServiceSalesOrderData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -68,21 +68,18 @@
         [isSelectAll]="selectAll"
       >
         <ng-template let-item>
-          <tr
-            *ngFor="let data of item; let i = index"
-            style="background-color: white"
-          >
+          <tr *ngFor="let data of item; let i = index">
             <td
               scope="row"
               class="d-flex pl-3"
               style="
                 color: #667085;
                 min-width: 86px;
+                border-top: 1px solid #f0f1f3;
                 /* max-width: 86px; */
                 align-items: center;
                 justify-content: left;
                 height: inherit;
-                border-top: 1px solid #f0f1f3;
               "
             >
               <input
@@ -129,7 +126,7 @@
                 min-width: 111px;
                 max-width: 111px;
                 border-top: 1px solid #f0f1f3;
-                text-align: left;
+                text-align: center;
               "
             >
               {{ data.ordered }}
@@ -139,7 +136,7 @@
               scope="col"
               style="
                 color: #667085;
-                text-align: left;
+                text-align: center;
                 min-width: 109px;
                 max-width: 109px;
                 border-top: 1px solid #f0f1f3;
@@ -166,7 +163,8 @@
                 color: #667085;
                 min-width: 133px;
                 max-width: 133px;
-                text-align: left;
+                text-align: center;
+
                 border-top: 1px solid #f0f1f3;
               "
             >
@@ -177,7 +175,6 @@
               scope="col"
               style="
                 color: #667085;
-                align-items: center;
                 min-width: 114px;
                 max-width: 114px;
                 border-top: 1px solid #f0f1f3;
@@ -208,7 +205,6 @@
               </div>
             </td>
             <td
-              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;

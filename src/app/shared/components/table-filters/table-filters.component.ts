@@ -17,13 +17,11 @@ export class TableFiltersComponent implements OnInit {
   @Input() filterColumnName!: FormControlName | any;
   @Input() columnList!: any;
 
-
   constructor() {}
 
   ngOnInit(): void {}
 
   ngOnChanges(): void {
-
-console.log("onChange insidie table filter called");
-}
+    console.log('onChange insidie table filter called');
+  }
 }

@@ -2,8 +2,8 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Sales Order Details"
-        [reportFormGroupName]="salesOrderForm"
+        title="Sales Details"
+        [reportFormGroupName]="salesForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
@@ -33,7 +33,7 @@
               margin: 0;
             "
           >
-            Recent Sales Orders
+            Recent Sales
           </p>
           <p
             style="
@@ -50,7 +50,7 @@
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [StatusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="salesOrderForm"
+          [tableFiltersGroupName]="salesForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
@@ -60,7 +60,7 @@
       <!-- </div> -->
       <app-mat-table
         [columns]="columns"
-        [filteredData]="filteredSalesOrderData"
+        [filteredData]="filteredSalesData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"

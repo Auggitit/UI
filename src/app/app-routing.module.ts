@@ -44,6 +44,12 @@ import { ServicesalelistComponent } from './vouchers/salesservicevch/servicesale
 import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesaleupdate/servicesaleupdate.component';
 import { SalesOrderReportComponent } from './reports/sales-order-report/sales-order-report.component';
 import { SalesOrderListComponent } from './reports/sales-order-list/sales-order-list.component';
+import { PurchaseOrderListComponent } from './reports/purchase-order-list/purchase-order-list.component';
+import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
+import { ServiceSalesOrderListComponent } from './reports/service-sales-order-list/service-sales-order-list.component';
+import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
+import { SalesListsComponent } from './reports/sales-lists/sales-lists.component';
+import { SalesReportComponent } from './reports/sales-report/sales-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -91,6 +97,24 @@ const routes: Routes = [
   { path: 'servicesalesupdate/:id', component: ServicesaleupdateComponent },
   { path: 'so-report', component: SalesOrderReportComponent },
   { path: 'sales-order-list', component: SalesOrderListComponent },
+  { path: 'purchase-order-list', component: PurchaseOrderListComponent },
+  { path: 'purchase-order-reports', component: PurchaseOrderReportsComponent },
+  {
+    path: 'service-sales-order-list',
+    component: ServiceSalesOrderListComponent,
+  },
+  {
+    path: 'service-sales-order-reports',
+    component: ServiceSalesOrderReportComponent,
+  },
+  {
+    path: 'sales-list',
+    component: SalesListsComponent,
+  },
+  {
+    path: 'sales-reports',
+    component: SalesReportComponent,
+  },
 ];
 
 @NgModule({

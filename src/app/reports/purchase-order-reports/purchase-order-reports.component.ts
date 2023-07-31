@@ -30,15 +30,15 @@ export interface VendorDropDown {
   name: string;
 }
 @Component({
-  selector: 'app-sales-order-report',
-  templateUrl: './sales-order-report.component.html',
-  styleUrls: ['./sales-order-report.component.scss'],
+  selector: 'app-purchase-order-reports',
+  templateUrl: './purchase-order-reports.component.html',
+  styleUrls: ['./purchase-order-reports.component.scss'],
 })
-export class SalesOrderReportComponent implements OnInit, OnDestroy {
+export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
-  salesOrderData!: any[];
-  filteredSalesOrderData: any[] = [];
+  purchaseOrderData!: any[];
+  filteredPurchaseOrderData: any[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -132,16 +132,16 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     this.paginationIndex = i;
   }
 
+  onClickButton(): void {
+    this.router.navigateByUrl('po');
+  }
+
   ngOnInit(): void {
     this.loadData();
     this.formSubscription = this.form.valueChanges.subscribe((values) => {
       console.log('--------', values);
-      this.getFilterData(values, this.salesOrderData);
+      this.getFilterData(values, this.purchaseOrderData);
     });
-  }
-
-  onClickButton(): void {
-    this.router.navigateByUrl('so');
   }
 
   onClickCreateNewOrderButton() {
@@ -235,12 +235,12 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesOrderData = newArr;
+    this.filteredPurchaseOrderData = newArr;
 
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Sales Order',
+        title: 'Total Purchase Order',
         count: updatedValue.length,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -252,7 +252,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-check',
         count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
-        title: 'Completed Sales Order',
+        title: 'Completed Purchase Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -262,7 +262,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales Order',
+        title: 'Pending Purchase Order',
         count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -273,7 +273,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
+        title: 'Cancelled Purchase Order',
         count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -284,7 +284,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales Order Value',
+        title: 'Purchase Order Value',
         count: Math.round(
           updatedValue.reduce(
             (prev: any, curr: any) => Number(prev) + Number(curr.orderedvalue),
@@ -591,7 +591,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         this.vendorDropDownData = [...newMap.values()];
         // console.log(this.vendorDropDownData, 'vendor drop downdata');
         // this.form.get('vendorcode')?.setValue('56');
-        this.salesOrderData = res;
+        this.purchaseOrderData = res;
         this.getFilterData(this.form.value, res);
       }
     });
@@ -606,20 +606,18 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.form.value.filterData].name;
-      console.log(timeDuration, 'timeduration');
-
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+        let tableData = this.filteredPurchaseOrderData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Sales Order', 240, (topValue += 50));
+        pdf.text('Recent Purchase Order', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
@@ -648,7 +646,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.vendorname,
+            'Purchase Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -691,7 +689,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Report.pdf');
+        pdf.save('Purchase Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -699,11 +697,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('salesOrdersTable')!;
+      let element = document.getElementById('purchaseOrdersTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Sales Order Report',
+        Title: 'Purchase Order Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -717,7 +715,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Sales Order Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
+        origin: 'E1',
+      });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
@@ -736,7 +736,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

@@ -84,6 +84,12 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from './shared/shared.module';
 import { TargetAndAchievementComponent } from './reports/sales-order-report/target-and-achievement/target-and-achievement.component';
 import { SalesOrderListComponent } from './reports/sales-order-list/sales-order-list.component';
+import { PurchaseOrderListComponent } from './reports/purchase-order-list/purchase-order-list.component';
+import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
+import { ServiceSalesOrderListComponent } from './reports/service-sales-order-list/service-sales-order-list.component';
+import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
+import { SalesListsComponent } from './reports/sales-lists/sales-lists.component';
+import { SalesReportComponent } from './reports/sales-report/sales-report.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +150,12 @@ import { SalesOrderListComponent } from './reports/sales-order-list/sales-order-
     GetProductDetailsPipe,
     TargetAndAchievementComponent,
     SalesOrderListComponent,
+    PurchaseOrderListComponent,
+    PurchaseOrderReportsComponent,
+    ServiceSalesOrderListComponent,
+    ServiceSalesOrderReportComponent,
+    SalesListsComponent,
+    SalesReportComponent,
   ],
   imports: [
     BrowserModule,

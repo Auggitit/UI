@@ -2,7 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="SALES ORDER SUMMARY"
+        title="PURCHASE ORDER SUMMARY"
         [reportFormGroupName]="form"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
@@ -10,6 +10,7 @@
         [SelectSaveOptions]="'SelectSaveOptions'"
         (onClickDownload)="downloadAsPDF()"
         (onClickCreateButton)="onClickButton()"
+        [isReports]="false"
       ></app-reports-header>
     </div>
     <div id="contentToSave" #contentToSave>
@@ -28,8 +29,8 @@
         <div class="col-8 col-8 col-8 col-8 pr-0">
           <app-mat-area-graph
             [chart-options]="chartOptions"
-            title="Sales"
-            subTitle="Sales Order Summary"
+            title="Purchase"
+            subTitle="Purchase Order Summary"
           ></app-mat-area-graph>
         </div>
       </div>
@@ -48,7 +49,7 @@
                 margin: 0;
               "
             >
-              Recent Sales Orders
+              Recent Purchase Orders
             </p>
             <p
               style="
@@ -80,9 +81,9 @@
       <script src="libs/jspdf.umd.js"></script>
       <script src="../dist/jspdf.plugin.autotable.js"></script>
       <app-mat-table
-        id="salesOrdersTable"
+        id="purchaseOrdersTable"
         [columns]="columns"
-        [filteredData]="filteredSalesOrderData"
+        [filteredData]="filteredPurchaseOrderData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -97,8 +98,8 @@
               style="
                 min-width: 90px;
                 /* max-width: 90px; */
-                align-items: center;
                 border-top: 1px solid #f0f1f3;
+                align-items: center;
                 justify-content: left;
                 height: inherit;
                 padding-left: 35px;

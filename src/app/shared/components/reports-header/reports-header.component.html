@@ -16,15 +16,27 @@
       IconHeightWidth="23px"
       label="Download As"
     ></app-mat-select-box>
+
     <app-mat-button
-    buttonColor="#F9F9FC"
-    svgIconToDisplay="Download"
-    paddingValue="0px 13px"
-    borderValues="1px solid #E0E2E7"
-    buttonHeight="40px"
-    (click)="clickDownload($event)"
-  >
-  </app-mat-button>
+      buttonColor="#F9F9FC"
+      svgIconToDisplay="Download"
+      paddingValue="0px 13px"
+      borderValues="1px solid #E0E2E7"
+      buttonHeight="40px"
+      (click)="clickDownload($event)"
+    >
+    </app-mat-button>
+    <div *ngIf="svgIconToDisplay">
+      <app-mat-button
+        buttonColor="#F9F9FC"
+        [svgIconToDisplay]="svgIconToDisplay"
+        paddingValue="0px 13px"
+        borderValues="1px solid #E0E2E7"
+        buttonHeight="40px"
+        (click)="gotoReports($event)"
+      ></app-mat-button>
+    </div>
+
     <app-mat-button
       title="Create New Order"
       buttonColor="#419FC7"
@@ -34,6 +46,7 @@
       iconColor="white"
       icon="bi bi-plus"
       buttonHeight="40px"
+      (onClickButton)="OnClickButton($event)"
     >
     </app-mat-button>
   </div>

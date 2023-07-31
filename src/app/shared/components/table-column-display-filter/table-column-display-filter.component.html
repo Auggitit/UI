@@ -1,26 +1,25 @@
 <form [formGroup]="ColumnFilterFormGroup">
-
-
-<app-mat-button
-  [matMenuTriggerFor]="columnsList"
-  buttonColor="#F9F9FC"
-  svgIconToDisplay="Filter"
-  paddingValue="0px 13px"
-  borderValues="1px solid #E0E2E7"
-  buttonHeight="40px"
-  (click)="onClickButton($event)"
-  
->
-  <mat-menu #columnsList="matMenu" style="width: 200%">
-    <section 
-    style="padding: 8px; padding-left: 25px"
-    *ngFor="let item of listOfTableColumns; let i=index">
-      <mat-checkbox 
-        [formControlName]="columnFilterName"
-        (change)="onSelectionChange(i)"
-        [checked]="item.needToShow"
-        >{{ item.title }}</mat-checkbox>
-    </section>
-  </mat-menu>
-</app-mat-button>
+  <app-mat-button
+    [matMenuTriggerFor]="columnsList"
+    buttonColor="#F9F9FC"
+    svgIconToDisplay="Filter"
+    paddingValue="0px 13px"
+    borderValues="1px solid #E0E2E7"
+    buttonHeight="40px"
+    (click)="onClickButton($event)"
+  >
+    <mat-menu #columnsList="matMenu" style="width: 200%">
+      <section
+        style="padding: 8px; padding-left: 25px"
+        *ngFor="let item of listOfTableColumns; let i = index"
+      >
+        <mat-checkbox
+          [formControlName]="columnFilterName"
+          (change)="onSelectionChange(i)"
+          [checked]="item.needToShow"
+          >{{ item.title }}</mat-checkbox
+        >
+      </section>
+    </mat-menu>
+  </app-mat-button>
 </form>

@@ -14,14 +14,14 @@ import { FormControlName, FormGroup } from '@angular/forms';
 })
 export class MatTableComponent implements OnInit {
   @Input() paginationIndex: number = 0;
-  @Input() filteredSalesOrderData: any[] = [];
+  @Input() filteredData: any[] = [];
   @Input() columns: any[] = [];
   @Input() pageCount: number = 10;
   totalRows!: number;
   numberOfPageButtonsVisible: number = 5;
-  @Input() selectAllCheckbox!: FormControlName |any;
+  @Input() selectAllCheckbox!: FormControlName | any;
   @Input() tableGroupName!: FormGroup;
-  @Input() isSelectAll!:any;
+  @Input() isSelectAll!: any;
   @ContentChild(TemplateRef) tableRowRef!: TemplateRef<any>;
   constructor() {}
 
@@ -30,7 +30,7 @@ export class MatTableComponent implements OnInit {
   }
 
   onClickIcon(colData: any): void {
-    let salesData = this.filteredSalesOrderData.flatMap((item) => item);
+    let salesData = this.filteredData.flatMap((item) => item);
     let updatedValue = salesData;
     this.columns.map((item: any) => {
       if (item.name === colData.name) {
@@ -70,7 +70,7 @@ export class MatTableComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesOrderData = newArr;
+    this.filteredData = newArr;
   }
 
   onClickNext(): void {
@@ -84,18 +84,14 @@ export class MatTableComponent implements OnInit {
       return paginationIndex - this.numberOfPageButtonsVisible + index + 2;
     } else return index + 1;
   }
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(): void {
-    this.totalRows = this.filteredSalesOrderData.flatMap((item) => item).length;
-    console.log("Tbale on change Activated")
-
-
+    this.totalRows = this.filteredData.flatMap((item) => item).length;
+    console.log('Tbale on change Activated');
   }
 
-  onSelectAll(){
-    this.isSelectAll.isSelected=!this.isSelectAll.isSelected;
+  onSelectAll() {
+    this.isSelectAll.isSelected = !this.isSelectAll.isSelected;
   }
 }

@@ -66,8 +66,8 @@ export class MatSelectBoxComponent implements OnInit, OnChanges {
   @Input() iconNeeded: boolean = false;
   @Input() Icon: string = '';
   @Input() selectWidth: string = '100%';
-  @Input() IconHeightWidth: string='24px';
-  @Input() paddingIconRight:string='8px';
+  @Input() IconHeightWidth: string = '24px';
+  @Input() paddingIconRight: string = '8px';
 
   constructor() {}
 
