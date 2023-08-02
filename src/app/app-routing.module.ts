@@ -56,6 +56,12 @@ import { CreditNoteComponent } from './reports/credit-note/credit-note.component
 import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
 import { DebitNoteComponent } from './reports/debit-note/debit-note.component';
+import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
+import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
+import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
+import { GrnReportComponent } from './reports/grn-report/grn-report.component';
+import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
+import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -121,6 +127,12 @@ const routes: Routes = [
   { path: 'credit-note-report', component: CreditNoteReportsComponent },
   { path: 'debit-note', component: DebitNoteComponent },
   { path: 'debit-note-report', component: DebitNoteReportComponent },
+  { path: 'service-po-list', component: SevicePurchaseOrderComponent },
+  { path: 'service-po-report', component: SevicePurchaseOrderReportComponent },
+  { path: 'grn-list', component: GrnListComponent },
+  { path: 'grn-report', component: GrnReportComponent },
+  { path: 'service-grn-list', component: ServiceGrnListComponent },
+  { path: 'service-grn-report', component: ServiceGrnReportComponent },
 ];
 
 @NgModule({

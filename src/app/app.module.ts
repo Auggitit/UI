@@ -96,6 +96,12 @@ import { CreditNoteComponent } from './reports/credit-note/credit-note.component
 import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
 import { DebitNoteComponent } from './reports/debit-note/debit-note.component';
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
+import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
+import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
+import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
+import { GrnReportComponent } from './reports/grn-report/grn-report.component';
+import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
+import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
 
 @NgModule({
   declarations: [
@@ -168,6 +174,12 @@ import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note
     CreditNoteReportsComponent,
     DebitNoteComponent,
     DebitNoteReportComponent,
+    SevicePurchaseOrderComponent,
+    SevicePurchaseOrderReportComponent,
+    GrnListComponent,
+    GrnReportComponent,
+    ServiceGrnListComponent,
+    ServiceGrnReportComponent,
   ],
   imports: [
     BrowserModule,
