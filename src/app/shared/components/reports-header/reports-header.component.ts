@@ -24,6 +24,7 @@ export class ReportsHeaderComponent implements OnInit, OnChanges {
   @Input() filterData!: FormControlName | any;
   @Input() svgIconToDisplay!: string;
   @Input() isReports: boolean = true;
+  @Input() buttonTitle: string = 'Create New Order';
   @Output() onClickDownload = new EventEmitter();
   @Output() onClickGoto = new EventEmitter();
   @Output() onClickCreateButton = new EventEmitter();

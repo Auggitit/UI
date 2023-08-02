@@ -145,7 +145,12 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              {{ data.received }}
+              <p class="m-0" style="color: #333843">
+                {{ data.solistDetails[0].pname }}
+              </p>
+              <p style="font-weight: 400; color: #667085">
+                + {{ data.solistDetails.length }} other products
+              </p>
             </td>
             <td
               *ngIf="columns[4].needToShow"
