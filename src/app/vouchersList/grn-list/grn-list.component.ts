@@ -33,19 +33,24 @@ export class GrnListComponent implements OnInit {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Vendor Detail',
+      title: 'Order Value',
       sortable: 0,
-      name: 'vendorname',
+      name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Order Qty',
+      sortable: 0,
+      name: 'ordered',
+      needToShow: true,
+    },
+    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
@@ -63,24 +68,34 @@ export class GrnListComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Vendor Detail',
+          title: 'Order Value',
           sortable: 0,
-          name: 'vendorname',
+          name: 'orderedvalue',
+          needToShow: true,
+        },
+        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Order Qty',
+          sortable: 0,
+          name: 'ordered',
           needToShow: true,
         },
         {
-          title: 'Product Detail',
+          title: 'Received Qty',
           sortable: 0,
-          name: 'pname',
+          name: 'received',
           needToShow: true,
         },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        {
+          title: 'Back Order Qty',
+          sortable: 0,
+          name: 'ordered',
+          needToShow: true,
+        },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
@@ -190,7 +205,7 @@ export class GrnListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
+        count: updatedValue.filter((itm) => Number(itm.received)).length,
         title: 'Completed Service GRN',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
@@ -201,7 +216,8 @@ export class GrnListComponent implements OnInit {
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Service GRN',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
@@ -289,6 +305,21 @@ export class GrnListComponent implements OnInit {
       console.log(result);
     });
   }
+  onClickCancelOrder() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
   onClickViewMore() {
     console.log('Clicked View More');
   }

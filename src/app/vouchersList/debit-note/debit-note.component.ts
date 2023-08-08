@@ -1,61 +1,66 @@
 import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
-import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { VendorDropDown } from 'src/app/reports/sales-order-report/sales-order-report.component';
 import {
   dateFilterOptions,
   dropDownData,
   exportOptions,
   statusOptions,
-} from '../stub/salesOrderStub';
+} from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
-import { SsalesService } from 'src/app/services/ssales.service';
 
 @Component({
-  selector: 'app-service-sales-order-list',
-  templateUrl: './service-sales-order-list.component.html',
-  styleUrls: ['./service-sales-order-list.component.scss'],
+  selector: 'app-debit-note',
+  templateUrl: './debit-note.component.html',
+  styleUrls: ['./debit-note.component.scss'],
 })
-export class ServiceSalesOrderListComponent implements OnInit {
+export class DebitNoteComponent implements OnInit {
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  serviceSalesOrderData: any[] = [];
-  serviceSalesOrderForm!: FormGroup;
+  salesOrderData: any[] = [];
+  salesOrderForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredServiceSalesOrderData: any[] = [];
+  filteredSalesOrderData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Vendor Detail',
+      title: 'Order Value',
       sortable: 0,
-      name: 'vendorname',
+      name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Order Qty',
+      sortable: 0,
+      name: 'ordered',
+      needToShow: true,
+    },
+    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
-    private salesapi: SsalesService,
+    private salesapi: SalesService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
   ) {
-    this.serviceSalesOrderForm = this.fb.group({
+    this.salesOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[0].id],
       startDate: [''],
@@ -64,41 +69,51 @@ export class ServiceSalesOrderListComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Vendor Detail',
+          title: 'Order Value',
           sortable: 0,
-          name: 'vendorname',
+          name: 'orderedvalue',
+          needToShow: true,
+        },
+        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Order Qty',
+          sortable: 0,
+          name: 'ordered',
           needToShow: true,
         },
         {
-          title: 'Product Detail',
+          title: 'Received Qty',
           sortable: 0,
-          name: 'pname',
+          name: 'received',
           needToShow: true,
         },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        {
+          title: 'Back Order Qty',
+          sortable: 0,
+          name: 'ordered',
+          needToShow: true,
+        },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
 
   ngOnInit(): void {
     this.loadData();
-    this.serviceSalesOrderForm.valueChanges.subscribe((values) => {
-      this.getFilterData(values, this.serviceSalesOrderData);
+    this.salesOrderForm.valueChanges.subscribe((values) => {
+      this.getFilterData(values, this.salesOrderData);
     });
   }
 
   gotoReportsPage(): void {
-    this.router.navigateByUrl('service-sales-order-reports');
+    this.router.navigateByUrl('debit-note-report');
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('soservice');
+    this.router.navigateByUrl('so');
   }
 
   getFilterData(formValues: any, serverData: any): void {
@@ -176,12 +191,12 @@ export class ServiceSalesOrderListComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredServiceSalesOrderData = newArr;
+    this.filteredSalesOrderData = newArr;
 
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Service Sales Order',
+        title: 'Total Sales Order',
         count: updatedValue.length,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -191,8 +206,8 @@ export class ServiceSalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
-        title: 'Completed Service Sales Order',
+        count: updatedValue.filter((itm) => Number(itm.received)).length,
+        title: 'Completed Debit Note',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -201,8 +216,9 @@ export class ServiceSalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Service Sales Order',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        title: 'Pending Debit Note',
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
@@ -211,7 +227,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Service Sales Order',
+        title: 'Cancelled Debit Note',
         count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -221,7 +237,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Service Sales Order Value',
+        title: 'Debit Note Value',
         count: Math.round(
           updatedValue.reduce(
             (prev: any, curr: any) => Number(prev) + Number(curr.orderedvalue),
@@ -235,11 +251,11 @@ export class ServiceSalesOrderListComponent implements OnInit {
         badgeValue: '+23%',
       },
     ];
-    console.log('data in table', this.filteredServiceSalesOrderData);
+    console.log('data in table', this.filteredSalesOrderData);
   }
 
   loadData() {
-    this.salesapi.getPendingSOListSOService().subscribe((res: any[]) => {
+    this.salesapi.getPendingSOListAll().subscribe((res: any[]) => {
       if (res.length) {
         const newMap = new Map();
         res
@@ -251,13 +267,13 @@ export class ServiceSalesOrderListComponent implements OnInit {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
-        this.serviceSalesOrderData = res;
-        this.getFilterData(this.serviceSalesOrderForm.value, res);
+        this.salesOrderData = res;
+        this.getFilterData(this.salesOrderForm.value, res);
 
         console.log(
-          this.serviceSalesOrderData,
+          this.salesOrderData,
           this.vendorDropDownData,
-          'Service sales order data'
+          'Debit Note data'
         );
       }
     });
@@ -290,6 +306,22 @@ export class ServiceSalesOrderListComponent implements OnInit {
       console.log(result);
     });
   }
+
+  onClickCancelOrder() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
   onClickViewMore() {
     console.log('Clicked View More');
   }

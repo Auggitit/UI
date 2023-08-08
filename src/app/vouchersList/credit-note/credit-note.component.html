@@ -2,8 +2,8 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Sales Details"
-        [reportFormGroupName]="salesForm"
+        title="Credit Note Details"
+        [reportFormGroupName]="salesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
@@ -11,7 +11,7 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Sales"
+        buttonTitle="Create New Credit Note"
       ></app-reports-header>
     </div>
     <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
@@ -34,7 +34,7 @@
               margin: 0;
             "
           >
-            Recent Sales
+            Recent Credit Notes
           </p>
           <p
             style="
@@ -51,7 +51,7 @@
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [StatusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="salesForm"
+          [tableFiltersGroupName]="salesOrderForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
@@ -61,7 +61,7 @@
       <!-- </div> -->
       <app-mat-table
         [columns]="columns"
-        [filteredData]="filteredSalesData"
+        [filteredData]="filteredSalesOrderData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -131,6 +131,7 @@
                 max-width: 111px;
                 border-top: 1px solid #f0f1f3;
                 text-align: left;
+                padding-left: 20px;
               "
             >
               {{ data.ordered }}
@@ -143,6 +144,7 @@
                 text-align: left;
                 min-width: 109px;
                 max-width: 109px;
+                padding-left: 20px;
                 border-top: 1px solid #f0f1f3;
               "
             >
@@ -168,10 +170,11 @@
                 min-width: 133px;
                 max-width: 133px;
                 text-align: left;
+                padding-left: 20px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">{{ data.receivedvalue }}</p>
+              <p class="mb-0">{{ data.ordered }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
@@ -184,7 +187,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.pending > 0">
+              <div *ngIf="data.received === '0'">
                 <span
                   style="
                     background-color: #feedec;
@@ -193,18 +196,19 @@
                     color: #e46a11;
                     font-weight: 600;
                   "
-                  >Issue</span
+                  >Pending</span
                 >
               </div>
-              <div *ngIf="data.pending == 0">
+              <div *ngIf="data.received !== '0'">
                 <span
                   class="completed"
                   style="
                     background-color: #e7f4ee;
                     color: #0d894f;
+                    border-radius: 100px;
                     font-weight: 600;
                   "
-                  >Advanced</span
+                  >Completed</span
                 >
               </div>
             </td>
@@ -247,6 +251,18 @@
                   (click)="onClickDelete()"
                 >
                   Delete
+                </button>
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickCancelOrder()"
+                >
+                  Cancel Order
                 </button>
                 <button mat-menu-item (click)="onClickViewMore()">
                   View More

@@ -237,7 +237,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.pending > 0">
+              <div *ngIf="data.received === '0'">
                 <span
                   style="
                     background-color: #fdf1e8;
@@ -246,18 +246,19 @@
                     color: #e46a11;
                     font-weight: 600;
                   "
-                  >Not Paid</span
+                  >Pending</span
                 >
               </div>
-              <div *ngIf="data.pending == 0">
+              <div *ngIf="data.received !== '0'">
                 <span
                   class="completed"
                   style="
                     background-color: #e7f4ee;
                     color: #0d894f;
+                    border-radius: 100px;
                     font-weight: 600;
                   "
-                  >Advanced</span
+                  >Completed</span
                 >
               </div>
             </td>

@@ -1,52 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
-import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { VendorDropDown } from 'src/app/reports/sales-order-report/sales-order-report.component';
 import {
   dateFilterOptions,
   dropDownData,
   exportOptions,
   statusOptions,
-} from '../stub/salesOrderStub';
+} from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-sales-lists',
-  templateUrl: './sales-lists.component.html',
-  styleUrls: ['./sales-lists.component.scss'],
+  selector: 'app-purchase-order-list',
+  templateUrl: './purchase-order-list.component.html',
+  styleUrls: ['./purchase-order-list.component.scss'],
 })
-export class SalesListsComponent implements OnInit {
+export class PurchaseOrderListComponent implements OnInit {
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  salesData: any[] = [];
-  salesForm!: FormGroup;
+  purchaseOrderData: any[] = [];
+  purchaseOrderForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredSalesData: any[] = [];
+  filteredPurchaseOrderData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Vendor Detail',
+      title: 'Order Value',
       sortable: 0,
-      name: 'vendorname',
+      name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Order Qty',
+      sortable: 0,
+      name: 'ordered',
+      needToShow: true,
+    },
+    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
@@ -55,7 +59,7 @@ export class SalesListsComponent implements OnInit {
     public dialog: MatDialog,
     public router: Router
   ) {
-    this.salesForm = this.fb.group({
+    this.purchaseOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[0].id],
       startDate: [''],
@@ -64,41 +68,51 @@ export class SalesListsComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Vendor Detail',
+          title: 'Order Value',
           sortable: 0,
-          name: 'vendorname',
+          name: 'orderedvalue',
+          needToShow: true,
+        },
+        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Order Qty',
+          sortable: 0,
+          name: 'ordered',
           needToShow: true,
         },
         {
-          title: 'Product Detail',
+          title: 'Received Qty',
           sortable: 0,
-          name: 'pname',
+          name: 'received',
           needToShow: true,
         },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        {
+          title: 'Back Order Qty',
+          sortable: 0,
+          name: 'ordered',
+          needToShow: true,
+        },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
 
   ngOnInit(): void {
     this.loadData();
-    this.salesForm.valueChanges.subscribe((values) => {
-      this.getFilterData(values, this.salesData);
+    this.purchaseOrderForm.valueChanges.subscribe((values) => {
+      this.getFilterData(values, this.purchaseOrderData);
     });
   }
 
   gotoReportsPage(): void {
-    this.router.navigateByUrl('sales-reports');
+    this.router.navigateByUrl('purchase-order-reports');
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('sales');
+    this.router.navigateByUrl('po');
   }
 
   getFilterData(formValues: any, serverData: any): void {
@@ -176,12 +190,12 @@ export class SalesListsComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesData = newArr;
+    this.filteredPurchaseOrderData = newArr;
 
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Sales',
+        title: 'Total Purchase Order',
         count: updatedValue.length,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -191,8 +205,8 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
-        title: 'Completed Sales ',
+        count: updatedValue.filter((itm) => Number(itm.received)).length,
+        title: 'Completed Purchase Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -201,8 +215,9 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales ',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        title: 'Pending Purchase Order',
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
@@ -211,7 +226,7 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales ',
+        title: 'Cancelled Purchase Order',
         count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -221,7 +236,7 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales  Value',
+        title: 'Purchase Order Value',
         count: Math.round(
           updatedValue.reduce(
             (prev: any, curr: any) => Number(prev) + Number(curr.orderedvalue),
@@ -235,11 +250,11 @@ export class SalesListsComponent implements OnInit {
         badgeValue: '+23%',
       },
     ];
-    console.log('data in table', this.filteredSalesData);
+    console.log('data in table', this.filteredPurchaseOrderData);
   }
 
   loadData() {
-    this.salesapi.getPendingSOListSOService().subscribe((res: any[]) => {
+    this.salesapi.getPendingSOListAll().subscribe((res: any[]) => {
       if (res.length) {
         const newMap = new Map();
         res
@@ -251,10 +266,14 @@ export class SalesListsComponent implements OnInit {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
-        this.salesData = res;
-        this.getFilterData(this.salesForm.value, res);
+        this.purchaseOrderData = res;
+        this.getFilterData(this.purchaseOrderForm.value, res);
 
-        console.log(this.salesData, this.vendorDropDownData, 'sales  data');
+        console.log(
+          this.purchaseOrderData,
+          this.vendorDropDownData,
+          'Purchase order data'
+        );
       }
     });
   }
@@ -286,6 +305,21 @@ export class SalesListsComponent implements OnInit {
       console.log(result);
     });
   }
+  onClickCancelOrder() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
   onClickViewMore() {
     console.log('Clicked View More');
   }

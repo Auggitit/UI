@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
-import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
+// import { VendorDropDown } from '../sales-order-report/sales-order-report.component';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { VendorDropDown } from 'src/app/reports/sales-order-report/sales-order-report.component';
 import {
   dateFilterOptions,
   dropDownData,
   exportOptions,
   statusOptions,
-} from '../stub/salesOrderStub';
+} from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-sales-order-list',
-  templateUrl: './sales-order-list.component.html',
-  styleUrls: ['./sales-order-list.component.scss'],
+  selector: 'app-credit-note',
+  templateUrl: './credit-note.component.html',
+  styleUrls: ['./credit-note.component.scss'],
 })
-export class SalesOrderListComponent implements OnInit {
+export class CreditNoteComponent implements OnInit {
   form!: FormGroup;
   vendorDropDownData: any[] = [];
   salesOrderData: any[] = [];
@@ -34,19 +35,24 @@ export class SalesOrderListComponent implements OnInit {
   selectAll = { isSelected: false };
 
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Vendor Detail',
+      title: 'Order Value',
       sortable: 0,
-      name: 'vendorname',
+      name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Order Qty',
+      sortable: 0,
+      name: 'ordered',
+      needToShow: true,
+    },
+    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
@@ -64,24 +70,34 @@ export class SalesOrderListComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Vendor Detail',
+          title: 'Order Value',
           sortable: 0,
-          name: 'vendorname',
+          name: 'orderedvalue',
+          needToShow: true,
+        },
+        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        {
+          title: 'Order Qty',
+          sortable: 0,
+          name: 'ordered',
           needToShow: true,
         },
         {
-          title: 'Product Detail',
+          title: 'Received Qty',
           sortable: 0,
-          name: 'pname',
+          name: 'received',
           needToShow: true,
         },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        {
+          title: 'Back Order Qty',
+          sortable: 0,
+          name: 'ordered',
+          needToShow: true,
+        },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
@@ -94,7 +110,7 @@ export class SalesOrderListComponent implements OnInit {
   }
 
   gotoReportsPage(): void {
-    this.router.navigateByUrl('so-report');
+    this.router.navigateByUrl('credit-note-report');
   }
 
   onClickButton(): void {
@@ -191,8 +207,8 @@ export class SalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
-        title: 'Completed Sales Order',
+        count: updatedValue.filter((itm) => Number(itm.received)).length,
+        title: 'Completed Credit Note',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -201,8 +217,9 @@ export class SalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales Order',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        title: 'Pending Credit Note',
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
@@ -211,7 +228,7 @@ export class SalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
+        title: 'Cancelled Credit Note',
         count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -221,7 +238,7 @@ export class SalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales Order Value',
+        title: 'Credit Note Value',
         count: Math.round(
           updatedValue.reduce(
             (prev: any, curr: any) => Number(prev) + Number(curr.orderedvalue),
@@ -257,7 +274,7 @@ export class SalesOrderListComponent implements OnInit {
         console.log(
           this.salesOrderData,
           this.vendorDropDownData,
-          'sales order data'
+          'Credit Note data'
         );
       }
     });
@@ -290,6 +307,21 @@ export class SalesOrderListComponent implements OnInit {
       console.log(result);
     });
   }
+  onClickCancelOrder() {
+    console.log('Clicked cancel');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
   onClickViewMore() {
     console.log('Clicked View More');
   }

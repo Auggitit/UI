@@ -38,10 +38,9 @@ export const dateFilterOptions = [
 ];
 
 export const statusOptions = [
-  { name: 'Paid', id: '0' },
-  { name: 'Advanced', id: '1' },
+  { name: 'Completed', id: '0' },
+  { name: 'Pending', id: '1' },
   { name: 'Cancelled', id: '2' },
-  { name: 'Not Paid', id: '3' },
 ];
 
 export const areaChartCategories = [

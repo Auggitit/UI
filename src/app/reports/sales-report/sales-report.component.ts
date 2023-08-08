@@ -145,10 +145,6 @@ export class SalesReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('sales');
   }
 
-  onClickCreateNewOrderButton() {
-    // console.log('Create New Order Button Clicked');
-  }
-
   getFilterData(formValues: any, serverData: any): void {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -252,7 +248,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
+        count: updatedValue.filter((itm) => Number(itm.received)).length,
         title: 'Completed Sales',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
@@ -264,7 +260,8 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Sales ',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',

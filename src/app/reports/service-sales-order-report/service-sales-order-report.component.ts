@@ -141,10 +141,6 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  onClickCreateNewOrderButton() {
-    // console.log('Create New Order Button Clicked');
-  }
-
   onClickButton(): void {
     this.router.navigateByUrl('soservice');
   }
@@ -264,7 +260,8 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Service Sales Order',
-        count: updatedValue.filter((itm) => Number(itm.pending) > 0).length,
+        count: updatedValue.filter((itm) => Number(itm.received === '0'))
+          .length,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',

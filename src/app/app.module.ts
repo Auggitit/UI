@@ -83,18 +83,10 @@ import { GetProductDetailsPipe } from './reports/sales-order-report/get-product-
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from './shared/shared.module';
 import { TargetAndAchievementComponent } from './reports/sales-order-report/target-and-achievement/target-and-achievement.component';
-import { SalesOrderListComponent } from './reports/sales-order-list/sales-order-list.component';
-import { PurchaseOrderListComponent } from './reports/purchase-order-list/purchase-order-list.component';
 import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
-import { ServiceSalesOrderListComponent } from './reports/service-sales-order-list/service-sales-order-list.component';
 import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
-import { SalesListsComponent } from './reports/sales-lists/sales-lists.component';
 import { SalesReportComponent } from './reports/sales-report/sales-report.component';
-import { SalesServiceListComponent } from './reports/sales-service-list/sales-service-list.component';
 import { SalesServiceReportComponent } from './reports/sales-service-report/sales-service-report.component';
-import { CreditNoteComponent } from './reports/credit-note/credit-note.component';
-import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
-import { DebitNoteComponent } from './reports/debit-note/debit-note.component';
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
 import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
 import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
@@ -102,6 +94,16 @@ import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
 import { GrnReportComponent } from './reports/grn-report/grn-report.component';
 import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
 import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
+import { ServiceSalesOrderListComponent } from './vouchersList/service-sales-order-list/service-sales-order-list.component';
+import { SalesServiceListComponent } from './vouchersList/sales-service-list/sales-service-list.component';
+// import { SalesOrderListComponent } from './vouchersList/sales-order-list/sales-order-list.component';
+import { SalesListsComponent } from './vouchersList/sales-lists/sales-lists.component';
+import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
+import { PurchaseOrderListComponent } from './vouchersList/purchase-order-list/purchase-order-list.component';
+import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.component';
+import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
+import { SalesOrderDetailsComponent } from './vouchersList/SalesOrder/sales-order-details/sales-order-details.component';
+import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-list/sales-order-list.component';
 
 @NgModule({
   declarations: [
@@ -180,6 +182,7 @@ import { ServiceGrnReportComponent } from './reports/service-grn-report/service-
     GrnReportComponent,
     ServiceGrnListComponent,
     ServiceGrnReportComponent,
+    SalesOrderDetailsComponent,
   ],
   imports: [
     BrowserModule,

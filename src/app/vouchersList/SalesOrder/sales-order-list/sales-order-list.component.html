@@ -2,7 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Credit Note Details"
+        title="Sales Order Details"
         [reportFormGroupName]="salesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
@@ -11,7 +11,6 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Credit Note"
       ></app-reports-header>
     </div>
     <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
@@ -34,7 +33,7 @@
               margin: 0;
             "
           >
-            Recent Credit Notes
+            Recent Sales Orders
           </p>
           <p
             style="
@@ -105,9 +104,11 @@
                 max-width: 128px;
               "
             >
-              <a href="" style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue
-              }}</a>
+              <a
+                href="/sales-order-details"
+                style="font-weight: 600; color: #13b2e4"
+                >{{ data.orderedvalue }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -131,6 +132,7 @@
                 max-width: 111px;
                 border-top: 1px solid #f0f1f3;
                 text-align: left;
+                padding-left: 20px;
               "
             >
               {{ data.ordered }}
@@ -143,10 +145,18 @@
                 text-align: left;
                 min-width: 109px;
                 max-width: 109px;
+                padding-left: 20px;
+
                 border-top: 1px solid #f0f1f3;
               "
             >
               {{ data.received }}
+              <!-- <p class="m-0" style="color: #333843">
+                {{ data.solistDetails[0].pname }}
+              </p>
+              <p style="font-weight: 400; color: #667085">
+                + {{ data.solistDetails.length }} other products
+              </p> -->
             </td>
             <td
               *ngIf="columns[4].needToShow"
@@ -168,10 +178,11 @@
                 min-width: 133px;
                 max-width: 133px;
                 text-align: left;
+                padding-left: 20px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">{{ data.receivedvalue }}</p>
+              <p class="mb-0">{{ data.ordered }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
@@ -184,27 +195,28 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.pending > 0">
+              <div *ngIf="data.received === '0'">
                 <span
                   style="
-                    background-color: #feedec;
+                    background-color: #fdf1e8;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
                     font-weight: 600;
                   "
-                  >Issue</span
+                  >Pending</span
                 >
               </div>
-              <div *ngIf="data.pending == 0">
+              <div *ngIf="data.received !== '0'">
                 <span
                   class="completed"
                   style="
                     background-color: #e7f4ee;
                     color: #0d894f;
+                    border-radius: 100px;
                     font-weight: 600;
                   "
-                  >Advanced</span
+                  >Completed</span
                 >
               </div>
             </td>
@@ -247,6 +259,18 @@
                   (click)="onClickDelete()"
                 >
                   Delete
+                </button>
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickCancelOrder()"
+                >
+                  Cancel Order
                 </button>
                 <button mat-menu-item (click)="onClickViewMore()">
                   View More

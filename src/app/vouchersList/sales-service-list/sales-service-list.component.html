@@ -2,8 +2,8 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Service Sales Order Details"
-        [reportFormGroupName]="serviceSalesOrderForm"
+        title="Service Sales Details"
+        [reportFormGroupName]="salesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
@@ -11,7 +11,7 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Service SO"
+        buttonTitle="Create New Service Sales"
       ></app-reports-header>
     </div>
     <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
@@ -22,7 +22,8 @@
     <div class="col-12 p-0 card">
       <!-- <div class="p-3"> -->
       <div
-        class="d-flex flex-wrap align-items-center justify-content-between p-3"
+        class="d-flex flex-wrap align-items-center p-3"
+        style="justify-content: space-between"
       >
         <div class="d-flex flex-wrap align-items-center">
           <p
@@ -47,11 +48,10 @@
             +2 Orders
           </p>
         </div>
-
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [StatusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="serviceSalesOrderForm"
+          [tableFiltersGroupName]="salesOrderForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
@@ -61,7 +61,7 @@
       <!-- </div> -->
       <app-mat-table
         [columns]="columns"
-        [filteredData]="filteredServiceSalesOrderData"
+        [filteredData]="filteredSalesOrderData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -69,18 +69,21 @@
         [isSelectAll]="selectAll"
       >
         <ng-template let-item>
-          <tr *ngFor="let data of item; let i = index">
+          <tr
+            *ngFor="let data of item; let i = index"
+            style="background-color: white"
+          >
             <td
               scope="row"
               class="d-flex pl-3"
               style="
                 color: #667085;
                 min-width: 86px;
-                border-top: 1px solid #f0f1f3;
                 /* max-width: 86px; */
                 align-items: center;
                 justify-content: left;
                 height: inherit;
+                border-top: 1px solid #f0f1f3;
               "
             >
               <input
@@ -127,7 +130,8 @@
                 min-width: 111px;
                 max-width: 111px;
                 border-top: 1px solid #f0f1f3;
-                text-align: center;
+                text-align: left;
+                padding-left: 20px;
               "
             >
               {{ data.ordered }}
@@ -137,10 +141,11 @@
               scope="col"
               style="
                 color: #667085;
-                text-align: center;
+                text-align: left;
                 min-width: 109px;
                 max-width: 109px;
                 border-top: 1px solid #f0f1f3;
+                padding-left: 20px;
               "
             >
               {{ data.received }}
@@ -164,48 +169,51 @@
                 color: #667085;
                 min-width: 133px;
                 max-width: 133px;
-                text-align: center;
-
+                text-align: left;
                 border-top: 1px solid #f0f1f3;
+                padding-left: 20px;
               "
             >
-              <p class="mb-0">{{ data.receivedvalue }}</p>
+              <p class="mb-0">{{ data.ordered }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
+                align-items: center;
                 min-width: 114px;
                 max-width: 114px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.pending > 0">
+              <div *ngIf="data.received === '0'">
                 <span
                   style="
-                    background-color: #feedec;
+                    background-color: #fdf1e8;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
                     font-weight: 600;
                   "
-                  >Issue</span
+                  >Pending</span
                 >
               </div>
-              <div *ngIf="data.pending == 0">
+              <div *ngIf="data.received !== '0'">
                 <span
                   class="completed"
                   style="
                     background-color: #e7f4ee;
                     color: #0d894f;
+                    border-radius: 100px;
                     font-weight: 600;
                   "
-                  >Advanced</span
+                  >Completed</span
                 >
               </div>
             </td>
             <td
+              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -243,6 +251,18 @@
                   (click)="onClickDelete()"
                 >
                   Delete
+                </button>
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickCancelOrder()"
+                >
+                  Cancel Order
                 </button>
                 <button mat-menu-item (click)="onClickViewMore()">
                   View More
