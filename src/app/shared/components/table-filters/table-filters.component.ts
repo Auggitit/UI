@@ -7,7 +7,7 @@ import { FormControlName, FormGroup } from '@angular/forms';
   styleUrls: ['./table-filters.component.scss'],
 })
 export class TableFiltersComponent implements OnInit {
-  @Input() StatusOptions!: { name: string; id: string | number }[];
+  @Input() statusOptions!: { name: string; id: string | number }[];
   @Input() vendorDropDownData!: { name: string; id: string | number }[];
   @Input() tableFiltersGroupName!: FormGroup;
   isIconNeeded: boolean = true;

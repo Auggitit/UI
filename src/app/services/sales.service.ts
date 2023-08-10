@@ -109,8 +109,51 @@ export class SalesService {
       );
   }
 
+  getAllSoList({
+    statusId,
+    vendorId,
+    globalFilterId,
+    search,
+  }: // fromDate,
+  // toDate,
+  {
+    statusId?: number;
+    vendorId?: number;
+    globalFilterId?: number;
+    search?: string;
+    // fromDate?: string;
+    // toDate?: string;
+  }) {
+    let params = new HttpParams();
+    if (statusId) {
+      params = params.append('statusId', statusId);
+    }
+    if (vendorId) {
+      params = params.append('vendorId', vendorId);
+    }
+    if (globalFilterId) {
+      params = params.append('globalFilterId', globalFilterId);
+    }
+    if (search) {
+      params = params.append('search', search);
+    }
+    // if (fromDate) {
+    //   params = params.append('fromDate', fromDate);
+    // }
+    // if (toDate) {
+    //   params = params.append('toDate', toDate);
+    // }
+    return this.http
+      .get<any>(this.URL + 'api/vSalesOrder/getSOLists', { params: params })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
   getPendingSOListAll() {
-    return this.http.get<any>(this.URL + 'api/vSales/getPendingSOListAll').pipe(
+    return this.http.get<any>(this.URL + 'api/vSalesOrder/getSOLists').pipe(
       map((res: any) => {
         return res;
       })

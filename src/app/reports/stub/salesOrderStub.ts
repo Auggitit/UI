@@ -15,32 +15,32 @@ export const exportOptions = [
 ];
 
 export const dateFilterOptions = [
-  {
-    name: 'All',
-    id: '0',
-  },
+  // {
+  //   name: 'All',
+  //   id: '0',
+  // },
   {
     name: 'Today',
-    id: '1',
+    id: 1,
   },
   {
     name: 'This Week',
-    id: '2',
+    id: 2,
   },
   {
     name: 'This Month',
-    id: '3',
+    id: 3,
   },
   {
     name: 'This Year',
-    id: '4',
+    id: 4,
   },
 ];
 
 export const statusOptions = [
-  { name: 'Completed', id: '0' },
-  { name: 'Pending', id: '1' },
-  { name: 'Cancelled', id: '2' },
+  { name: 'Pending', id: 1 },
+  { name: 'Completed', id: 2 },
+  { name: 'Cancelled', id: 3 },
 ];
 
 export const areaChartCategories = [
