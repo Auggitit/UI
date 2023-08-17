@@ -62,7 +62,7 @@ export class SalesOrderListComponent implements OnInit {
   ) {
     this.salesOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
-      filterData: [dateFilterOptions[0].id],
+      filterData: [dateFilterOptions[2].id],
       startDate: [''],
       endDate: [''],
       vendorcode: [''],
@@ -102,9 +102,9 @@ export class SalesOrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData(this.salesOrderForm.value, true);
     this.salesOrderForm.valueChanges.subscribe((values) => {
-      this.getFilterData(values, this.salesOrderData);
+      this.loadData(values);
     });
   }
 
@@ -116,71 +116,75 @@ export class SalesOrderListComponent implements OnInit {
     this.router.navigateByUrl('so');
   }
 
-  getFilterData(formValues: any, serverData: any): void {
-    let updatedValue: any[] = serverData;
-    console.log(updatedValue, 'updated value');
+  getFilterData(formValues: any, serverData: any) {
+    this.cardsDetails = [
+      {
+        icon: 'bi bi-cash-stack',
+        title: 'Total Sales Order',
+        count: serverData.totalSOs,
+        cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
+        iconBackStyles:
+          'max-width: fit-content; padding:12px;background-color:#419FC733',
+        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
+        badgeValue: '100%',
+        neededRupeeSign: false,
+      },
+      {
+        icon: 'bi bi-cart-check',
+        count: serverData.completedSOs,
+        title: 'Completed Sales Order',
+        cardIconStyles: 'display:flex; color: #9FD24E',
+        iconBackStyles:
+          'max-width: fit-content; padding:12px;background-color:#9FD24E33',
+        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
+        badgeValue: `${Number.parseFloat(
+          serverData.completedSOsPercent
+        ).toFixed(2)}%`,
+        neededRupeeSign: false,
+      },
+      {
+        icon: 'bi bi-cart-dash',
+        title: 'Pending Sales Order',
+        count: serverData.pendingSOs,
+        cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
+        iconBackStyles:
+          'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
+        badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
+        badgeValue: `${Number.parseFloat(serverData.pendingSOsPercent).toFixed(
+          2
+        )}%`,
+        neededRupeeSign: false,
+      },
+      {
+        icon: 'bi bi-cart-x',
+        title: 'Cancelled Sales Order',
+        count: serverData.cancelledSOs,
+        cardIconStyles: 'display:flex; color: #F04438;z-index:100',
+        iconBackStyles:
+          'max-width: fit-content; padding:12px;background-color:#F0443833',
+        badgeStyles: 'background-color:#F0443833;color: #F04438',
+        badgeValue: `${Number.parseFloat(
+          serverData.cancelledSOsPercent
+        ).toFixed(2)}%`,
+        neededRupeeSign: false,
+      },
+      {
+        icon: 'bi bi-wallet',
+        title: 'Sales Order Value',
+        count: serverData.salesOrderValue,
+        cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
+        iconBackStyles:
+          'max-width: fit-content; padding:12px;background-color:#41A0C833',
+        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
+        // badgeValue: '+23%',
+        neededRupeeSign: true,
+      },
+    ];
 
-    if (formValues.vendorcode) {
-      updatedValue = updatedValue.filter(
-        (itm) => itm.vendorcode == formValues.vendorcode
-      );
-    }
-
-    if (formValues.startDate && formValues.endDate) {
-      updatedValue = updatedValue.filter((itm) => {
-        let sodate = itm.sodate;
-        let splited = sodate.split(' ')[0].split('-');
-        let formatedDate = splited[1] + '/' + splited[0] + '/' + splited[2];
-        let dateF = new Date(formatedDate).toISOString();
-        return (
-          dateF >= new Date(formValues.startDate).toISOString() &&
-          dateF <= new Date(formValues.endDate).toISOString()
-        );
-      });
-    }
-
-    if (formValues.filterData) {
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      const sunday = new Date(now);
-      const saturday = new Date(now);
-      sunday.setDate(sunday.getDate() - sunday.getDay() + 1);
-      saturday.setDate(saturday.getDate() - saturday.getDay() + 7);
-      if (formValues.filterData) {
-        updatedValue = updatedValue.filter((item: any) => {
-          let sodate = item.sodate;
-          let splited = sodate.split(' ')[0].split('-');
-          let formatedDate = splited[2] + '-' + splited[1] + '-' + splited[0];
-
-          if (formValues.filterData === '0') {
-            return item;
-          }
-          if (formValues.filterData === '1') {
-            return (
-              new Date(formatedDate).toISOString().split('T')[0] ===
-              new Date().toISOString().split('T')[0]
-            );
-          }
-          if (formValues.filterData === '2') {
-            return (
-              new Date(formatedDate).toISOString() >= sunday.toISOString() &&
-              new Date(formatedDate).toISOString() <= saturday.toISOString()
-            );
-          }
-          if (formValues.filterData === '3') {
-            return new Date(formatedDate).getMonth() == now.getMonth();
-          }
-          if (formValues.filterData === '4') {
-            return new Date(formatedDate).getFullYear() == now.getFullYear();
-          }
-          return;
-        });
-      }
-    }
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of updatedValue) {
+    for (let data of serverData.solists) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -193,88 +197,56 @@ export class SalesOrderListComponent implements OnInit {
     }
     this.filteredSalesOrderData = newArr;
 
-    this.cardsDetails = [
-      {
-        icon: 'bi bi-cash-stack',
-        title: 'Total Sales Order',
-        count: updatedValue.length,
-        cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
-        iconBackStyles:
-          'max-width: fit-content; padding:12px;background-color:#419FC733',
-        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+7.5%',
-      },
-      {
-        icon: 'bi bi-cart-check',
-        count: updatedValue.filter((itm) => Number(itm.received)).length,
-        title: 'Completed Sales Order',
-        cardIconStyles: 'display:flex; color: #9FD24E',
-        iconBackStyles:
-          'max-width: fit-content; padding:12px;background-color:#9FD24E33',
-        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+1.5%',
-      },
-      {
-        icon: 'bi bi-cart-dash',
-        title: 'Pending Sales Order',
-        count: updatedValue.filter((itm) => Number(itm.received === '0'))
-          .length,
-        cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
-        iconBackStyles:
-          'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
-        badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: '-2%',
-      },
-      {
-        icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
-        count: updatedValue.filter((itm) => Number(itm.pending) === 0).length,
-        cardIconStyles: 'display:flex; color: #F04438;z-index:100',
-        iconBackStyles:
-          'max-width: fit-content; padding:12px;background-color:#F0443833',
-        badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: '-13%',
-      },
-      {
-        icon: 'bi bi-wallet',
-        title: 'Sales Order Value',
-        count: Math.round(
-          updatedValue.reduce(
-            (prev: any, curr: any) => Number(prev) + Number(curr.orderedvalue),
-            0
-          )
-        ),
-        cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
-        iconBackStyles:
-          'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+23%',
-      },
+    let seriesData: any[] = [];
+    let graphLabels = [
+      ['Yesterday', 'Today'],
+      ['Last Week', 'This Week'],
+      ['Last Month', 'This Month'],
+      ['Last Year', 'This Year'],
     ];
-    console.log('data in table', this.filteredSalesOrderData);
+
+    if (serverData.graphData.length) {
+      for (let [index, value] of serverData.graphData.entries()) {
+        let graphValue = Object.entries(value).sort();
+        let graphArrayData = [];
+        for (let item of graphValue) {
+          graphArrayData.push(item[1]);
+        }
+        seriesData.push({
+          name: graphLabels[formValues.filterData - 1][index],
+          color: index == 0 ? '#E46A11' : '#419FC7',
+          data: graphArrayData,
+        });
+      }
+    }
+    console.log(seriesData, 'series data');
   }
 
-  loadData() {
-    this.salesapi.getPendingSOListAll().subscribe((res: any[]) => {
-      if (res.length) {
-        const newMap = new Map();
-        res
-          .map((item: any) => {
-            return {
-              name: item.vendorname,
-              id: item.vendorcode,
-            };
-          })
-          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-        this.vendorDropDownData = [...newMap.values()];
-        this.salesOrderData = res;
-        this.getFilterData(this.salesOrderForm.value, res);
-
-        console.log(
-          this.salesOrderData,
-          this.vendorDropDownData,
-          'sales order data'
-        );
+  loadData(formValues: any, isInitialFetchData: boolean = false) {
+    let params = {
+      statusId: formValues.reportStatus,
+      vendorId: formValues.vendorcode,
+      globalFilterId: formValues.filterData,
+      search: formValues.searchValues,
+      // fromDate: formValues.startDate,
+      // toDate: formValues.toDate,
+    };
+    this.salesapi.getAllSoList(params).subscribe((res: any) => {
+      if (res.solists.length) {
+        if (isInitialFetchData) {
+          const newMap = new Map();
+          res.solists
+            .map((item: any) => {
+              return {
+                name: item.vendorname,
+                id: item.vendorcode,
+              };
+            })
+            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+          this.vendorDropDownData = [...newMap.values()];
+        }
+        console.log(res, 'response...........');
+        this.getFilterData(formValues, res);
       }
     });
   }

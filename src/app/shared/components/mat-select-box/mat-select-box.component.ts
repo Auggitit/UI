@@ -18,8 +18,8 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
       [appearance]="formAppearance"
       [ngStyle]="{
         width: selectWidth,
-        'padding-left': '8px',
-        'padding-right': '8px'
+        'padding-left': '4px',
+        'padding-right': '4px'
       }"
     >
       <mat-label style="font-size:14px;color:#667085;font-weight:400">{{

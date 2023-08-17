@@ -79,7 +79,7 @@ import { ServicesaleComponent } from './vouchers/salesservicevch/servicesale/ser
 import { ServicesalelistComponent } from './vouchers/salesservicevch/servicesalelist/servicesalelist.component';
 import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesaleupdate/servicesaleupdate.component';
 import { SalesOrderReportComponent } from './reports/sales-order-report/sales-order-report.component';
-import { GetProductDetailsPipe } from './reports/sales-order-report/get-product-details.pipe';
+// import { GetProductDetailsPipe } from './reports/get-product-details.pipe';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from './shared/shared.module';
 import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
@@ -104,6 +104,7 @@ import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit
 import { SalesOrderDetailsComponent } from './vouchersList/SalesOrder/sales-order-details/sales-order-details.component';
 import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-list/sales-order-list.component';
 import { TargetAndAchievementComponent } from './shared/components/target-and-achievement/target-and-achievement.component';
+import { GetProductDetailsPipe } from './reports/get-product-details.pipe';
 
 @NgModule({
   declarations: [

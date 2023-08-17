@@ -8,16 +8,12 @@ import {
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
 import {
-  TodayChartCategories,
-  WeekChartCategories,
-  areaChartCategories,
   dateFilterOptions,
   dropDownData,
   exportOptions,
-  monthChartCategories,
   statusOptions,
 } from '../stub/salesOrderStub';
-import { Subscription, startWith } from 'rxjs';
+import { Subscription } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -153,7 +149,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+7.5%',
+        badgeValue: '100%',
         neededRupeeSign: false,
       },
       {
@@ -164,7 +160,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+1.5%',
+        badgeValue: `${Number.parseFloat(
+          serverData.completedSOsPercent
+        ).toFixed(2)}%`,
         neededRupeeSign: false,
       },
       {
@@ -175,7 +173,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: '-2%',
+        badgeValue: `${Number.parseFloat(serverData.pendingSOsPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
@@ -186,7 +186,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: '-13%',
+        badgeValue: `${Number.parseFloat(
+          serverData.cancelledSOsPercent
+        ).toFixed(2)}%`,
         neededRupeeSign: false,
       },
       {
@@ -196,8 +198,8 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: '+23%',
+        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
+        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -271,9 +273,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       vendorId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
-      // fromDate: formValues.startDate,
-      // toDate: formValues.toDate,
+      fromDate: formValues.startDate,
+      toDate: formValues.toDate,
     };
+
+    console.log(formValues.startDate, 'start date');
 
     this.salesapi.getAllSoList(params).subscribe((res: any) => {
       if (res.solists.length) {

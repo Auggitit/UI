@@ -35,46 +35,20 @@
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <div class="pl-2 pt-3 pb-3">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between pl-3"
-        >
-          <div class="d-flex flex-wrap align-items-center">
-            <p
-              style="
-                font-size: 18px;
-                font-weight: 600;
-                padding-right: 8px;
-                margin: 0;
-              "
-            >
-              Recent Sales Orders
-            </p>
-            <p
-              style="
-                color: #0d894f;
-                background-color: #e7f4ee;
-                border-radius: 100px;
-                padding: 8px;
-                margin: 0;
-              "
-            >
-              +2 Orders
-            </p>
-          </div>
-          <span>
-            <app-table-filters
-              [vendorDropDownData]="vendorDropDownData"
-              [statusOptions]="reportStatusOptions"
-              [tableFiltersGroupName]="form"
-              [searchSuggestionsList]="searchSuggestionsList"
-              [reportStatus]="'reportStatus'"
-              [vendorcode]="'vendorcode'"
-              [filterColumnName]="'columnFilter'"
-              [columnList]="columns"
-            ></app-table-filters>
-          </span>
-        </div>
+      <div
+        class="d-flex flex-wrap align-items-center justify-content-between pl-3 pt-3 pb-3"
+      >
+        <p style="font-size: 18px; font-weight: 600">Recent Sales Orders</p>
+        <app-table-filters
+          [vendorDropDownData]="vendorDropDownData"
+          [statusOptions]="reportStatusOptions"
+          [tableFiltersGroupName]="form"
+          [searchSuggestionsList]="searchSuggestionsList"
+          [reportStatus]="'reportStatus'"
+          [vendorcode]="'vendorcode'"
+          [filterColumnName]="'columnFilter'"
+          [columnList]="columns"
+        ></app-table-filters>
       </div>
 
       <script src="libs/jspdf.umd.js"></script>
