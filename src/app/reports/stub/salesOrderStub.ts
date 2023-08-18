@@ -2,6 +2,10 @@ export interface dropDownData {
   id: string | number;
   name: string;
 }
+export interface VendorDropDown {
+  id: string;
+  name: string;
+}
 
 export const exportOptions = [
   {

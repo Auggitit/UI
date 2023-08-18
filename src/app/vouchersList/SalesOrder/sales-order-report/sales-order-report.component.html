@@ -98,9 +98,11 @@
                 max-width: 100px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.sono
-              }}</a>
+              <a
+                (click)="onClickSono(data)"
+                style="color: #13b2e4; font-weight: 600"
+                >{{ data.sono }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -178,7 +180,9 @@
                 <span style="font-weight: 500">{{ data.received }}</span>
               </p>
               <p class="mb-0" style="font-weight: 600">
-                Back Order -<span style="font-weight: 500">{{ 30 }}</span>
+                Back Order -<span style="font-weight: 500">{{
+                  data.ordered - data.received
+                }}</span>
               </p>
             </td>
             <td
@@ -191,13 +195,16 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">Price - {{ data.orderedvalue }}</p>
-              <p class="mb-0">GST- 3000</p>
+              <p class="mb-0">
+                Price - {{ data.orderedvalue | currency : "INR" }}
+              </p>
+              <p class="mb-0">GST- 3,000</p>
               <p class="mb-0">
                 Total-
-                <span style="font-weight: 600"
-                  >₹{{ data.solistDetails.length * data.orderedvalue }}</span
-                >
+                <span style="font-weight: 600">{{
+                  data.solistDetails.length * data.orderedvalue
+                    | currency : "INR"
+                }}</span>
               </p>
             </td>
             <td
@@ -210,7 +217,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
                     background-color: #fdf1e8;
@@ -222,7 +229,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="

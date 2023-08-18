@@ -1,5 +1,5 @@
 <div
-  class="shadow-sm border border-1 border-{#E0E2E7} pt-4 pb-4 pl-3  bg-white"
+  class="shadow-sm border border-1 border-{#E0E2E7} pt-4 pb-4 pl-3 bg-white"
   style="height: 160px; border-radius: 8px"
 >
   <div
@@ -13,16 +13,33 @@
     </i>
   </div>
 
-  <p class="pt-3 " style="font-size: 15px; color: #667085; font-weight:600">
+  <p class="pt-3" style="font-size: 15px; color: #667085; font-weight: 600">
     {{ contentToDisplay.title }}
   </p>
   <div style="display: flex">
-    <p class="mb-0 pt-1" style="color: #333843; font-size: 20px;font-weight: 600;">
-      <span *ngIf="contentToDisplay.neededRupeeSign" >₹</span>{{ contentToDisplay.count }}
+    <p
+      class="mb-0 pt-1"
+      style="color: #333843; font-size: 20px; font-weight: 600"
+    >
+      <span *ngIf="contentToDisplay.neededRupeeSign">{{
+        contentToDisplay.count | currency : "INR"
+      }}</span>
+      <span *ngIf="!contentToDisplay.neededRupeeSign">{{
+        contentToDisplay.count
+      }}</span>
     </p>
-    <span  class="pl-2">
-      <p class="badge" [style]="contentToDisplay.badgeStyles" 
-        style="border-radius: 8px;padding: 5px; font-weight: 600;font-size: 12px;vertical-align: sub; " >
+    <span class="pl-2">
+      <p
+        class="badge"
+        [style]="contentToDisplay.badgeStyles"
+        style="
+          border-radius: 8px;
+          padding: 5px;
+          font-weight: 600;
+          font-size: 12px;
+          vertical-align: sub;
+        "
+      >
         {{ contentToDisplay.badgeValue }}
       </p>
     </span>

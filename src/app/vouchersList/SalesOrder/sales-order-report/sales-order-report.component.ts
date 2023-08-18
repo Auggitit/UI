@@ -7,24 +7,21 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
-import {
-  dateFilterOptions,
-  dropDownData,
-  exportOptions,
-  statusOptions,
-} from '../stub/salesOrderStub';
 import { Subscription } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { SalesService } from './../../services/sales.service';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
+import {
+  VendorDropDown,
+  dateFilterOptions,
+  dropDownData,
+  exportOptions,
+  statusOptions,
+} from 'src/app/reports/stub/salesOrderStub';
+import { SalesService } from 'src/app/services/sales.service';
 
-export interface VendorDropDown {
-  id: string;
-  name: string;
-}
 @Component({
   selector: 'app-sales-order-report',
   templateUrl: './sales-order-report.component.html',
@@ -88,7 +85,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       vendorcode: [''],
       endDate: [''],
       startDate: [''],
-      filterData: [dateFilterOptions[2].id],
+      filterData: [dateFilterOptions[3].id],
       reportStatus: [''],
       SelectSaveOptions: [exportOptions[0].id],
       searchValues: [''],
@@ -137,6 +134,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
 
   onClickButton(): void {
     this.router.navigateByUrl('so');
+  }
+  onClickSono(data: any): void {
+    this.router.navigate(['/sales-order-details'], {
+      queryParams: { sono: data.sono },
+    });
   }
 
   getFilterData(formValues: any, serverData: any) {
@@ -230,11 +232,16 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
 
     if (serverData.graphData.length) {
       for (let [index, value] of serverData.graphData.entries()) {
-        let graphValue = Object.entries(value).sort();
+        let graphValue = Object.entries(value);
+        if (formValues.filterData === 1 || formValues.filterData === 3) {
+          graphValue = Object.entries(value).sort();
+        }
+
         let graphArrayData = [];
         for (let item of graphValue) {
           graphArrayData.push(item[1]);
         }
+
         seriesData.push({
           name: graphLabels[formValues.filterData - 1][index],
           color: index == 0 ? '#E46A11' : '#419FC7',
@@ -243,6 +250,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       }
     }
     console.log(seriesData, 'series data');
+
+    let chartCategories = Object.keys(serverData.graphData[0]);
+    if (formValues.filterData === 1 || formValues.filterData === 3) {
+      chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
 
     this.chartOptions = {
       series: seriesData,
@@ -262,22 +274,38 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         curve: 'smooth',
       },
       xaxis: {
-        categories: Object.keys(serverData.graphData[0]).sort(),
+        categories: chartCategories,
       },
     };
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
+    let firstDate;
+    let lastDate;
+    if (formValues?.startDate) {
+      let firstDateformat = new Date(formValues?.startDate);
+      let lastDateformat = new Date(formValues?.startDate);
+      let firstDateSplit = firstDateformat
+        ?.toISOString()
+        .split('T')[0]
+        .split('-');
+      let lastDateSplit = lastDateformat
+        ?.toISOString()
+        .split('T')[0]
+        .split('-');
+      firstDate =
+        firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
+      lastDate =
+        lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
+    }
     let params = {
       statusId: formValues.reportStatus,
       vendorId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
-      fromDate: formValues.startDate,
-      toDate: formValues.toDate,
+      fromDate: firstDate,
+      toDate: lastDate,
     };
-
-    console.log(formValues.startDate, 'start date');
 
     this.salesapi.getAllSoList(params).subscribe((res: any) => {
       if (res.solists.length) {

@@ -205,3 +205,7 @@ button.mat-menu-item {
 .table thead th {
   vertical-align: inherit;
 }
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background{
+  background-color: #419FC7 !important;
+}

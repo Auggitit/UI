@@ -114,15 +114,15 @@ export class SalesService {
     vendorId,
     globalFilterId,
     search,
-  }: // fromDate,
-  // toDate,
-  {
+    fromDate,
+    toDate,
+  }: {
     statusId?: number;
     vendorId?: number;
     globalFilterId?: number;
     search?: string;
-    // fromDate?: string;
-    // toDate?: string;
+    fromDate?: string;
+    toDate?: string;
   }) {
     let params = new HttpParams();
     if (statusId) {
@@ -137,14 +137,29 @@ export class SalesService {
     if (search) {
       params = params.append('search', search);
     }
-    // if (fromDate) {
-    //   params = params.append('fromDate', fromDate);
-    // }
-    // if (toDate) {
-    //   params = params.append('toDate', toDate);
-    // }
+    if (fromDate) {
+      params = params.append('fromDate', fromDate);
+    }
+    if (toDate) {
+      params = params.append('toDate', toDate);
+    }
     return this.http
       .get<any>(this.URL + 'api/vSalesOrder/getSOLists', { params: params })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getSoDetail({ sono }: { sono: string }) {
+    let params = new HttpParams();
+    if (sono) {
+      params = params.append('sono', sono);
+    }
+
+    return this.http
+      .get<any>(this.URL + 'api/vSalesOrder/getSO', { params: params })
       .pipe(
         map((res: any) => {
           return res;

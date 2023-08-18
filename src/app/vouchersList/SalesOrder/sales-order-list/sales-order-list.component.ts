@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { VendorDropDown } from 'src/app/reports/sales-order-report/sales-order-report.component';
 import {
+  VendorDropDown,
   dateFilterOptions,
   dropDownData,
   exportOptions,
@@ -62,7 +62,7 @@ export class SalesOrderListComponent implements OnInit {
   ) {
     this.salesOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
-      filterData: [dateFilterOptions[2].id],
+      filterData: [dateFilterOptions[3].id],
       startDate: [''],
       endDate: [''],
       vendorcode: [''],
@@ -114,6 +114,58 @@ export class SalesOrderListComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigateByUrl('so');
+  }
+
+  onClickEdit() {
+    console.log('Clicked Edit');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: 'Do You Want To Modify Data ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
+  onClickDelete() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
+  // onClickCancelOrder() {
+  //   console.log('Clicked Delete');
+  //   const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+  //     data: {
+  //       iconToDisplay: 'DeleteFile',
+  //       contentText: 'Do You Want To Cancel Order ?',
+  //     },
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //     console.log(result);
+  //   });
+  // }
+
+  onClickViewMore(data: any) {
+    console.log(data, 'Clicked View More');
+    this.router.navigate(['/sales-order-details'], {
+      queryParams: { sono: data.sono },
+    });
   }
 
   getFilterData(formValues: any, serverData: any) {
@@ -222,14 +274,32 @@ export class SalesOrderListComponent implements OnInit {
     console.log(seriesData, 'series data');
   }
 
-  loadData(formValues: any, isInitialFetchData: boolean = false) {
+  loadData(formValues?: any, isInitialFetchData: boolean = false) {
+    let firstDate;
+    let lastDate;
+    if (formValues?.startDate) {
+      let firstDateformat = new Date(formValues?.startDate);
+      let lastDateformat = new Date(formValues?.startDate);
+      let firstDateSplit = firstDateformat
+        ?.toISOString()
+        .split('T')[0]
+        .split('-');
+      let lastDateSplit = lastDateformat
+        ?.toISOString()
+        .split('T')[0]
+        .split('-');
+      firstDate =
+        firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
+      lastDate =
+        lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
+    }
     let params = {
       statusId: formValues.reportStatus,
       vendorId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
-      // fromDate: formValues.startDate,
-      // toDate: formValues.toDate,
+      fromDate: firstDate,
+      toDate: lastDate,
     };
     this.salesapi.getAllSoList(params).subscribe((res: any) => {
       if (res.solists.length) {
@@ -249,53 +319,5 @@ export class SalesOrderListComponent implements OnInit {
         this.getFilterData(formValues, res);
       }
     });
-  }
-  onClickEdit() {
-    console.log('Clicked Edit');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'EditData',
-        contentText: 'Do You Want To Modify Data ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
-    });
-  }
-
-  onClickDelete() {
-    console.log('Clicked Delete');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Delete Data ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
-    });
-  }
-
-  onClickCancelOrder() {
-    console.log('Clicked Delete');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Cancel Order ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
-    });
-  }
-
-  onClickViewMore() {
-    console.log('Clicked View More');
   }
 }

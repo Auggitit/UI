@@ -42,7 +42,6 @@ import { SalesupdateComponent } from './vouchers/salesvch/salesupdate/salesupdat
 import { ServicesaleComponent } from './vouchers/salesservicevch/servicesale/servicesale.component';
 import { ServicesalelistComponent } from './vouchers/salesservicevch/servicesalelist/servicesalelist.component';
 import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesaleupdate/servicesaleupdate.component';
-import { SalesOrderReportComponent } from './reports/sales-order-report/sales-order-report.component';
 import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
 import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
 import { SalesReportComponent } from './reports/sales-report/sales-report.component';
@@ -63,6 +62,7 @@ import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.comp
 import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
 import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
 import { SalesOrderDetailsComponent } from './vouchersList/SalesOrder/sales-order-details/sales-order-details.component';
+import { SalesOrderReportComponent } from './vouchersList/SalesOrder/sales-order-report/sales-order-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

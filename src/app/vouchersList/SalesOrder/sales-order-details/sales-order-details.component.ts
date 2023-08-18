@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   dateFilterOptions,
   dropDownData,
@@ -12,25 +14,44 @@ import { SalesService } from 'src/app/services/sales.service';
   styleUrls: ['./sales-order-details.component.scss'],
 })
 export class SalesOrderDetailsComponent implements OnInit {
+  salesOrderDetailsForm!: FormGroup;
   filterByOptions: dropDownData[] = dateFilterOptions;
   saveAsOptions: dropDownData[] = exportOptions;
-  salesOrderData: any[] = [];
+  salesOrderData: any;
   productsData: any[] = [];
 
-  constructor(private salesapi: SalesService) {}
+  constructor(
+    private salesapi: SalesService,
+    private router: ActivatedRoute,
+    private navigate: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
+    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+  }
+
+  clickDownload(e: any): void {
+    console.log(e, 'clickDownload');
+  }
+
+  gotoReportsPage(): void {
+    console.log('gotoReportsPage');
+  }
+
+  onClickButton(): void {
+    this.navigate.navigateByUrl('so');
   }
 
   loadData() {
-    this.salesapi.getPendingSOListAll().subscribe((res: any[]) => {
-      if (res.length) {
-        this.salesOrderData = res;
-        this.productsData = res[0].solistDetails;
+    let params = this.router.snapshot.queryParams['sono'];
+    console.log(params, 'params');
 
-        console.log(this.salesOrderData, 'sales order data');
-      }
+    this.salesapi.getSoDetail({ sono: params }).subscribe((res: any) => {
+      console.log(res, '...........reponae');
+
+      this.salesOrderData = res;
+      this.productsData = res.soDetailLists;
     });
   }
 }

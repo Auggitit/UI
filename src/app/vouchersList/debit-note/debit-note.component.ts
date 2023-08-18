@@ -3,8 +3,8 @@ import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { VendorDropDown } from 'src/app/reports/sales-order-report/sales-order-report.component';
 import {
+  VendorDropDown,
   dateFilterOptions,
   dropDownData,
   exportOptions,
