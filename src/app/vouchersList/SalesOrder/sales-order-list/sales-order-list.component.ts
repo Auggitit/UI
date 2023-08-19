@@ -139,17 +139,16 @@ export class SalesOrderListComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {});
   }
 
-  // onClickCancelOrder() {
-  //   const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-  //     data: {
-  //       iconToDisplay: 'DeleteFile',
-  //       contentText: 'Do You Want To Cancel Order ?',
-  //     },
-  //   });
+  onClickCancelOrder() {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
 
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
 
   onClickViewMore(data: any) {
     this.router.navigate(['/sales-order-details'], {

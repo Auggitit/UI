@@ -117,23 +117,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
   }
 
   getFilterData(serverData: any) {
-    let newArr: any[] = [];
-    let rowIndex = 0;
-    let rowCount = 0;
-    for (let data of serverData.orders) {
-      if (rowCount === this.pageCount) {
-        rowCount = 0;
-        rowIndex++;
-      }
-      if (!newArr[rowIndex]) {
-        newArr[rowIndex] = [];
-      }
-      newArr[rowIndex].push(data);
-      rowCount++;
-    }
-
-    this.filteredServiceSalesOrderData = newArr;
-
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
@@ -192,6 +175,24 @@ export class ServiceSalesOrderListComponent implements OnInit {
         // badgeValue: '+23%',
       },
     ];
+
+    let newArr: any[] = [];
+    let rowIndex = 0;
+    let rowCount = 0;
+    for (let data of serverData.orders) {
+      if (rowCount === this.pageCount) {
+        rowCount = 0;
+        rowIndex++;
+      }
+      if (!newArr[rowIndex]) {
+        newArr[rowIndex] = [];
+      }
+      newArr[rowIndex].push(data);
+      rowCount++;
+    }
+
+    this.filteredServiceSalesOrderData = newArr;
+
     console.log('data in table', this.filteredServiceSalesOrderData);
   }
 

@@ -106,6 +106,8 @@ import { SalesOrderReportComponent } from './vouchersList/SalesOrder/sales-order
 import { ServiceSalesOrderDetailsComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-details/service-sales-order-details.component';
 import { ServiceSalesOrderListComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-list/service-sales-order-list.component';
 import { ServiceSalesOrderReportComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-report/service-sales-order-report.component';
+import { SalesDetailsComponent } from './vouchersList/Sales/sales-details/sales-details.component';
+import { ServiceSalesDetailsComponent } from './vouchersList/ServiceSales/service-sales-details/service-sales-details.component';
 
 @NgModule({
   declarations: [
@@ -186,6 +188,8 @@ import { ServiceSalesOrderReportComponent } from './vouchersList/ServiceSalesOrd
     ServiceGrnReportComponent,
     SalesOrderDetailsComponent,
     ServiceSalesOrderDetailsComponent,
+    SalesDetailsComponent,
+    ServiceSalesDetailsComponent,
   ],
   imports: [
     BrowserModule,

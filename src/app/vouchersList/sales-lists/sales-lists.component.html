@@ -30,13 +30,13 @@
             style="
               font-weight: 600;
               font-size: 1.125rem;
-              padding-right: 8px;
-              margin: 0;
+              /* padding-right: 8px;
+              margin: 0; */
             "
           >
             Recent Sales
           </p>
-          <p
+          <!-- <p
             style="
               color: #0d894f;
               background-color: #e7f4ee;
@@ -46,7 +46,7 @@
             "
           >
             +2 Orders
-          </p>
+          </p> -->
         </div>
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
@@ -264,7 +264,7 @@
                 >
                   Cancel Order
                 </button>
-                <button mat-menu-item (click)="onClickViewMore()">
+                <button mat-menu-item (click)="onClickViewMore(data)">
                   View More
                 </button>
               </mat-menu>
