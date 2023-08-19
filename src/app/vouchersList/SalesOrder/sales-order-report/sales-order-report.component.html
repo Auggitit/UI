@@ -38,7 +38,7 @@
       <div
         class="d-flex flex-wrap align-items-center justify-content-between pl-3 pt-3 pb-3"
       >
-        <p style="font-size: 18px; font-weight: 600">Recent Sales Orders</p>
+        <p style="font-size: 1.125rem; font-weight: 600">Recent Sales Orders</p>
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [statusOptions]="reportStatusOptions"
@@ -143,10 +143,10 @@
               "
             >
               <p class="m-0" style="color: #333843; font-weight: 600">
-                {{ data.solistDetails[0].pname }}
+                {{ data.orderDetails[0].pname }}
               </p>
               <p style="font-weight: 400; color: #667085">
-                + {{ data.solistDetails.length }} other products
+                + {{ data.orderDetails.length }} other products
               </p>
             </td>
             <td
@@ -202,7 +202,7 @@
               <p class="mb-0">
                 Total-
                 <span style="font-weight: 600">{{
-                  data.solistDetails.length * data.orderedvalue
+                  data.orderDetails.length * data.orderedvalue
                     | currency : "INR"
                 }}</span>
               </p>

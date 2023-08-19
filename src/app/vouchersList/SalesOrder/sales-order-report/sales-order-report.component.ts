@@ -21,6 +21,7 @@ import {
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { SalesService } from 'src/app/services/sales.service';
+import { SoService } from 'src/app/services/so.service';
 
 @Component({
   selector: 'app-sales-order-report',
@@ -77,7 +78,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private salesapi: SalesService,
+    private salesOrderApi: SoService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -146,7 +147,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Sales Order',
-        count: serverData.totalSOs,
+        count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -156,47 +157,47 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedSOs,
+        count: serverData.completedOrders,
         title: 'Completed Sales Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: `${Number.parseFloat(
-          serverData.completedSOsPercent
+          serverData.completedOrdersPercent
         ).toFixed(2)}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Sales Order',
-        count: serverData.pendingSOs,
+        count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(serverData.pendingSOsPercent).toFixed(
-          2
-        )}%`,
+        badgeValue: `${Number.parseFloat(
+          serverData.pendingOrdersPercent
+        ).toFixed(2)}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Sales Order',
-        count: serverData.cancelledSOs,
+        count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
         badgeValue: `${Number.parseFloat(
-          serverData.cancelledSOsPercent
+          serverData.cancelledOrdersPercent
         ).toFixed(2)}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Sales Order Value',
-        count: serverData.salesOrderValue,
+        count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
@@ -209,7 +210,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.solists) {
+    for (let data of serverData.orders) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -307,11 +308,12 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       toDate: lastDate,
     };
 
-    this.salesapi.getAllSoList(params).subscribe((res: any) => {
-      if (res.solists.length) {
+    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+      console.log(res, 'response...........');
+      if (res.orders.length) {
         if (isInitialFetchData) {
           const newMap = new Map();
-          res.solists
+          res.orders
             .map((item: any) => {
               return {
                 name: item.vendorname,
@@ -321,7 +323,6 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             .forEach((item: VendorDropDown) => newMap.set(item.id, item));
           this.vendorDropDownData = [...newMap.values()];
         }
-        console.log(res, 'response...........');
         this.getFilterData(formValues, res);
       }
     });

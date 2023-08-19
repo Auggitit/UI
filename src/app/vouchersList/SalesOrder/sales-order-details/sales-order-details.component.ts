@@ -7,6 +7,7 @@ import {
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { SalesService } from 'src/app/services/sales.service';
+import { SoService } from 'src/app/services/so.service';
 
 @Component({
   selector: 'app-sales-order-details',
@@ -21,7 +22,7 @@ export class SalesOrderDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    private salesapi: SalesService,
+    private salesOrderApi: SoService,
     private router: ActivatedRoute,
     private navigate: Router
   ) {}
@@ -47,7 +48,7 @@ export class SalesOrderDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['sono'];
     console.log(params, 'params');
 
-    this.salesapi.getSoDetail({ sono: params }).subscribe((res: any) => {
+    this.salesOrderApi.getSoDetail({ sono: params }).subscribe((res: any) => {
       console.log(res, '...........reponae');
 
       this.salesOrderData = res;

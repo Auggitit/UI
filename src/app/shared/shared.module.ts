@@ -7,11 +7,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { 
-          MatDialogModule,
-          MatDialog,
-          MatDialogRef,
-          MAT_DIALOG_DATA
+import {
+  MatDialogModule,
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRadioModule } from '@angular/material/radio';
@@ -39,6 +39,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/export-pdf-dialog-box.component';
 import { TableColumnDisplayFilterComponent } from './components/table-column-display-filter/table-column-display-filter.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,7 @@ import { TableColumnDisplayFilterComponent } from './components/table-column-dis
     NgApexchartsModule,
     ReactiveFormsModule,
     MatMenuModule,
-
+    MatTooltipModule,
   ],
   exports: [
     MatSelectBoxComponent,
@@ -94,7 +95,7 @@ import { TableColumnDisplayFilterComponent } from './components/table-column-dis
     InputAutoCompleteComponent,
     TableFiltersComponent,
     MatMenuModule,
-    MatDialogModule
+    MatDialogModule,
   ],
 })
 export class SharedModule {}

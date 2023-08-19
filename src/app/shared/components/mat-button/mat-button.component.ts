@@ -5,6 +5,7 @@ import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
   template: `
     <button
       mat-raised-button
+      [matTooltip]="tooltipText"
       [ngStyle]="{
         'background-color': buttonColor,
         'font-size': titleFontSize,
@@ -53,7 +54,7 @@ export class MatButtonComponent implements OnInit {
   @Input() borderValues: string = '0px';
   @Input() svgIconToDisplay!: string;
   @Input() buttonWidth!: string;
-
+  @Input() tooltipText!: string;
   constructor() {}
 
   onClick(event: any): void {

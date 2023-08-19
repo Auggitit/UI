@@ -6,7 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
     <div class="card-body" style="position:relative;">
       <div class="d-flex  flex-wrap justify-content-between">
         <div>
-          <p style="color: #333843; font-size: 18px; font-weight: 600">
+          <p style="color: #333843; font-size: 1.125rem; font-weight: 600">
             {{ title }}
           </p>
           <p style="color: #667085">{{ subTitle }}</p>
