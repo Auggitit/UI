@@ -2,7 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Service Sales Order Details"
+        title="SERVICE SALES ORDER DETAILS"
         [reportFormGroupName]="serviceSalesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
@@ -11,7 +11,7 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Service SO"
+        buttonTitle="Create Service SO"
       ></app-reports-header>
     </div>
     <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
@@ -20,34 +20,10 @@
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <!-- <div class="p-3"> -->
-      <div
-        class="d-flex flex-wrap align-items-center justify-content-between p-3"
-      >
-        <div class="d-flex flex-wrap align-items-center">
-          <p
-            style="
-              font-weight: 600;
-              font-size: 1.125rem;
-              padding-right: 8px;
-              margin: 0;
-            "
-          >
-            Recent Service Sales Orders
-          </p>
-          <p
-            style="
-              color: #0d894f;
-              background-color: #e7f4ee;
-              border-radius: 100px;
-              padding: 8px;
-              margin: 0;
-            "
-          >
-            +2 Orders
-          </p>
-        </div>
-
+      <p style="padding: 12px; font-weight: 600; font-size: 1.125rem">
+        Recent Service SO
+      </p>
+      <div class="pl-2 pb-2">
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [statusOptions]="reportStatusOptions"
@@ -58,7 +34,6 @@
           [columnList]="columns"
         ></app-table-filters>
       </div>
-      <!-- </div> -->
       <app-mat-table
         [columns]="columns"
         [filteredData]="filteredServiceSalesOrderData"
@@ -103,7 +78,7 @@
               "
             >
               <a href="" style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue
+                data.orderedvalue | currency : "INR"
               }}</a>
             </td>
             <td
@@ -171,7 +146,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">{{ data.ordered }}</p>
+              <p class="mb-0">{{ data.ordered - data.received }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
@@ -183,7 +158,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.ordered !== data.received">
                 <span
                   style="
                     background-color: #fdf1e8;
@@ -195,7 +170,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.ordered === data.received">
                 <span
                   class="completed"
                   style="
@@ -247,7 +222,7 @@
                 >
                   Delete
                 </button>
-                <button
+                <!-- <button
                   mat-menu-item
                   style="
                     border-bottom: 0.5px solid #959ba433;
@@ -258,8 +233,8 @@
                   (click)="onClickCancelOrder()"
                 >
                   Cancel Order
-                </button>
-                <button mat-menu-item (click)="onClickViewMore()">
+                </button> -->
+                <button mat-menu-item (click)="onClickViewMore(data)">
                   View More
                 </button>
               </mat-menu>

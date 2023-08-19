@@ -19,10 +19,6 @@ export const exportOptions = [
 ];
 
 export const dateFilterOptions = [
-  // {
-  //   name: 'All',
-  //   id: '0',
-  // },
   {
     name: 'Today',
     id: 1,

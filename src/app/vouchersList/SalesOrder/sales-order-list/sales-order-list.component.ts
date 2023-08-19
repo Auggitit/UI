@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -158,7 +157,7 @@ export class SalesOrderListComponent implements OnInit {
     });
   }
 
-  getFilterData(formValues: any, serverData: any) {
+  getFilterData(serverData: any) {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
@@ -238,30 +237,6 @@ export class SalesOrderListComponent implements OnInit {
       rowCount++;
     }
     this.filteredSalesOrderData = newArr;
-
-    let seriesData: any[] = [];
-    let graphLabels = [
-      ['Yesterday', 'Today'],
-      ['Last Week', 'This Week'],
-      ['Last Month', 'This Month'],
-      ['Last Year', 'This Year'],
-    ];
-
-    if (serverData.graphData.length) {
-      for (let [index, value] of serverData.graphData.entries()) {
-        let graphValue = Object.entries(value).sort();
-        let graphArrayData = [];
-        for (let item of graphValue) {
-          graphArrayData.push(item[1]);
-        }
-        seriesData.push({
-          name: graphLabels[formValues.filterData - 1][index],
-          color: index == 0 ? '#E46A11' : '#419FC7',
-          data: graphArrayData,
-        });
-      }
-    }
-    console.log(seriesData, 'series data');
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -306,7 +281,7 @@ export class SalesOrderListComponent implements OnInit {
             .forEach((item: VendorDropDown) => newMap.set(item.id, item));
           this.vendorDropDownData = [...newMap.values()];
         }
-        this.getFilterData(formValues, res);
+        this.getFilterData(formValues);
       }
     });
   }

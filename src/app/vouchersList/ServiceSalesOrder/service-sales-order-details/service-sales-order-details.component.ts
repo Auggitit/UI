@@ -9,11 +9,11 @@ import {
 import { SoService } from 'src/app/services/so.service';
 
 @Component({
-  selector: 'app-sales-order-details',
-  templateUrl: './sales-order-details.component.html',
-  styleUrls: ['./sales-order-details.component.scss'],
+  selector: 'app-service-sales-order-details',
+  templateUrl: './service-sales-order-details.component.html',
+  styleUrls: ['./service-sales-order-details.component.scss'],
 })
-export class SalesOrderDetailsComponent implements OnInit {
+export class ServiceSalesOrderDetailsComponent implements OnInit {
   salesOrderDetailsForm!: FormGroup;
   filterByOptions: dropDownData[] = dateFilterOptions;
   saveAsOptions: dropDownData[] = exportOptions;

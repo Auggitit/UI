@@ -7,31 +7,50 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
-import { Subscription } from 'rxjs';
+// import {
+//   TodayChartCategories,
+//   WeekChartCategories,
+//   areaChartCategories,
+//   dateFilterOptions,
+//   dropDownData,
+//   exportOptions,
+//   monthChartCategories,
+//   statusOptions,
+// } from '../stub/salesOrderStub';
+import { Subscription, startWith } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+// import { SalesService } from './../../services/sales.service';
 import * as XLSX from 'xlsx';
+import { SsalesService } from 'src/app/services/ssales.service';
 import { Router } from '@angular/router';
 import {
-  VendorDropDown,
+  TodayChartCategories,
+  WeekChartCategories,
+  areaChartCategories,
   dateFilterOptions,
   dropDownData,
   exportOptions,
+  monthChartCategories,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
+import { SsoService } from 'src/app/services/sso.service';
 
+export interface VendorDropDown {
+  id: string;
+  name: string;
+}
 @Component({
-  selector: 'app-sales-order-report',
-  templateUrl: './sales-order-report.component.html',
-  styleUrls: ['./sales-order-report.component.scss'],
+  selector: 'app-service-sales-order-report',
+  templateUrl: './service-sales-order-report.component.html',
+  styleUrls: ['./service-sales-order-report.component.scss'],
 })
-export class SalesOrderReportComponent implements OnInit, OnDestroy {
+export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
-  statusId: any = 0;
-  filteredSalesOrderData: any[] = [];
+  serviceSalesOrderData!: any[];
+  filteredServiceSalesOrderData: any[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -77,7 +96,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private salesOrderApi: SoService,
+    private serviceSOApi: SsoService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -133,19 +152,14 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('so');
-  }
-  onClickSono(data: any): void {
-    this.router.navigate(['/sales-order-details'], {
-      queryParams: { sono: data.sono },
-    });
+    this.router.navigateByUrl('soservice');
   }
 
-  getFilterData(formValues: any, serverData: any) {
+  getFilterData(formValues: any, serverData: any): void {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Sales Order',
+        title: 'Total Service SO',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -157,7 +171,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Sales Order',
+        title: 'Completed Service SO',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -169,7 +183,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales Order',
+        title: 'Pending Service SO',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -195,13 +209,12 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales Order Value',
+        title: 'Service SO Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
+
         neededRupeeSign: true,
       },
     ];
@@ -220,7 +233,8 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesOrderData = newArr;
+
+    this.filteredServiceSalesOrderData = newArr;
 
     let seriesData: any[] = [];
     let graphLabels = [
@@ -307,7 +321,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       toDate: lastDate,
     };
 
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    console.log(params, 'params........');
+
+    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
       if (res.orders.length) {
         if (isInitialFetchData) {
@@ -337,20 +353,20 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.form.value.filterData].name;
-      console.log(timeDuration, 'timeduration');
-
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.text(' Service Sales Order Summary(' + timeDuration + ')', 200, 50);
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+        let tableData = this.filteredServiceSalesOrderData.flatMap(
+          (item) => item
+        );
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Sales Order', 240, (topValue += 50));
+        pdf.text('Recent Service Sales Order', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
@@ -379,7 +395,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.vendorname,
+            'Service Sales Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -400,7 +416,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'vendorname',
+              dataKey: 'sono',
             },
             {
               header: 'Data & Time',
@@ -408,21 +424,21 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'ordered',
+              dataKey: 'sono',
             },
             {
               header: 'Price',
-              dataKey: 'orderedvalue',
+              dataKey: 'sono',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'sono',
             },
           ],
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Report.pdf');
+        pdf.save('Service Sales Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -430,11 +446,11 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('salesOrdersTable')!;
+      let element = document.getElementById('serviceSalesOrderTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Sales Order Report',
+        Title: 'Service Sales Order Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -448,7 +464,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Sales Order Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(ws, [['Service Sales Order Summary']], {
+        origin: 'E1',
+      });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
@@ -467,7 +485,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'Service Sales Order Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

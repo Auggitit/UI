@@ -1,0 +1,384 @@
+<div class="content-wrapper">
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="d-flex flex-wrap align-items-center justify-content-end pb-3">
+      <app-mat-button
+        buttonColor="#F9F9FC"
+        svgIconToDisplay="Download"
+        paddingValue="0px 13px"
+        borderValues="1px solid #E0E2E7"
+        buttonHeight="40px"
+      >
+      </app-mat-button>
+      <app-mat-select-box
+        [formOptions]="saveAsOptions"
+        [controlName]="'filterData'"
+        [groupName]="'salesOrderDetailsForm'"
+        selectWidth="145px"
+      ></app-mat-select-box>
+
+      <app-mat-select-box
+        [controlName]="'SelectSaveOptions'"
+        [groupName]="'salesOrderDetailsForm'"
+        selectWidth="130px"
+        IconHeightWidth="23px"
+        label="Download As"
+      ></app-mat-select-box>
+
+      <app-mat-button
+        title="Create New Order"
+        buttonColor="#419FC7"
+        textColor="#FFFFFF"
+        titleFontSize="0.875rem"
+        titleFontWeight="600"
+        iconColor="white"
+        icon="bi bi-plus"
+        buttonHeight="40px"
+        (onClickCreateButton)="onClickButton()"
+      >
+      </app-mat-button>
+    </div>
+    <div
+      class="d-flex flex-wrap justify-content-between align-items-center"
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-bottom: 4px;
+      "
+    >
+      <div>
+        <img
+          src="assets/LogoAuggitSvg.svg"
+          alt="AdminLTE Logo"
+          style="width: 40%; margin-bottom: 8px"
+        />
+        <p
+          style="
+            color: rgba(51, 56, 67, 1);
+            font-size: 1.25rem;
+            font-weight: 400;
+          "
+        >
+          VOUCH APPLICAITON PRIVATE LIMITED
+          <!-- {{ salesOrderData.companydisplayname }} -->
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          <!-- {{ salesOrderData.companyaddress.split(", ")[0] }} -->
+          96, MANGADU SWAMY STREET,
+
+          <!-- {{ salesOrderData.companyaddress.split(",")[1] }} -->
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          <!-- {{ salesOrderData.companyaddress.split(",")[2] }}
+          {{ salesOrderData.companyaddress.split(",")[3] }}
+          {{ salesOrderData.companyaddress.split(",")[4] }} -->
+          CHENNAI, TAMIL NADU, INDIA
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          GST- 44DDRET4343Q2Q3
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          Contact: 044-0449 9900
+        </p>
+      </div>
+      <div class="d-flex flex-wrap" style="gap: 30px">
+        <div>
+          <p style="color: #333843">Sales Order</p>
+          <p style="color: #333843">Sales Order Date</p>
+          <p style="color: #333843">Due Date</p>
+          <p style="color: #333843">Reference PO NO</p>
+        </div>
+        <div>
+          <p style="color: #419fc7">{{ salesOrderData.sono }}</p>
+          <p style="color: #419fc7">{{ salesOrderData.sodate }}</p>
+          <p style="color: #419fc7">45 Days</p>
+          <p style="color: #419fc7">{{ salesOrderData.refno }}</p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="d-flex flex-wrap justify-content-between"
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+      "
+    >
+      <div>
+        <p
+          style="
+            color: rgba(102, 112, 133, 0.8);
+            font-size: 1rem;
+            font-weight: 500;
+          "
+        >
+          NAME OF THE CLIENT
+        </p>
+        <p
+          style="
+            color: rgba(51, 56, 67, 1);
+            font-size: 1.25rem;
+            font-weight: 400;
+          "
+        >
+          {{ salesOrderData.companydisplayname }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          {{ salesOrderData.companyaddress.split(", ")[0] }}
+          {{ salesOrderData.companyaddress.split(",")[1] }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          {{ salesOrderData.companyaddress.split(",")[2] }}
+          {{ salesOrderData.companyaddress.split(",")[3] }}
+          {{ salesOrderData.companyaddress.split(",")[4] }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          GST- {{ salesOrderData.gstno }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          Contact:{{ salesOrderData.contactphone }}
+        </p>
+      </div>
+      <div>
+        <p
+          style="
+            color: rgba(102, 112, 133, 0.8);
+            font-size: 1.125rem;
+            font-weight: 500;
+          "
+        >
+          DELIVERY ADDRESSS
+        </p>
+        <p
+          style="
+            color: rgba(51, 56, 67, 1);
+            font-size: 1.5rem;
+            font-weight: 400;
+          "
+        >
+          LTI Limited
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          {{ salesOrderData.deliveryaddress.split(", ")[0] }}
+          {{ salesOrderData.deliveryaddress.split(",")[1] }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          {{ salesOrderData.deliveryaddress.split(",")[2] }}
+          {{ salesOrderData.deliveryaddress.split(",")[3] }}
+          {{ salesOrderData.deliveryaddress.split(",")[4] }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          GST- {{ salesOrderData.gstno }}
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+          Contact:{{ salesOrderData.contactphone }}
+        </p>
+      </div>
+    </div>
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-top: 4px;
+      "
+    >
+      <div>
+        <p style="color: #333843; font-size: 0.875rem; font-weight: 700">
+          Reference : SELVA KUMAR S
+        </p>
+        <p style="color: #667085; font-size: 0.875rem; font-weight: 400">
+          April 25, 2023 6:30 PM<span style="color: rgba(102, 112, 133, 0.5)">
+            from </span
+          >Default Sales Channel
+        </p>
+      </div>
+      <div
+        class="d-flex flex-wrap justify-content-between"
+        style="align-items: center; margin-top: 30px"
+      >
+        <div>
+          <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
+            Contact Person : SHIVA R S
+          </p>
+          <p style="font-size: 0.875rem; font-weight: 7 00; color: #333843">
+            Contact Number : +919012345678
+          </p>
+        </div>
+        <div>
+          <p style="font-size: 0.9375rem; font-weight: 700; color: #000000">
+            Transport: Not Applicable
+          </p>
+          <div class="d-flex flex-wrap justify-content-between">
+            <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+              Order Quantity
+            </p>
+            <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+              - 10
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-top: 4px;
+      "
+    >
+      <p style="font-weight: 700; font-size: 0.875rem">Summary</p>
+      <table
+        class="table col-12 p-0"
+        style="border-top: 1px solid rgba(217, 236, 244, 0.28)"
+      >
+        <tbody>
+          <tr
+            *ngFor="let data of productsData; let i = index"
+            style="
+              font-size: 0.75rem;
+              background-color: rgba(217, 236, 244, 0.28);
+              border-top: 2px;
+            "
+          >
+            <td
+              style="
+                border-top: 1px solid rgba(217, 236, 244, 0.28) !important ;
+                /* padding-left: 4px; */
+                text-align: center;
+              "
+            >
+              {{ i + 1 }}
+            </td>
+            <td
+              style="
+                border-top: 1px solid rgba(217, 236, 244, 0.28) !important ;
+                padding-left: 4%;
+              "
+            >
+              <p>{{ data.pname }}</p>
+              <p>Material · Mild Steel</p>
+            </td>
+            <td
+              style="border-top: 1px solid rgba(217, 236, 244, 0.28) !important"
+            >
+              <p>{{ data.sku }}</p>
+            </td>
+            <td
+              style="border-top: 1px solid rgba(217, 236, 244, 0.28) !important"
+            >
+              <p>{{ data.hsn }}</p>
+            </td>
+            <td
+              style="border-top: 1px solid rgba(217, 236, 244, 0.28) !important"
+            >
+              <p>{{ data.rate | currency : "INR" }}</p>
+            </td>
+            <td
+              style="border-top: 1px solid rgba(217, 236, 244, 0.28) !important"
+            >
+              <p>{{ data.pqty }}</p>
+            </td>
+            <td
+              style="
+                border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
+                text-align: right;
+                margin-top: 2px;
+              "
+            >
+              <p style="margin-right: 8px">
+                {{ data.total | currency : "INR" }}
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        class="d-flex flex-wrap justify-content-between"
+        style="
+          margin-top: -12px;
+          height: 48px;
+          align-items: center;
+          padding: 8px;
+          background-color: rgba(217, 236, 244, 0.28);
+          border: 1px solid rgba(217, 236, 244, 0.28);
+        "
+      >
+        <p>CGST</p>
+        <p>1,000</p>
+      </div>
+      <div
+        style="
+          margin-top: 4px;
+          height: 48px;
+          padding: 8px;
+          align-items: center;
+          background-color: rgba(217, 236, 244, 0.28);
+          border: 1px solid rgba(217, 236, 244, 0.28);
+        "
+        class="d-flex flex-wrap justify-content-between"
+      >
+        <p>SGST</p>
+        <p>1,000</p>
+      </div>
+      <div
+        style="
+          margin-top: 4px;
+          height: 48px;
+          padding: 8px;
+          background-color: rgba(217, 236, 244, 0.28);
+          border: 1px solid rgba(217, 236, 244, 0.28);
+        "
+        class="d-flex flex-wrap justify-content-between align-items-center"
+      >
+        <p>IGST</p>
+        <p>1,000</p>
+      </div>
+      <div
+        style="
+          margin-top: 4px;
+          height: 48px;
+          padding: 8px;
+          align-items: center;
+          background-color: rgba(217, 236, 244, 0.28);
+          border: 1px solid rgba(217, 236, 244, 0.28);
+        "
+        class="d-flex flex-wrap justify-content-between"
+      >
+        <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
+          Subtotal
+        </p>
+        <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
+          1,00,000
+        </p>
+      </div>
+    </div>
+    <div style="margin-top: 8px">
+      <p style="color: #333843; font-weight: 700">NOTES:</p>
+      <p style="color: #333843; font-weight: 700">
+        1. Please send the invoice copy to the marketing office
+      </p>
+      <p style="color: #333843; font-weight: 700">
+        2. Only fresh material to be loaded
+      </p>
+      <p style="color: #333843; font-weight: 700">
+        3. The test certificate should sent along with the material
+      </p>
+      <p style="color: #333843; font-weight: 700">
+        4. Please do not send excess Quantity
+      </p>
+    </div>
+    <div
+      class="d-flex flex-wrap justify-content-between"
+      style="margin-top: 8%"
+    >
+      <p style="color: #333843; font-weight: 700">Ordered By</p>
+      <p style="color: #333843; font-weight: 700">SO Authorized By</p>
+    </div>
+  </div>
+</div>

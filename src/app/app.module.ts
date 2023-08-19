@@ -81,7 +81,7 @@ import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesa
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from './shared/shared.module';
 import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
-import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
+// import { ServiceSalesOrderReportComponent } from './reports/service-sales-order-report/service-sales-order-report.component';
 import { SalesReportComponent } from './reports/sales-report/sales-report.component';
 import { SalesServiceReportComponent } from './reports/sales-service-report/sales-service-report.component';
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
@@ -91,7 +91,7 @@ import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
 import { GrnReportComponent } from './reports/grn-report/grn-report.component';
 import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
 import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
-import { ServiceSalesOrderListComponent } from './vouchersList/service-sales-order-list/service-sales-order-list.component';
+// import { ServiceSalesOrderListComponent } from './vouchersList/service-sales-order-list/service-sales-order-list.component';
 import { SalesServiceListComponent } from './vouchersList/sales-service-list/sales-service-list.component';
 import { SalesListsComponent } from './vouchersList/sales-lists/sales-lists.component';
 import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
@@ -103,6 +103,9 @@ import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-l
 import { TargetAndAchievementComponent } from './shared/components/target-and-achievement/target-and-achievement.component';
 import { GetProductDetailsPipe } from './reports/get-product-details.pipe';
 import { SalesOrderReportComponent } from './vouchersList/SalesOrder/sales-order-report/sales-order-report.component';
+import { ServiceSalesOrderDetailsComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-details/service-sales-order-details.component';
+import { ServiceSalesOrderListComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-list/service-sales-order-list.component';
+import { ServiceSalesOrderReportComponent } from './vouchersList/ServiceSalesOrder/service-sales-order-report/service-sales-order-report.component';
 
 @NgModule({
   declarations: [
@@ -182,6 +185,7 @@ import { SalesOrderReportComponent } from './vouchersList/SalesOrder/sales-order
     ServiceGrnListComponent,
     ServiceGrnReportComponent,
     SalesOrderDetailsComponent,
+    ServiceSalesOrderDetailsComponent,
   ],
   imports: [
     BrowserModule,
