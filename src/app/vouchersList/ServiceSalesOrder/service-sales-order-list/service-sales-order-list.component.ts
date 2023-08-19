@@ -12,6 +12,8 @@ import { SoService } from 'src/app/services/so.service';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { VendorDropDown } from '../service-sales-order-report/service-sales-order-report.component';
 import { SsoService } from 'src/app/services/sso.service';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-service-sales-order-list',
@@ -210,20 +212,30 @@ export class ServiceSalesOrderListComponent implements OnInit {
       console.log(result);
     });
   }
-  onClickDelete() {
-    console.log('Clicked Delete');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Delete Data ?',
-      },
-    });
+  deletepo(data: any) {
+    console.log(data, '.......data');
 
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you Delete data?',
+    });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
+      if (result) {
+        console.log(data);
+        this.serviceSOApi.Delete_SO(data.sono).subscribe((res) => {
+          this.serviceSOApi.Delete_SODetails(data.sono).subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'PO ' + data.pono + ' Deleted Successfully',
+            });
+            this.loadData();
+          });
+        });
+      }
     });
   }
+
   onClickCancelOrder() {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
@@ -240,7 +252,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
   }
 
   onClickViewMore(data: any) {
-    this.router.navigate(['/service-sales-order-details'], {
+    this.router.navigate(['/service-sales-details'], {
       queryParams: { sono: data.sono },
     });
   }
@@ -274,7 +286,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
     };
     this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      if (res.orders.length) {
+      // if (res.orders.length) {
         if (isInitialFetchData) {
           const newMap = new Map();
           res.orders
@@ -288,7 +300,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
           this.vendorDropDownData = [...newMap.values()];
         }
         this.getFilterData(res);
-      }
+      // }
     });
   }
 }

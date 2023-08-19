@@ -315,19 +315,19 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
 
     this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      if (res.orders.length) {
-        if (isInitialFetchData) {
-          const newMap = new Map();
-          res.orders
-            .map((item: any) => {
-              return {
-                name: item.vendorname,
-                id: item.vendorcode,
-              };
-            })
-            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-          this.vendorDropDownData = [...newMap.values()];
-        }
+      // if (res.orders.length) {
+      if (isInitialFetchData) {
+        const newMap = new Map();
+        res.orders
+          .map((item: any) => {
+            return {
+              name: item.vendorname,
+              id: item.vendorcode,
+            };
+          })
+          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+        this.vendorDropDownData = [...newMap.values()];
+        // }
         this.getFilterData(formValues, res);
       }
     });
@@ -341,7 +341,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.form.value.filterData].name;
+        this.filterByOptions[this.form.value.filterData - 1].name;
       console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {

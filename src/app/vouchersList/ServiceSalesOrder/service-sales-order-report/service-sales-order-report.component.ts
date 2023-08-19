@@ -325,21 +325,21 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
 
     this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      if (res.orders.length) {
-        if (isInitialFetchData) {
-          const newMap = new Map();
-          res.orders
-            .map((item: any) => {
-              return {
-                name: item.vendorname,
-                id: item.vendorcode,
-              };
-            })
-            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-          this.vendorDropDownData = [...newMap.values()];
-        }
-        this.getFilterData(formValues, res);
+      // if (res.orders.length) {
+      if (isInitialFetchData) {
+        const newMap = new Map();
+        res.orders
+          .map((item: any) => {
+            return {
+              name: item.vendorname,
+              id: item.vendorcode,
+            };
+          })
+          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+        this.vendorDropDownData = [...newMap.values()];
       }
+      this.getFilterData(formValues, res);
+      // }
     });
   }
 

@@ -116,7 +116,7 @@ export class SalesListsComponent implements OnInit {
     this.router.navigateByUrl('sales');
   }
 
-  getFilterData(formValues: any, serverData: any): void {
+  getFilterData(serverData: any): void {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
@@ -127,6 +127,7 @@ export class SalesListsComponent implements OnInit {
           'max-width: fit-content; padding:12px;background-color:#419FC733',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '100%',
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-check',
@@ -139,6 +140,7 @@ export class SalesListsComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.completedOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
@@ -151,6 +153,7 @@ export class SalesListsComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.pendingOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
@@ -163,6 +166,7 @@ export class SalesListsComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.cancelledOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
@@ -173,6 +177,7 @@ export class SalesListsComponent implements OnInit {
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
         // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         // badgeValue: '+23%',
+        neededRupeeSign: true,
       },
     ];
 
@@ -273,21 +278,21 @@ export class SalesListsComponent implements OnInit {
     };
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      if (res.orders.length) {
-        if (isInitialFetchData) {
-          const newMap = new Map();
-          res.orders
-            .map((item: any) => {
-              return {
-                name: item.vendorname,
-                id: item.vendorcode,
-              };
-            })
-            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-          this.vendorDropDownData = [...newMap.values()];
-        }
-        this.getFilterData(formValues, res);
+      // if (res.orders.length) {
+      if (isInitialFetchData) {
+        const newMap = new Map();
+        res.orders
+          .map((item: any) => {
+            return {
+              name: item.vendorname,
+              id: item.vendorcode,
+            };
+          })
+          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+        this.vendorDropDownData = [...newMap.values()];
       }
+      this.getFilterData(res);
+      // }
     });
   }
 }

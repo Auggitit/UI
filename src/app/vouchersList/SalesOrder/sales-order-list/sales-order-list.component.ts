@@ -64,6 +64,7 @@ export class SalesOrderListComponent implements OnInit {
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[3].id],
       startDate: [''],
+      searchValues: [''],
       endDate: [''],
       vendorcode: [''],
       reportStatus: [''],
@@ -267,21 +268,21 @@ export class SalesOrderListComponent implements OnInit {
     };
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      if (res.orders.length) {
-        if (isInitialFetchData) {
-          const newMap = new Map();
-          res.orders
-            .map((item: any) => {
-              return {
-                name: item.vendorname,
-                id: item.vendorcode,
-              };
-            })
-            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-          this.vendorDropDownData = [...newMap.values()];
-        }
-        this.getFilterData(formValues);
+      // if (res.orders.length) {
+      if (isInitialFetchData) {
+        const newMap = new Map();
+        res.orders
+          .map((item: any) => {
+            return {
+              name: item.vendorname,
+              id: item.vendorcode,
+            };
+          })
+          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+        this.vendorDropDownData = [...newMap.values()];
       }
+      this.getFilterData(res);
+      // }
     });
   }
 }

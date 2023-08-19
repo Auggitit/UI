@@ -128,6 +128,7 @@ export class SalesServiceListComponent implements OnInit {
           'max-width: fit-content; padding:12px;background-color:#419FC733',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         badgeValue: '100%',
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-check',
@@ -140,6 +141,7 @@ export class SalesServiceListComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.completedOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
@@ -153,6 +155,7 @@ export class SalesServiceListComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.pendingOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
@@ -165,17 +168,18 @@ export class SalesServiceListComponent implements OnInit {
         badgeValue: `${Number.parseFloat(
           serverData.cancelledOrdersPercent
         ).toFixed(2)}%`,
+        neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Sales Order Value',
         count: serverData.orderValues,
-
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
         // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
         // badgeValue: '+23%',
+        neededRupeeSign: true,
       },
     ];
 
@@ -220,7 +224,6 @@ export class SalesServiceListComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       console.log(result);
@@ -276,21 +279,21 @@ export class SalesServiceListComponent implements OnInit {
     };
     this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      if (res.orders.length) {
-        if (isInitialFetchData) {
-          const newMap = new Map();
-          res.orders
-            .map((item: any) => {
-              return {
-                name: item.vendorname,
-                id: item.vendorcode,
-              };
-            })
-            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-          this.vendorDropDownData = [...newMap.values()];
-        }
-        this.getFilterData(res);
+      // if (res.orders.length) {
+      if (isInitialFetchData) {
+        const newMap = new Map();
+        res.orders
+          .map((item: any) => {
+            return {
+              name: item.vendorname,
+              id: item.vendorcode,
+            };
+          })
+          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+        this.vendorDropDownData = [...newMap.values()];
       }
+      this.getFilterData(res);
+      // }
     });
   }
 }

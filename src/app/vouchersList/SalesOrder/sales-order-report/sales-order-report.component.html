@@ -38,6 +38,7 @@
       <div class="pl-3 pt-3 pb-3">
         <p style="font-size: 1.125rem; font-weight: 600">Recent Sales Orders</p>
         <app-table-filters
+          [searchControlName]="'searchValues'"
           [vendorDropDownData]="vendorDropDownData"
           [statusOptions]="reportStatusOptions"
           [tableFiltersGroupName]="form"

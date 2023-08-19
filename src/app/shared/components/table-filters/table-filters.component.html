@@ -67,7 +67,22 @@
     [iconNeeded]="isIconNeeded"
     Icon="bankCardLine"
   ></app-mat-select-box>
-  <app-search-box searchBoxWidth="160px"> </app-search-box>
+  <form [formGroup]="tableFiltersGroupName">
+    <mat-form-field appearance="outline" [ngStyle]="{ width: '160px' }">
+      <input
+        type="text"
+        [formControlName]="searchControlName"
+        matInput
+        placeholder="Search"
+      />
+      <span matPrefix>
+        <mat-icon
+          style="height: 25px; width: 25px; margin-right: 10px"
+          svgIcon="Search"
+        ></mat-icon
+      ></span>
+    </mat-form-field>
+  </form>
   <app-table-column-display-filter
     [ColumnFilterFormGroup]="tableFiltersGroupName"
     [columnFilterName]="filterColumnName"
