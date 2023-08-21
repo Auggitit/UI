@@ -9,45 +9,22 @@
         [filterData]="'filterData'"
         [SelectSaveOptions]="'SelectSaveOptions'"
         svgIconToDisplay="ReportsIcon"
+        (onClickDownload)="downloadAsPDF()"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
         buttonTitle="Create New Sales"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
-      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+    <div id="contentToSave" #contentToSave>
+      <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+        <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
+          <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <!-- <div class="p-3"> -->
-      <div
-        class="d-flex flex-wrap align-items-center p-3"
-        style="justify-content: space-between"
-      >
-        <div class="d-flex flex-wrap align-items-center">
-          <p
-            style="
-              font-weight: 600;
-              font-size: 1.125rem;
-              /* padding-right: 8px;
-              margin: 0; */
-            "
-          >
-            Recent Sales
-          </p>
-          <!-- <p
-            style="
-              color: #0d894f;
-              background-color: #e7f4ee;
-              border-radius: 100px;
-              padding: 8px;
-              margin: 0;
-            "
-          >
-            +2 Orders
-          </p> -->
-        </div>
+      <div class="p-3">
+        <p style="font-weight: 600; font-size: 1.125rem">Recent Sales</p>
         <app-table-filters
           [searchControlName]="'searchValues'"
           [vendorDropDownData]="vendorDropDownData"
@@ -59,8 +36,8 @@
           [columnList]="columns"
         ></app-table-filters>
       </div>
-      <!-- </div> -->
       <app-mat-table
+        id="salesTable"
         [columns]="columns"
         [filteredData]="filteredSalesData"
         [paginationIndex]="paginationIndex"
@@ -80,7 +57,6 @@
               style="
                 color: #667085;
                 min-width: 86px;
-                /* max-width: 86px; */
                 align-items: center;
                 justify-content: left;
                 height: inherit;
@@ -175,7 +151,7 @@
                 padding-left: 20px;
               "
             >
-              <p class="mb-0">{{ data.ordered }}</p>
+              <p class="mb-0">{{ data.ordered - data.received }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
@@ -188,10 +164,10 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -200,7 +176,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="
@@ -225,6 +201,11 @@
               "
             >
               <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
                 class="bi bi-three-dots-vertical"
                 [matMenuTriggerFor]="threeDotOptions"
               >

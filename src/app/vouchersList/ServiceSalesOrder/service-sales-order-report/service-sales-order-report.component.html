@@ -100,9 +100,11 @@
                 max-width: 100px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.sono
-              }}</a>
+              <a
+                (click)="onClickSono(data)"
+                style="color: #13b2e4; font-weight: 600"
+                >{{ data.sono }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -220,7 +222,7 @@
               <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;

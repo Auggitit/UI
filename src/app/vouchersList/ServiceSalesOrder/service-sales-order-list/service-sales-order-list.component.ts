@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,13 +14,17 @@ import { VendorDropDown } from '../service-sales-order-report/service-sales-orde
 import { SsoService } from 'src/app/services/sso.service';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import Swal from 'sweetalert2';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-service-sales-order-list',
   templateUrl: './service-sales-order-list.component.html',
   styleUrls: ['./service-sales-order-list.component.scss'],
 })
 export class ServiceSalesOrderListComponent implements OnInit {
+  @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
   serviceSalesOrderData: any[] = [];
@@ -217,28 +221,16 @@ export class ServiceSalesOrderListComponent implements OnInit {
       console.log(result);
     });
   }
-  deletepo(data: any) {
-    console.log(data, '.......data');
 
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Delete data?',
+  onClickDelete() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(data);
-        this.serviceSOApi.Delete_SO(data.sono).subscribe((res) => {
-          this.serviceSOApi.Delete_SODetails(data.sono).subscribe((res) => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Deleted!',
-              text: 'PO ' + data.pono + ' Deleted Successfully',
-            });
-            this.loadData();
-          });
-        });
-      }
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   onClickCancelOrder() {
@@ -249,7 +241,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
         contentText: 'Do You Want To Cancel Order ?',
       },
     });
-
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       console.log(result);
@@ -257,7 +248,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
   }
 
   onClickViewMore(data: any) {
-    this.router.navigate(['/service-sales-details'], {
+    this.router.navigate(['/service-sales-order-details'], {
       queryParams: { sono: data.sono },
     });
   }
@@ -291,7 +282,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
     };
     this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -305,7 +295,155 @@ export class ServiceSalesOrderListComponent implements OnInit {
         this.vendorDropDownData = [...newMap.values()];
       }
       this.getFilterData(res);
-      // }
     });
+  }
+
+  downloadAsPDF() {
+    if (this.serviceSalesOrderForm.value.SelectSaveOptions === 0) {
+      let topValue = 0;
+      var data = this.contentToSave.nativeElement;
+      let timeDuration: string =
+        this.filterByOptions[this.serviceSalesOrderForm.value.filterData - 1]
+          .name;
+      console.log(timeDuration, 'timeduration');
+
+      html2canvas(data, { scale: 2 }).then((canvas) => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        let pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.text('Service Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
+        pdf.addPage();
+
+        let tableData = this.filteredServiceSalesOrderData.flatMap(
+          (item) => item
+        );
+        console.log('Fil dat dabhg', tableData);
+
+        pdf.setLineWidth(2);
+        pdf.text('Recent Service Sales Order', 240, (topValue += 50));
+        pdf.setFontSize(12);
+        let startDate: String =
+          this.serviceSalesOrderForm.value?.startDate.toString();
+        let endDate: String =
+          this.serviceSalesOrderForm.value?.endDate.toString();
+        console.log(
+          startDate,
+          endDate,
+          '=======serviceSalesOrderForm Values========',
+          this.serviceSalesOrderForm.value
+        );
+        if (this.serviceSalesOrderForm.value.startDate != '')
+          pdf.text(
+            'From :' +
+              startDate.substring(4, 14) +
+              ' To : ' +
+              endDate.substring(4, 14),
+            50,
+            (topValue += 70)
+          );
+        if (this.serviceSalesOrderForm.value.reportStatus != '')
+          pdf.text(
+            'Status : ' +
+              this.reportStatusOptions[
+                this.serviceSalesOrderForm.value.reportStatus - 1
+              ].name,
+            50,
+            (topValue += 20)
+          );
+        if (this.serviceSalesOrderForm.value.vendorcode != '')
+          pdf.text(
+            'Vendor Name : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        if (this.serviceSalesOrderForm.value.vendorcode != '')
+          pdf.text(
+            'Sales Person : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        autoTable(pdf, {
+          body: tableData,
+          columns: [
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
+            },
+            {
+              header: 'Vendor',
+              dataKey: 'vendorname',
+            },
+            {
+              header: 'Order Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Received Quantity',
+              dataKey: 'received',
+            },
+            {
+              header: 'Data & Time',
+              dataKey: 'sodate',
+            },
+            {
+              header: 'Back Order Quantity',
+              dataKey: 'received',
+            },
+            {
+              header: 'Status',
+              dataKey: 'received',
+            },
+          ],
+          startY: (topValue += 30),
+          theme: 'striped',
+        });
+        pdf.save('Service Sales Order Report.pdf');
+      });
+    } else {
+      //Code for Excel Format Download
+      /* var blob = new Blob([html],{type: 'data:application/vnd.ms-excel' });
+      var u = URL.createObjectURL(blob);
+      window.open(u); */
+
+      let element = document.getElementById('serviceSalesOrderTable')!;
+
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      wb.Props = {
+        Title: 'Service Sales Order Report',
+      };
+      var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
+      var wsCols = [
+        { wch: 7 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 40 },
+        { wch: 50 },
+        { wch: 25 },
+        { wch: 50 },
+        { wch: 50 },
+      ];
+      ws['!cols'] = wsCols;
+      XLSX.utils.sheet_add_aoa(ws, [['Service Sales Order Summary']], {
+        origin: 'E1',
+      });
+      XLSX.utils.sheet_add_aoa(
+        ws,
+        [
+          [
+            'Order Value',
+            'Vendor',
+            'Order Quantity',
+            'Received Quantity',
+            'Date & Time',
+            'Back Order Quantity',
+            'Status',
+          ],
+        ],
+        { origin: 'A3' }
+      );
+      XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
+      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.writeFile(wb, 'Report.xlsx');
+    }
   }
 }

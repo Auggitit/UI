@@ -215,4 +215,63 @@ export class SsalesService {
         })
       );
   }
+  getAllServiceSalesList({
+    statusId,
+    vendorId,
+    globalFilterId,
+    search,
+    fromDate,
+    toDate,
+  }: {
+    statusId?: number;
+    vendorId?: number;
+    globalFilterId?: number;
+    search?: string;
+    fromDate?: string;
+    toDate?: string;
+  }) {
+    let params = new HttpParams();
+    if (statusId) {
+      params = params.append('statusId', statusId);
+    }
+    if (vendorId) {
+      params = params.append('vendorId', vendorId);
+    }
+    if (globalFilterId) {
+      params = params.append('globalFilterId', globalFilterId);
+    }
+    if (search) {
+      params = params.append('search', search);
+    }
+    if (fromDate) {
+      params = params.append('fromDate', fromDate);
+    }
+    if (toDate) {
+      params = params.append('toDate', toDate);
+    }
+    return this.http
+      .get<any>(this.URL + 'api/vServiceSales/getServiceSalesLists', {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getServiceSalesDetail({ sono }: { sono: string }) {
+    let params = new HttpParams();
+    if (sono) {
+      params = params.append('sono', sono);
+    }
+
+    return this.http
+      .get<any>(this.URL + 'api/vServiceSalesOrder/getSSO', { params: params })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
 }

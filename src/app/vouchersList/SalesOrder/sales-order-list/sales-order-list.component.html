@@ -2,7 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Sales Order Details"
+        title="SALES ORDER DETAILS"
         [reportFormGroupName]="salesOrderForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
@@ -171,7 +171,7 @@
               <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -205,6 +205,11 @@
               "
             >
               <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
                 class="bi bi-three-dots-vertical"
                 [matMenuTriggerFor]="threeDotOptions"
               >

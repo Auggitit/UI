@@ -11,12 +11,15 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
+        (onClickDownload)="downloadAsPDF()"
         buttonTitle="Create Service SO"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
-      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+    <div id="contentToSave" #contentToSave>
+      <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+        <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
+          <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
@@ -36,6 +39,7 @@
         ></app-table-filters>
       </div>
       <app-mat-table
+        id="serviceSalesOrderTable"
         [columns]="columns"
         [filteredData]="filteredServiceSalesOrderData"
         [paginationIndex]="paginationIndex"
@@ -154,15 +158,16 @@
               scope="col"
               style="
                 color: #667085;
+                align-items: center;
                 min-width: 114px;
                 max-width: 114px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.ordered !== data.received">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -171,7 +176,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.ordered === data.received">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="
@@ -185,6 +190,7 @@
               </div>
             </td>
             <td
+              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -195,6 +201,11 @@
               "
             >
               <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
                 class="bi bi-three-dots-vertical"
                 [matMenuTriggerFor]="threeDotOptions"
               >
@@ -219,7 +230,7 @@
                     width: 80%;
                     color: #ec3900;
                   "
-                  (click)="deletepo(data)"
+                  (click)="onClickDelete()"
                 >
                   Delete
                 </button>

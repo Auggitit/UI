@@ -140,6 +140,12 @@ export class SalesReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('sales');
   }
 
+  onClickSono(data: any): void {
+    this.router.navigate(['/sales-details'], {
+      queryParams: { sono: data.sono },
+    });
+  }
+
   getFilterData(formValues: any, serverData: any): void {
     this.cardsDetails = [
       {
@@ -200,8 +206,6 @@ export class SalesReportComponent implements OnInit, OnDestroy {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -309,7 +313,6 @@ export class SalesReportComponent implements OnInit, OnDestroy {
 
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -321,7 +324,6 @@ export class SalesReportComponent implements OnInit, OnDestroy {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
-        // }
         this.getFilterData(formValues, res);
       }
     });
@@ -335,13 +337,9 @@ export class SalesReportComponent implements OnInit, OnDestroy {
     if (this.form.value?.SelectSaveOptions === 0) {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
-      console.log();
-
-      console.log(this.form.value?.filterData, 'this.form.value.filterData');
 
       let timeDuration: string =
         this.filterByOptions[this.form.value.filterData - 1].name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -351,14 +349,12 @@ export class SalesReportComponent implements OnInit, OnDestroy {
         pdf.addPage();
 
         let tableData = this.filteredSalesData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Sales ', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
-        console.log('=======Form Values========', this.form.value);
         if (this.form.value.startDate != '')
           pdf.text(
             'From :' +

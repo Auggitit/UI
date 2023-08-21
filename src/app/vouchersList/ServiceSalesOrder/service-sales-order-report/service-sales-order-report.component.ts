@@ -155,6 +155,12 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('soservice');
   }
 
+  onClickSono(data: any): void {
+    this.router.navigate(['/service-sales-order-details'], {
+      queryParams: { sono: data.sono },
+    });
+  }
+
   getFilterData(formValues: any, serverData: any): void {
     this.cardsDetails = [
       {

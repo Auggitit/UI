@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -12,6 +11,7 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import { SsoService } from 'src/app/services/sso.service';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { SsalesService } from 'src/app/services/ssales.service';
 
 @Component({
   selector: 'app-sales-service-list',
@@ -56,7 +56,7 @@ export class SalesServiceListComponent implements OnInit {
   ];
 
   constructor(
-    private serviceSOApi: SsoService,
+    private serviceSalesApi: SsalesService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -277,23 +277,25 @@ export class SalesServiceListComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
-      console.log(res, '-------------res');
-      // if (res.orders.length) {
-      if (isInitialFetchData) {
-        const newMap = new Map();
-        res.orders
-          .map((item: any) => {
-            return {
-              name: item.vendorname,
-              id: item.vendorcode,
-            };
-          })
-          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-        this.vendorDropDownData = [...newMap.values()];
-      }
-      this.getFilterData(res);
-      // }
-    });
+    this.serviceSalesApi
+      .getAllServiceSalesList(params)
+      .subscribe((res: any) => {
+        console.log(res, '--------888----res');
+        // if (res.orders.length) {
+        if (isInitialFetchData) {
+          const newMap = new Map();
+          res.orders
+            .map((item: any) => {
+              return {
+                name: item.vendorname,
+                id: item.vendorcode,
+              };
+            })
+            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+          this.vendorDropDownData = [...newMap.values()];
+        }
+        this.getFilterData(res);
+        // }
+      });
   }
 }

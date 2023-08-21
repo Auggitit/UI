@@ -141,7 +141,6 @@ export class SalesOrderListComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-
     dialogRef.afterClosed().subscribe((result) => {});
   }
 
@@ -221,8 +220,6 @@ export class SalesOrderListComponent implements OnInit {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -273,7 +270,6 @@ export class SalesOrderListComponent implements OnInit {
     };
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -287,7 +283,6 @@ export class SalesOrderListComponent implements OnInit {
         this.vendorDropDownData = [...newMap.values()];
       }
       this.getFilterData(res);
-      // }
     });
   }
 
@@ -303,7 +298,7 @@ export class SalesOrderListComponent implements OnInit {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
         pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
-        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 160);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
         let tableData = this.filteredSalesOrderData.flatMap((item) => item);
@@ -354,32 +349,28 @@ export class SalesOrderListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order ID',
-              dataKey: 'sono',
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
-              header: 'Ref ID',
-              dataKey: 'vendorcode',
-            },
-            {
-              header: 'Vendor Detail',
+              header: 'Vendor',
               dataKey: 'vendorname',
             },
             {
-              header: 'Product Detail',
-              dataKey: 'vendorname',
+              header: 'Order Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Received Quantity',
+              dataKey: 'received',
             },
             {
               header: 'Data & Time',
               dataKey: 'sodate',
             },
             {
-              header: 'Quantity',
-              dataKey: 'ordered',
-            },
-            {
-              header: 'Price',
-              dataKey: 'orderedvalue',
+              header: 'Back Order Quantity',
+              dataKey: 'received',
             },
             {
               header: 'Status',
@@ -389,7 +380,7 @@ export class SalesOrderListComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Report.pdf');
+        pdf.save('Sales Order Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -420,14 +411,12 @@ export class SalesOrderListComponent implements OnInit {
         ws,
         [
           [
-            'Sr No',
-            'Order ID',
-            'Ref ID',
-            'Vendor Detail',
-            'Product Detail',
+            'Order Value',
+            'Vendor',
+            'Order Quantity',
+            'Received Quantity',
             'Date & Time',
-            'Quantity',
-            'Price',
+            'Back Order Quantity',
             'Status',
           ],
         ],

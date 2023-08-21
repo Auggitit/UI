@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,13 +12,18 @@ import {
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { SoService } from 'src/app/services/so.service';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-sales-lists',
   templateUrl: './sales-lists.component.html',
   styleUrls: ['./sales-lists.component.scss'],
 })
 export class SalesListsComponent implements OnInit {
+  @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
+
   form!: FormGroup;
   vendorDropDownData: any[] = [];
   salesData: any[] = [];
@@ -57,6 +62,7 @@ export class SalesListsComponent implements OnInit {
 
   constructor(
     private salesOrderApi: SoService,
+    private saalesApi: SalesService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -175,8 +181,6 @@ export class SalesListsComponent implements OnInit {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -277,8 +281,6 @@ export class SalesListsComponent implements OnInit {
       toDate: lastDate,
     };
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
-      console.log(res, '-------------res');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -292,7 +294,147 @@ export class SalesListsComponent implements OnInit {
         this.vendorDropDownData = [...newMap.values()];
       }
       this.getFilterData(res);
-      // }
     });
+  }
+
+  downloadAsPDF() {
+    if (this.salesForm.value.SelectSaveOptions === 0) {
+      let topValue = 0;
+      var data = this.contentToSave.nativeElement;
+      let timeDuration: string =
+        this.filterByOptions[this.salesForm.value.filterData - 1].name;
+      console.log(timeDuration, 'timeduration');
+
+      html2canvas(data, { scale: 2 }).then((canvas) => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        let pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.text(' Sales Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
+        pdf.addPage();
+
+        let tableData = this.filteredSalesData.flatMap((item) => item);
+        console.log('Fil dat dabhg', tableData);
+
+        pdf.setLineWidth(2);
+        pdf.text('Recent Sales', 240, (topValue += 50));
+        pdf.setFontSize(12);
+        let startDate: String = this.salesForm.value?.startDate.toString();
+        let endDate: String = this.salesForm.value?.endDate.toString();
+        console.log(
+          startDate,
+          endDate,
+          '=======salesForm Values========',
+          this.salesForm.value
+        );
+        if (this.salesForm.value.startDate != '')
+          pdf.text(
+            'From :' +
+              startDate.substring(4, 14) +
+              ' To : ' +
+              endDate.substring(4, 14),
+            50,
+            (topValue += 70)
+          );
+        if (this.salesForm.value.reportStatus != '')
+          pdf.text(
+            'Status : ' +
+              this.reportStatusOptions[this.salesForm.value.reportStatus - 1]
+                .name,
+            50,
+            (topValue += 20)
+          );
+        if (this.salesForm.value.vendorcode != '')
+          pdf.text(
+            'Vendor Name : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        if (this.salesForm.value.vendorcode != '')
+          pdf.text(
+            'Sales Person : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        autoTable(pdf, {
+          body: tableData,
+          columns: [
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
+            },
+            {
+              header: 'Vendor',
+              dataKey: 'vendorname',
+            },
+            {
+              header: 'Order Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Received Quantity',
+              dataKey: 'received',
+            },
+            {
+              header: 'Data & Time',
+              dataKey: 'sodate',
+            },
+            {
+              header: 'Back Order Quantity',
+              dataKey: 'received',
+            },
+            {
+              header: 'Status',
+              dataKey: 'received',
+            },
+          ],
+          startY: (topValue += 30),
+          theme: 'striped',
+        });
+        pdf.save('Sales Order Report.pdf');
+      });
+    } else {
+      //Code for Excel Format Download
+      /* var blob = new Blob([html],{type: 'data:application/vnd.ms-excel' });
+      var u = URL.createObjectURL(blob);
+      window.open(u); */
+
+      let element = document.getElementById('salesTable')!;
+
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      wb.Props = {
+        Title: 'Sales Report',
+      };
+      var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
+      var wsCols = [
+        { wch: 7 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 40 },
+        { wch: 50 },
+        { wch: 25 },
+        { wch: 50 },
+        { wch: 50 },
+      ];
+      ws['!cols'] = wsCols;
+      XLSX.utils.sheet_add_aoa(ws, [['Sales Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(
+        ws,
+        [
+          [
+            'Order Value',
+            'Vendor',
+            'Order Quantity',
+            'Received Quantity',
+            'Date & Time',
+            'Back Order Quantity',
+            'Status',
+          ],
+        ],
+        { origin: 'A3' }
+      );
+      XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
+      XLSX.utils.book_append_sheet(wb, ws, 'Sales Summary');
+      XLSX.writeFile(wb, 'Report.xlsx');
+    }
   }
 }
