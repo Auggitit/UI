@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -11,6 +11,10 @@ import {
 import { Router } from '@angular/router';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { SoService } from 'src/app/services/so.service';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-sales-order-list',
@@ -18,6 +22,7 @@ import { SoService } from 'src/app/services/so.service';
   styleUrls: ['./sales-order-list.component.scss'],
 })
 export class SalesOrderListComponent implements OnInit {
+  @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
   salesOrderData: any[] = [];
@@ -284,5 +289,153 @@ export class SalesOrderListComponent implements OnInit {
       this.getFilterData(res);
       // }
     });
+  }
+
+  downloadAsPDF() {
+    if (this.salesOrderForm.value.SelectSaveOptions === 0) {
+      let topValue = 0;
+      var data = this.contentToSave.nativeElement;
+      let timeDuration: string =
+        this.filterByOptions[this.salesOrderForm.value.filterData - 1].name;
+      console.log(timeDuration, 'timeduration');
+
+      html2canvas(data, { scale: 2 }).then((canvas) => {
+        const contentDataURL = canvas.toDataURL('image/png');
+        let pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.text(' Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 160);
+        pdf.addPage();
+
+        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+        console.log('Fil dat dabhg', tableData);
+
+        pdf.setLineWidth(2);
+        pdf.text('Recent Sales Order', 240, (topValue += 50));
+        pdf.setFontSize(12);
+        let startDate: String = this.salesOrderForm.value?.startDate.toString();
+        let endDate: String = this.salesOrderForm.value?.endDate.toString();
+        console.log(
+          startDate,
+          endDate,
+          '=======salesOrderForm Values========',
+          this.salesOrderForm.value
+        );
+        if (this.salesOrderForm.value.startDate != '')
+          pdf.text(
+            'From :' +
+              startDate.substring(4, 14) +
+              ' To : ' +
+              endDate.substring(4, 14),
+            50,
+            (topValue += 70)
+          );
+        if (this.salesOrderForm.value.reportStatus != '')
+          pdf.text(
+            'Status : ' +
+              this.reportStatusOptions[
+                this.salesOrderForm.value.reportStatus - 1
+              ].name,
+            50,
+            (topValue += 20)
+          );
+        if (this.salesOrderForm.value.vendorcode != '')
+          pdf.text(
+            'Vendor Name : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        if (this.salesOrderForm.value.vendorcode != '')
+          pdf.text(
+            'Sales Person : ' + tableData[0]?.vendorname,
+            50,
+            (topValue += 20)
+          );
+        autoTable(pdf, {
+          body: tableData,
+          columns: [
+            {
+              header: 'Order ID',
+              dataKey: 'sono',
+            },
+            {
+              header: 'Ref ID',
+              dataKey: 'vendorcode',
+            },
+            {
+              header: 'Vendor Detail',
+              dataKey: 'vendorname',
+            },
+            {
+              header: 'Product Detail',
+              dataKey: 'vendorname',
+            },
+            {
+              header: 'Data & Time',
+              dataKey: 'sodate',
+            },
+            {
+              header: 'Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Price',
+              dataKey: 'orderedvalue',
+            },
+            {
+              header: 'Status',
+              dataKey: 'received',
+            },
+          ],
+          startY: (topValue += 30),
+          theme: 'striped',
+        });
+        pdf.save('Sales Report.pdf');
+      });
+    } else {
+      //Code for Excel Format Download
+      /* var blob = new Blob([html],{type: 'data:application/vnd.ms-excel' });
+      var u = URL.createObjectURL(blob);
+      window.open(u); */
+
+      let element = document.getElementById('salesOrdersTable')!;
+
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      wb.Props = {
+        Title: 'Sales Order Report',
+      };
+      var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
+      var wsCols = [
+        { wch: 7 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 40 },
+        { wch: 50 },
+        { wch: 25 },
+        { wch: 50 },
+        { wch: 50 },
+      ];
+      ws['!cols'] = wsCols;
+      XLSX.utils.sheet_add_aoa(ws, [['Sales Order Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(
+        ws,
+        [
+          [
+            'Sr No',
+            'Order ID',
+            'Ref ID',
+            'Vendor Detail',
+            'Product Detail',
+            'Date & Time',
+            'Quantity',
+            'Price',
+            'Status',
+          ],
+        ],
+        { origin: 'A3' }
+      );
+      XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
+      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.writeFile(wb, 'Report.xlsx');
+    }
   }
 }

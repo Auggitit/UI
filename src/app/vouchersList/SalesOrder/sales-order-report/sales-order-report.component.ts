@@ -336,7 +336,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.form.value.filterData].name;
+        this.filterByOptions[this.form.value.filterData - 1].name;
       console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {

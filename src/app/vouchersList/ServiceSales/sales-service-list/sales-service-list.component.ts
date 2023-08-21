@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SalesService } from 'src/app/services/sales.service';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogBoxComponent } from './../../shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { Router } from '@angular/router';
 import {
   VendorDropDown,
   dateFilterOptions,
@@ -10,25 +10,25 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { Router } from '@angular/router';
-import { SoService } from 'src/app/services/so.service';
+import { SsoService } from 'src/app/services/sso.service';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 
 @Component({
-  selector: 'app-sales-lists',
-  templateUrl: './sales-lists.component.html',
-  styleUrls: ['./sales-lists.component.scss'],
+  selector: 'app-sales-service-list',
+  templateUrl: './sales-service-list.component.html',
+  styleUrls: ['./sales-service-list.component.scss'],
 })
-export class SalesListsComponent implements OnInit {
+export class SalesServiceListComponent implements OnInit {
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  salesData: any[] = [];
-  salesForm!: FormGroup;
+  salesOrderData: any[] = [];
+  salesOrderForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredSalesData: any[] = [];
+  filteredSalesOrderData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
@@ -56,12 +56,12 @@ export class SalesListsComponent implements OnInit {
   ];
 
   constructor(
-    private salesOrderApi: SoService,
+    private serviceSOApi: SsoService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
   ) {
-    this.salesForm = this.fb.group({
+    this.salesOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[3].id],
       startDate: [''],
@@ -103,24 +103,25 @@ export class SalesListsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData(this.salesForm.value, true);
-    this.salesForm.valueChanges.subscribe((values) => {
+    this.loadData(this.salesOrderForm.value, true);
+    this.salesOrderForm.valueChanges.subscribe((values) => {
       this.loadData(values);
     });
   }
+
   gotoReportsPage(): void {
-    this.router.navigateByUrl('sales-reports');
+    this.router.navigateByUrl('sales-service-report');
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('sales');
+    this.router.navigateByUrl('servicesales');
   }
 
   getFilterData(serverData: any): void {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Sales',
+        title: 'Total Sales Order',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -132,7 +133,7 @@ export class SalesListsComponent implements OnInit {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Sales ',
+        title: 'Completed Sales Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -144,8 +145,9 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales ',
+        title: 'Pending Sales Order',
         count: serverData.pendingOrders,
+
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
@@ -157,7 +159,7 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales ',
+        title: 'Cancelled Sales Order',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -170,7 +172,7 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales  Value',
+        title: 'Sales Order Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
@@ -195,9 +197,9 @@ export class SalesListsComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesData = newArr;
+    this.filteredSalesOrderData = newArr;
 
-    console.log('data in table', this.filteredSalesData);
+    console.log('data in table', this.filteredSalesOrderData);
   }
 
   onClickEdit() {
@@ -222,12 +224,12 @@ export class SalesListsComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-
     dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       console.log(result);
     });
   }
+
   onClickCancelOrder() {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
@@ -242,9 +244,8 @@ export class SalesListsComponent implements OnInit {
       console.log(result);
     });
   }
-
   onClickViewMore(data: any) {
-    this.router.navigate(['/sales-details'], {
+    this.router.navigate(['/service-sales-details'], {
       queryParams: { sono: data.sono },
     });
   }
@@ -276,7 +277,7 @@ export class SalesListsComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       // if (res.orders.length) {
       if (isInitialFetchData) {

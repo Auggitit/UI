@@ -10,12 +10,15 @@
         [SelectSaveOptions]="'SelectSaveOptions'"
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
+        (onClickDownload)="downloadAsPDF()"
         (onClickCreateButton)="onClickButton()"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
-      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+    <div id="contentToSave" #contentToSave>
+      <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+        <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
+          <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
@@ -35,6 +38,7 @@
         ></app-table-filters>
       </div>
       <app-mat-table
+        id="salesOrdersTable"
         [columns]="columns"
         [filteredData]="filteredSalesOrderData"
         [paginationIndex]="paginationIndex"

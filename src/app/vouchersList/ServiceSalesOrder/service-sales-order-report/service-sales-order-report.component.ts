@@ -352,7 +352,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.form.value.filterData].name;
+        this.filterByOptions[this.form.value.filterData - 1].name;
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');

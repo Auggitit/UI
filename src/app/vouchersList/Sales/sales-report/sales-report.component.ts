@@ -7,24 +7,19 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
-import {
-  TodayChartCategories,
-  WeekChartCategories,
-  areaChartCategories,
-  dateFilterOptions,
-  dropDownData,
-  exportOptions,
-  monthChartCategories,
-  statusOptions,
-} from '../stub/salesOrderStub';
 import { Subscription, startWith } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { SalesService } from './../../services/sales.service';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
 import { SoService } from 'src/app/services/so.service';
+import {
+  dateFilterOptions,
+  dropDownData,
+  exportOptions,
+  statusOptions,
+} from 'src/app/reports/stub/salesOrderStub';
 
 export interface VendorDropDown {
   id: string;
