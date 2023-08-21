@@ -13,13 +13,13 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
-import { SoService } from 'src/app/services/so.service';
 import {
   dateFilterOptions,
   dropDownData,
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
+import { SalesService } from 'src/app/services/sales.service';
 
 export interface VendorDropDown {
   id: string;
@@ -81,7 +81,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private salesOrderApi: SoService,
+    private salesApi: SalesService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -311,7 +311,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       toDate: lastDate,
     };
 
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.salesApi.getAllSalesList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
       if (isInitialFetchData) {
         const newMap = new Map();

@@ -11,7 +11,6 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -61,8 +60,7 @@ export class SalesListsComponent implements OnInit {
   ];
 
   constructor(
-    private salesOrderApi: SoService,
-    private saalesApi: SalesService,
+    private salesApi: SalesService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -280,7 +278,7 @@ export class SalesListsComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.salesApi.getAllSalesList(params).subscribe((res: any) => {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -390,7 +388,7 @@ export class SalesListsComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Order Report.pdf');
+        pdf.save('Sales Report.pdf');
       });
     } else {
       //Code for Excel Format Download

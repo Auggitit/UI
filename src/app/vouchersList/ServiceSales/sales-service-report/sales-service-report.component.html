@@ -37,54 +37,30 @@
     </div>
     <div class="col-12 p-0 card">
       <div class="pl-2 pt-3 pb-3">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between pl-3"
-        >
-          <div class="d-flex flex-wrap align-items-center">
-            <p
-              style="
-                font-size: 1.125rem;
-                font-weight: 600;
-                padding-right: 8px;
-                margin: 0;
-              "
-            >
-              Recent Service Sales
-            </p>
-            <p
-              style="
-                color: #0d894f;
-                background-color: #e7f4ee;
-                border-radius: 100px;
-                padding: 8px;
-                margin: 0;
-              "
-            >
-              +2 Orders
-            </p>
-          </div>
-          <span>
-            <app-table-filters
-              [searchControlName]="'searchValues'"
-              [vendorDropDownData]="vendorDropDownData"
-              [statusOptions]="reportStatusOptions"
-              [tableFiltersGroupName]="form"
-              [searchSuggestionsList]="searchSuggestionsList"
-              [reportStatus]="'reportStatus'"
-              [vendorcode]="'vendorcode'"
-              [filterColumnName]="'columnFilter'"
-              [columnList]="columns"
-            ></app-table-filters>
-          </span>
+        <div class="pl-3">
+          <p style="font-size: 1.125rem; font-weight: 600">
+            Recent Service Sales
+          </p>
+          <app-table-filters
+            [searchControlName]="'searchValues'"
+            [vendorDropDownData]="vendorDropDownData"
+            [statusOptions]="reportStatusOptions"
+            [tableFiltersGroupName]="form"
+            [searchSuggestionsList]="searchSuggestionsList"
+            [reportStatus]="'reportStatus'"
+            [vendorcode]="'vendorcode'"
+            [filterColumnName]="'columnFilter'"
+            [columnList]="columns"
+          ></app-table-filters>
         </div>
       </div>
 
       <script src="libs/jspdf.umd.js"></script>
       <script src="../dist/jspdf.plugin.autotable.js"></script>
       <app-mat-table
-        id="salesOrdersTable"
+        id="serviceSOTable"
         [columns]="columns"
-        [filteredData]="filteredSalesOrderData"
+        [filteredData]="filteredServiceSalesData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -126,9 +102,11 @@
                 max-width: 100px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.sono
-              }}</a>
+              <a
+                (click)="onClickSono(data)"
+                style="color: #13b2e4; font-weight: 600"
+                >{{ data.sono }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -206,7 +184,9 @@
                 <span style="font-weight: 500">{{ data.received }}</span>
               </p>
               <p class="mb-0" style="font-weight: 600">
-                Back Order -<span style="font-weight: 500">{{ 30 }}</span>
+                Back Order -<span style="font-weight: 500">{{
+                  data.ordered - data.received
+                }}</span>
               </p>
             </td>
             <td
@@ -219,29 +199,33 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">Price - {{ data.orderedvalue }}</p>
-              <p class="mb-0">GST- 3000</p>
+              <p class="mb-0">
+                Price - {{ data.orderedvalue | currency : "INR" }}
+              </p>
+              <p class="mb-0">GST- 3,000</p>
               <p class="mb-0">
                 Total-
-                <span style="font-weight: 600"
-                  >₹{{ data.orderDetails.length * data.orderedvalue }}</span
-                >
+                <span style="font-weight: 600">{{
+                  data.orderDetails.length * data.orderedvalue
+                    | currency : "INR"
+                }}</span>
               </p>
             </td>
             <td
-              *ngIf="columns[7].needToShow"
+              *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
+                align-items: center;
                 min-width: 114px;
                 max-width: 114px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -250,7 +234,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="

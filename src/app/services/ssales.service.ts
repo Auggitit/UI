@@ -267,7 +267,9 @@ export class SsalesService {
     }
 
     return this.http
-      .get<any>(this.URL + 'api/vServiceSalesOrder/getSSO', { params: params })
+      .get<any>(this.URL + 'api/vServiceSales/getServiceSales', {
+        params: params,
+      })
       .pipe(
         map((res: any) => {
           return res;

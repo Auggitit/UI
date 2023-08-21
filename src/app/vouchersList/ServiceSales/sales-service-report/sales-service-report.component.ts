@@ -20,6 +20,7 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
+import { SsalesService } from 'src/app/services/ssales.service';
 
 export interface VendorDropDown {
   id: string;
@@ -34,8 +35,7 @@ export interface VendorDropDown {
 export class SalesServiceReportComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
-  salesOrderData!: any[];
-  filteredSalesOrderData: any[] = [];
+  filteredServiceSalesData: any[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -81,7 +81,8 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private serviceSOApi: SsoService,
+    // private serviceSOApi: SsoService,
+    private serviceSalesApi: SsalesService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -140,11 +141,17 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('servicesales');
   }
 
+  onClickSono(data: any): void {
+    this.router.navigate(['/service-sales-details'], {
+      queryParams: { sono: data.sono },
+    });
+  }
+
   getFilterData(formValues: any, serverData: any): void {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Sales Order',
+        title: 'Total Service Sales',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -156,7 +163,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Sales Order',
+        title: 'Completed Service Sales',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -168,7 +175,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Sales Order',
+        title: 'Pending Service Sales',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -181,7 +188,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
+        title: 'Cancelled Service Sales',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -194,13 +201,11 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Service Sales Order Value',
+        title: 'Service Service Sales Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -219,7 +224,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredSalesOrderData = newArr;
+    this.filteredServiceSalesData = newArr;
 
     let seriesData: any[] = [];
     let graphLabels = [
@@ -308,24 +313,26 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
 
     console.log(params, 'params........');
 
-    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
-      console.log(res, 'response...........');
-      // if (res.orders.length) {
-      if (isInitialFetchData) {
-        const newMap = new Map();
-        res.orders
-          .map((item: any) => {
-            return {
-              name: item.vendorname,
-              id: item.vendorcode,
-            };
-          })
-          .forEach((item: VendorDropDown) => newMap.set(item.id, item));
-        this.vendorDropDownData = [...newMap.values()];
-        // }
-        this.getFilterData(formValues, res);
-      }
-    });
+    this.serviceSalesApi
+      .getAllServiceSalesList(params)
+      .subscribe((res: any) => {
+        console.log(res, 'response...........');
+        // if (res.orders.length) {
+        if (isInitialFetchData) {
+          const newMap = new Map();
+          res.orders
+            .map((item: any) => {
+              return {
+                name: item.vendorname,
+                id: item.vendorcode,
+              };
+            })
+            .forEach((item: VendorDropDown) => newMap.set(item.id, item));
+          this.vendorDropDownData = [...newMap.values()];
+          // }
+          this.getFilterData(formValues, res);
+        }
+      });
   }
   ngOnDestroy(): void {
     this.formSubscription.unsubscribe();
@@ -346,7 +353,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
+        let tableData = this.filteredServiceSalesData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
@@ -430,7 +437,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('salesOrdersTable')!;
+      let element = document.getElementById('serviceSOTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
