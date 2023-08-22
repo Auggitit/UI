@@ -1,155 +1,170 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
-import { ApexChart } from 'ng-apexcharts';
-import { Subscription } from 'rxjs';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import {
+  VendorDropDown,
   dateFilterOptions,
   dropDownData,
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SsoService } from 'src/app/services/sso.service';
+import { Router } from '@angular/router';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { SoService } from 'src/app/services/so.service';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
-export interface VendorDropDown {
-  id: string;
-  name: string;
-}
 @Component({
-  selector: 'app-service-sales-order-report',
-  templateUrl: './service-sales-order-report.component.html',
-  styleUrls: ['./service-sales-order-report.component.scss'],
+  selector: 'app-purchase-order-list',
+  templateUrl: './purchase-order-list.component.html',
+  styleUrls: ['./purchase-order-list.component.scss'],
 })
-export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
+export class PurchaseOrderListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  formSubscription!: Subscription;
-  serviceSalesOrderData!: any[];
-  filteredServiceSalesOrderData: any[] = [];
-  vendorDropDownData: VendorDropDown[] = [];
-  paginationIndex: number = 0;
-  pageCount: number = 10;
   form!: FormGroup;
-  orderValue: number = 0;
-  confirmedStatus: number = 0;
-  totalPending: number = 0;
-  totalOrder: number = 0;
+  vendorDropDownData: any[] = [];
+  purchaseOrderForm!: FormGroup;
   cardsDetails: any[] = [];
-  public chartOptions: any = {};
-  isIconNeeded: boolean = true;
-  searchSuggestionsList: string[] = ['SearchValue1', 'InputValue2', 'Value3'];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
+  paginationIndex: number = 0;
+  pageCount: number = 10;
+  filteredPurchaseOrderData: any[] = [];
+  isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
-  searchValues!: FormControlName;
-  columnFilter!: FormControlName;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Vendor Detail',
+      title: 'Order Value',
       sortable: 0,
-      name: 'vendorname',
+      name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    {
+      title: 'Order Qty',
+      sortable: 0,
+      name: 'ordered',
+      needToShow: true,
+    },
+    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
-  chartSpec: Partial<ApexChart> = {
-    fontFamily: 'Inter',
-    height: 265,
-    type: 'area',
-    toolbar: {
-      show: false,
-    },
-  };
-
   constructor(
-    private serviceSOApi: SsoService,
-    private router: Router,
-    private fb: FormBuilder
+    private salesOrderApi: SoService,
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    public router: Router
   ) {
-    this.form = this.fb.group({
-      vendorcode: [''],
-      endDate: [''],
-      startDate: [''],
-      filterData: [dateFilterOptions[3].id],
-      reportStatus: [''],
+    this.purchaseOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
+      filterData: [dateFilterOptions[3].id],
+      startDate: [''],
       searchValues: [''],
+      endDate: [''],
+      vendorcode: [''],
+      reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Vendor Detail',
+          title: 'Order Value',
           sortable: 0,
-          name: 'vendorname',
+          name: 'orderedvalue',
           needToShow: true,
         },
+        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Product Detail',
+          title: 'Order Qty',
           sortable: 0,
-          name: 'pname',
+          name: 'ordered',
           needToShow: true,
         },
+        { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
-        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
-        { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        {
+          title: 'Back Order Qty',
+          sortable: 0,
+          name: 'ordered',
+          needToShow: true,
+        },
+        {
+          title: 'Status',
+          sortable: 0,
+          name: 'orderedvalue',
+          needToShow: true,
+        },
+        { title: 'Action', sortable: 0, name: 'pending', needToShow: true },
       ],
     });
   }
 
-  onClickNext(): void {
-    this.paginationIndex += 1;
-  }
-
-  onClickPrev(): void {
-    this.paginationIndex -= 1;
-  }
-
-  onClickPaginationNo(i: number): void {
-    this.paginationIndex = i;
-  }
-
   ngOnInit(): void {
-    this.loadData(this.form.value, true);
-    this.formSubscription = this.form.valueChanges.subscribe((values) => {
+    this.loadData(this.purchaseOrderForm.value, true);
+    this.purchaseOrderForm.valueChanges.subscribe((values) => {
       this.loadData(values);
     });
   }
 
-  onClickButton(): void {
-    this.router.navigateByUrl('soservice');
+  gotoReportsPage(): void {
+    this.router.navigateByUrl('po-report');
   }
 
-  onClickSono(data: any): void {
-    this.router.navigate(['/service-sales-order-details'], {
+  onClickButton(): void {
+    this.router.navigateByUrl('po');
+  }
+
+  onClickEdit() {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: 'Do You Want To Modify Data ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
+  onClickDelete() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
+  onClickCancelOrder() {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
+  onClickViewMore(data: any) {
+    this.router.navigate(['/purchase-order-details'], {
       queryParams: { sono: data.sono },
     });
   }
 
-  getFilterData(formValues: any, serverData: any): void {
+  getFilterData(serverData: any) {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Service SO',
+        title: 'Total Purchase Order',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -161,7 +176,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Service SO',
+        title: 'Completed Purchase Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -173,7 +188,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Service SO',
+        title: 'Pending Purchase Order',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -186,7 +201,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
+        title: 'Cancelled Purchase Order',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -199,12 +214,11 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Service SO Value',
+        title: 'Purchase Order Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-
         neededRupeeSign: true,
       },
     ];
@@ -223,64 +237,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-
-    this.filteredServiceSalesOrderData = newArr;
-
-    let seriesData: any[] = [];
-    let graphLabels = [
-      ['Yesterday', 'Today'],
-      ['Last Week', 'This Week'],
-      ['Last Month', 'This Month'],
-      ['Last Year', 'This Year'],
-    ];
-
-    if (serverData.graphData.length) {
-      for (let [index, value] of serverData.graphData.entries()) {
-        let graphValue = Object.entries(value);
-        if (formValues.filterData === 1 || formValues.filterData === 3) {
-          graphValue = Object.entries(value).sort();
-        }
-
-        let graphArrayData = [];
-        for (let item of graphValue) {
-          graphArrayData.push(item[1]);
-        }
-
-        seriesData.push({
-          name: graphLabels[formValues.filterData - 1][index],
-          color: index == 0 ? '#E46A11' : '#419FC7',
-          data: graphArrayData,
-        });
-      }
-    }
-    console.log(seriesData, 'series data');
-
-    let chartCategories = Object.keys(serverData.graphData[0]);
-    if (formValues.filterData === 1 || formValues.filterData === 3) {
-      chartCategories = Object.keys(serverData.graphData[0]).sort();
-    }
-
-    this.chartOptions = {
-      series: seriesData,
-      chart: this.chartSpec,
-      dataLabels: {
-        enabled: false,
-      },
-      fill: {
-        colors: ['#419FC7', '#E46A11'],
-        gradient: {
-          opacityFrom: 0.38,
-          opacityTo: 0.2,
-        },
-      },
-      stroke: {
-        colors: ['#E46A11', '#419FC7'],
-        curve: 'smooth',
-      },
-      xaxis: {
-        categories: chartCategories,
-      },
-    };
+    this.filteredPurchaseOrderData = newArr;
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -310,12 +267,8 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       fromDate: firstDate,
       toDate: lastDate,
     };
-
-    console.log(params, 'params........');
-
-    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
-      console.log(res, 'response...........');
-      // if (res.orders.length) {
+    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+      console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -328,40 +281,41 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
       }
-      this.getFilterData(formValues, res);
-      // }
+      this.getFilterData(res);
     });
   }
 
-  ngOnDestroy(): void {
-    this.formSubscription.unsubscribe();
-  }
-
   downloadAsPDF() {
-    if (this.form.value.SelectSaveOptions === 0) {
+    if (this.purchaseOrderForm.value.SelectSaveOptions === 0) {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.form.value.filterData - 1].name;
+        this.filterByOptions[this.purchaseOrderForm.value.filterData - 1].name;
+      console.log(timeDuration, 'timeduration');
+
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Service Sales Order Summary(' + timeDuration + ')', 200, 50);
-        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
+        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredServiceSalesOrderData.flatMap(
-          (item) => item
-        );
+        let tableData = this.filteredPurchaseOrderData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Service Sales Order', 240, (topValue += 50));
+        pdf.text('Recent Purchase Order', 240, (topValue += 50));
         pdf.setFontSize(12);
-        let startDate: String = this.form.value?.startDate.toString();
-        let endDate: String = this.form.value?.endDate.toString();
-        console.log('=======Form Values========', this.form.value);
-        if (this.form.value.startDate != '')
+        let startDate: String =
+          this.purchaseOrderForm.value?.startDate.toString();
+        let endDate: String = this.purchaseOrderForm.value?.endDate.toString();
+        console.log(
+          startDate,
+          endDate,
+          '=======purchaseOrderForm Values========',
+          this.purchaseOrderForm.value
+        );
+        if (this.purchaseOrderForm.value.startDate != '')
           pdf.text(
             'From :' +
               startDate.substring(4, 14) +
@@ -370,22 +324,24 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
             50,
             (topValue += 70)
           );
-        if (this.form.value.reportStatus != '')
+        if (this.purchaseOrderForm.value.reportStatus != '')
           pdf.text(
             'Status : ' +
-              this.reportStatusOptions[this.form.value.reportStatus].name,
+              this.reportStatusOptions[
+                this.purchaseOrderForm.value.reportStatus - 1
+              ].name,
             50,
             (topValue += 20)
           );
-        if (this.form.value.vendorcode != '')
+        if (this.purchaseOrderForm.value.vendorcode != '')
           pdf.text(
             'Vendor Name : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
-        if (this.form.value.vendorcode != '')
+        if (this.purchaseOrderForm.value.vendorcode != '')
           pdf.text(
-            'Service Sales Person : ' + tableData[0]?.vendorname,
+            'Purchase Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -393,42 +349,38 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
           body: tableData,
           columns: [
             {
-              header: 'Order ID',
-              dataKey: 'sono',
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
-              header: 'Ref ID',
-              dataKey: 'vendorcode',
-            },
-            {
-              header: 'Vendor Detail',
+              header: 'Vendor',
               dataKey: 'vendorname',
             },
             {
-              header: 'Product Detail',
-              dataKey: 'sono',
+              header: 'Order Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Received Quantity',
+              dataKey: 'received',
             },
             {
               header: 'Data & Time',
               dataKey: 'sodate',
             },
             {
-              header: 'Quantity',
-              dataKey: 'sono',
-            },
-            {
-              header: 'Price',
-              dataKey: 'sono',
+              header: 'Back Order Quantity',
+              dataKey: 'received',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'received',
             },
           ],
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Service Sales Report.pdf');
+        pdf.save('Purchase Order Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -436,11 +388,11 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('serviceSalesOrderTable')!;
+      let element = document.getElementById('purchaseOrderTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Service Sales Order Report',
+        Title: 'Purchase Order Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -454,28 +406,26 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Service Sales Order Summary']], {
+      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
         origin: 'E1',
       });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
           [
-            'Sr No',
-            'Order ID',
-            'Ref ID',
-            'Vendor Detail',
-            'Product Detail',
+            'Order Value',
+            'Vendor',
+            'Order Quantity',
+            'Received Quantity',
             'Date & Time',
-            'Quantity',
-            'Price',
+            'Back Order Quantity',
             'Status',
           ],
         ],
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Service Sales Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

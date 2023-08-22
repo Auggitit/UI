@@ -26,15 +26,14 @@ export interface VendorDropDown {
   name: string;
 }
 @Component({
-  selector: 'app-service-sales-order-report',
-  templateUrl: './service-sales-order-report.component.html',
-  styleUrls: ['./service-sales-order-report.component.scss'],
+  selector: 'app-purchase-order-reports',
+  templateUrl: './purchase-order-reports.component.html',
+  styleUrls: ['./purchase-order-reports.component.scss'],
 })
-export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
+export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
-  serviceSalesOrderData!: any[];
-  filteredServiceSalesOrderData: any[] = [];
+  filteredPoData: any[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -136,11 +135,11 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('soservice');
+    this.router.navigateByUrl('po');
   }
 
   onClickSono(data: any): void {
-    this.router.navigate(['/service-sales-order-details'], {
+    this.router.navigate(['/purchase-order-details'], {
       queryParams: { sono: data.sono },
     });
   }
@@ -149,7 +148,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Service SO',
+        title: 'Total Purchase Order',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -161,7 +160,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Service SO',
+        title: 'Completed Purchase Order',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -173,7 +172,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Service SO',
+        title: 'Pending Purchase Order',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -186,7 +185,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Sales Order',
+        title: 'Cancelled Purchase Order',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -199,7 +198,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Service SO Value',
+        title: 'Purchase Order Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
@@ -224,7 +223,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       rowCount++;
     }
 
-    this.filteredServiceSalesOrderData = newArr;
+    this.filteredPoData = newArr;
 
     let seriesData: any[] = [];
     let graphLabels = [
@@ -346,17 +345,15 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Service Sales Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredServiceSalesOrderData.flatMap(
-          (item) => item
-        );
+        let tableData = this.filteredPoData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Service Sales Order', 240, (topValue += 50));
+        pdf.text('Recent Purchase Order', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
@@ -385,7 +382,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Service Sales Person : ' + tableData[0]?.vendorname,
+            'Purchase Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -428,7 +425,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Service Sales Report.pdf');
+        pdf.save('Purchase Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -436,11 +433,11 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('serviceSalesOrderTable')!;
+      let element = document.getElementById('poTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Service Sales Order Report',
+        Title: 'Purchase Order Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -454,7 +451,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Service Sales Order Summary']], {
+      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
         origin: 'E1',
       });
       XLSX.utils.sheet_add_aoa(
@@ -475,7 +472,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Service Sales Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

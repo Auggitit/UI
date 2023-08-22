@@ -42,16 +42,16 @@ import { SalesupdateComponent } from './vouchers/salesvch/salesupdate/salesupdat
 import { ServicesaleComponent } from './vouchers/salesservicevch/servicesale/servicesale.component';
 import { ServicesalelistComponent } from './vouchers/salesservicevch/servicesalelist/servicesalelist.component';
 import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesaleupdate/servicesaleupdate.component';
-import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
+// import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
-import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
-import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
+// import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
+// import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
 import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
 import { GrnReportComponent } from './reports/grn-report/grn-report.component';
 import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
 import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
 import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-list/sales-order-list.component';
-import { PurchaseOrderListComponent } from './vouchersList/purchase-order-list/purchase-order-list.component';
+// import { PurchaseOrderListComponent } from './vouchersList/purchase-order-list/purchase-order-list.component';
 import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.component';
 import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
 import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
@@ -66,6 +66,11 @@ import { SalesListsComponent } from './vouchersList/Sales/sales-lists/sales-list
 import { SalesReportComponent } from './vouchersList/Sales/sales-report/sales-report.component';
 import { SalesServiceListComponent } from './vouchersList/ServiceSales/sales-service-list/sales-service-list.component';
 import { SalesServiceReportComponent } from './vouchersList/ServiceSales/sales-service-report/sales-service-report.component';
+import { PurchaseOrderListComponent } from './vouchersList/PurchaseOrder/purchase-order-list/purchase-order-list.component';
+import { PurchaseOrderReportsComponent } from './vouchersList/PurchaseOrder/purchase-order-reports/purchase-order-reports.component';
+import { PurchaseDetailsComponent } from './vouchersList/PurchaseOrder/purchase-details/purchase-details.component';
+import { SevicePurchaseOrderComponent } from './vouchersList/ServicePurchaseOrder/sevice-purchase-order/sevice-purchase-order.component';
+import { SevicePurchaseOrderReportComponent } from './vouchersList/ServicePurchaseOrder/sevice-purchase-order-report/sevice-purchase-order-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -114,7 +119,7 @@ const routes: Routes = [
   { path: 'so-report', component: SalesOrderReportComponent },
   { path: 'sales-order-list', component: SalesOrderListComponent },
   { path: 'purchase-order-list', component: PurchaseOrderListComponent },
-  { path: 'purchase-order-reports', component: PurchaseOrderReportsComponent },
+  { path: 'po-report', component: PurchaseOrderReportsComponent },
   {
     path: 'service-sales-order-list',
     component: ServiceSalesOrderListComponent,
@@ -144,6 +149,8 @@ const routes: Routes = [
   },
   { path: 'sales-details', component: SalesDetailsComponent },
   { path: 'service-sales-details', component: ServiceSalesDetailsComponent },
+  { path: 'purchase-order-details', component: PurchaseDetailsComponent },
+  { path: 'service-po-details', component: PurchaseDetailsComponent },
 ];
 
 @NgModule({
