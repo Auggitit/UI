@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { ApexChart } from 'ng-apexcharts';
-import { Subscription, startWith } from 'rxjs';
+import { Subscription } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';

@@ -7,7 +7,6 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { SalesService } from 'src/app/services/sales.service';
 import { PoService } from 'src/app/services/po.service';
 
 @Component({
@@ -23,7 +22,6 @@ export class PurchaseDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    // private salesApi: SalesService,
     private poApi: PoService,
     private router: ActivatedRoute,
     private navigate: Router,
@@ -36,7 +34,7 @@ export class PurchaseDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['pono'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -48,13 +46,13 @@ export class PurchaseDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('sales');
+    this.navigate.navigateByUrl('po');
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
+    let params = this.router.snapshot.queryParams['pono'];
     console.log(params, 'params');
-    this.poApi.getPoDetail({ sono: params }).subscribe((res: any) => {
+    this.poApi.getPoDetail({ pono: params }).subscribe((res: any) => {
       this.purchaseOrderData = res;
       this.productsData = res.soDetailLists;
     });

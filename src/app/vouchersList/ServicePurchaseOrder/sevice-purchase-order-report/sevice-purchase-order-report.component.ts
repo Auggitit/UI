@@ -19,7 +19,6 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SsoService } from 'src/app/services/sso.service';
 import { PoserviceService } from 'src/app/services/poservice.service';
 
 export interface VendorDropDown {
@@ -55,8 +54,8 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
     {
       title: 'Vendor Detail',
       sortable: 0,
@@ -64,7 +63,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -80,7 +79,6 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    // private serviceSOApi: SsoService,
     private servicePoApi: PoserviceService,
     private router: Router,
     private fb: FormBuilder
@@ -95,8 +93,8 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
         {
           title: 'Vendor Detail',
           sortable: 0,
@@ -109,7 +107,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -140,9 +138,9 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('poservice');
   }
 
-  onClickSono(data: any): void {
+  onClickPono(data: any): void {
     this.router.navigate(['/service-po-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { pono: data.pono },
     });
   }
 
@@ -395,7 +393,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Ref ID',
@@ -407,23 +405,23 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'podate',
             },
             {
               header: 'Quantity',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Price',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
           ],
           startY: (topValue += 30),

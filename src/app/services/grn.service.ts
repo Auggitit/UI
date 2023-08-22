@@ -248,10 +248,10 @@ export class GrnService {
       );
   }
 
-  getGrnDetail({ sono }: { sono: string }) {
+  getGrnDetail({ pono }: { pono: string }) {
     let params = new HttpParams();
-    if (sono) {
-      params = params.append('sono', sono);
+    if (pono) {
+      params = params.append('pono', pono);
     }
 
     return this.http

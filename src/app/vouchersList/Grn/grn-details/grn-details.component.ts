@@ -5,7 +5,6 @@ import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { GrnService } from 'src/app/services/grn.service';
@@ -50,8 +49,8 @@ export class GrnDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
-    this.grnApi.getGrnDetail({ sono: params }).subscribe((res: any) => {
+    let params = this.router.snapshot.queryParams['pono'];
+    this.grnApi.getGrnDetail({ pono: params }).subscribe((res: any) => {
       this.grnData = res;
       this.productsData = res.soDetailLists;
     });

@@ -5,7 +5,6 @@ import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { PoserviceService } from 'src/app/services/poservice.service';
@@ -23,7 +22,6 @@ export class ServicePoDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    // private salesOrderApi: SoService,
     private servicePoApi: PoserviceService,
     private router: ActivatedRoute,
     private navigate: Router,
@@ -47,13 +45,13 @@ export class ServicePoDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('so');
+    this.navigate.navigateByUrl('po');
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
+    let params = this.router.snapshot.queryParams['pono'];
     this.servicePoApi
-      .getServicePoDetail({ sono: params })
+      .getServicePoDetail({ pono: params })
       .subscribe((res: any) => {
         this.purchaseOrderData = res;
         this.productsData = res.soDetailLists;
@@ -66,10 +64,10 @@ export class ServicePoDetailsComponent implements OnInit {
     html2canvas(data, { scale: 2 }).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Sales Order Details', 200, 50);
+      pdf.text(' Service Po Details', 200, 50);
       pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
       pdf.addPage();
-      pdf.save('Sales Details Report.pdf');
+      pdf.save('Service Po Details Report.pdf');
     });
   }
 }

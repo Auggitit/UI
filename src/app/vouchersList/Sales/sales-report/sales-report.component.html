@@ -39,33 +39,8 @@
       <div
         class="d-flex flex-wrap align-items-center justify-content-between pl-3 pt-3 pb-3"
       >
-        <!-- <div
-          class="d-flex flex-wrap align-items-center justify-content-between pl-3"
-        > -->
-        <!-- <div class="d-flex flex-wrap align-items-center"> -->
-        <p
-          style="
-            font-size: 1.125rem;
-            font-weight: 600;
-            /* padding-right: 8px;
-                margin: 0; */
-          "
-        >
-          Recent Sales
-        </p>
-        <!-- <p
-              style="
-                color: #0d894f;
-                background-color: #e7f4ee;
-                border-radius: 100px;
-                padding: 8px;
-                margin: 0;
-              "
-            >
-              +2 Orders
-            </p> -->
-        <!-- </div> -->
-        <!-- <span> -->
+        <p style="font-size: 1.125rem; font-weight: 600">Recent Sales</p>
+
         <app-table-filters
           [searchControlName]="'searchValues'"
           [vendorDropDownData]="vendorDropDownData"
@@ -77,8 +52,6 @@
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
-        <!-- </span> -->
-        <!-- </div> -->
       </div>
 
       <script src="libs/jspdf.umd.js"></script>

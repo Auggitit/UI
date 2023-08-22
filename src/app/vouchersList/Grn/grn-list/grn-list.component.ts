@@ -10,7 +10,6 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -45,7 +44,7 @@ export class GrnListComponent implements OnInit {
       name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
     {
       title: 'Order Qty',
       sortable: 0,
@@ -53,7 +52,7 @@ export class GrnListComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
@@ -81,7 +80,7 @@ export class GrnListComponent implements OnInit {
           name: 'orderedvalue',
           needToShow: true,
         },
-        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
         {
           title: 'Order Qty',
           sortable: 0,
@@ -89,7 +88,7 @@ export class GrnListComponent implements OnInit {
           needToShow: true,
         },
         { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
@@ -157,7 +156,7 @@ export class GrnListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/grn-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { pono: data.pono },
     });
   }
 
@@ -365,7 +364,7 @@ export class GrnListComponent implements OnInit {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'podate',
             },
             {
               header: 'Back Order Quantity',

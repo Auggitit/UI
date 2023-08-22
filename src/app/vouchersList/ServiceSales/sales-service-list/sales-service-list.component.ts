@@ -9,10 +9,8 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SsoService } from 'src/app/services/sso.service';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { SsalesService } from 'src/app/services/ssales.service';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -61,7 +59,6 @@ export class SalesServiceListComponent implements OnInit {
 
   constructor(
     private serviceSalesApi: SsalesService,
-    // private salesOrderApi: SoService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router

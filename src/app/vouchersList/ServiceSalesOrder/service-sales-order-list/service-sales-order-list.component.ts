@@ -8,12 +8,9 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { VendorDropDown } from '../service-sales-order-report/service-sales-order-report.component';
 import { SsoService } from 'src/app/services/sso.service';
-import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
-import Swal from 'sweetalert2';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';

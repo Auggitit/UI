@@ -20,7 +20,6 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import { GrnService } from 'src/app/services/grn.service';
 
 @Component({
@@ -53,8 +52,8 @@ export class GrnReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
     {
       title: 'Vendor Detail',
       sortable: 0,
@@ -62,7 +61,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -92,8 +91,8 @@ export class GrnReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
         {
           title: 'Vendor Detail',
           sortable: 0,
@@ -106,7 +105,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -136,9 +135,9 @@ export class GrnReportComponent implements OnInit, OnDestroy {
   onClickButton(): void {
     this.router.navigateByUrl('grn');
   }
-  onClickSono(data: any): void {
+  onClickPono(data: any): void {
     this.router.navigate(['/grn-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { pono: data.pono },
     });
   }
 
@@ -201,8 +200,6 @@ export class GrnReportComponent implements OnInit, OnDestroy {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -389,7 +386,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Ref ID',
@@ -405,7 +402,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'podate',
             },
             {
               header: 'Quantity',

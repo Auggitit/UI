@@ -58,7 +58,7 @@
       <script src="libs/jspdf.umd.js"></script>
       <script src="../dist/jspdf.plugin.autotable.js"></script>
       <app-mat-table
-        id="serviceSOTable"
+        id="serviceGrnTable"
         [columns]="columns"
         [filteredData]="filteredServiceGrnData"
         [paginationIndex]="paginationIndex"
@@ -103,9 +103,9 @@
               "
             >
               <a
-                (click)="onClickSono(data)"
+                (click)="onClickPono(data)"
                 style="color: #13b2e4; font-weight: 600"
-                >{{ data.sono }}</a
+                >{{ data.pono }}</a
               >
             </td>
             <td
@@ -118,7 +118,7 @@
               "
             >
               <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.sono
+                data.pono
               }}</a>
             </td>
             <td
@@ -134,7 +134,7 @@
                 {{ data.vendorname }}
               </p>
               <a href="" style="color: #667085; line-height: 2">{{
-                data.sono
+                data.pono
               }}</a>
             </td>
             <td
@@ -163,7 +163,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              {{ data.sodate }}
+              {{ data.podate }}
             </td>
             <td
               *ngIf="columns[5].needToShow"

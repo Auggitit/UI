@@ -10,7 +10,6 @@ import {
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { SsoService } from 'src/app/services/sso.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -44,7 +43,7 @@ export class ServiceGrnListComponent implements OnInit {
       name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
     {
       title: 'Order Qty',
       sortable: 0,
@@ -80,7 +79,7 @@ export class ServiceGrnListComponent implements OnInit {
           name: 'orderedvalue',
           needToShow: true,
         },
-        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
         {
           title: 'Order Qty',
           sortable: 0,
@@ -246,7 +245,7 @@ export class ServiceGrnListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/service-grn-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { pono: data.pono },
     });
   }
 

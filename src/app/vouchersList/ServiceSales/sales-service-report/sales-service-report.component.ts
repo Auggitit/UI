@@ -13,7 +13,6 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { Router } from '@angular/router';
-import { SsoService } from 'src/app/services/sso.service';
 import {
   dateFilterOptions,
   dropDownData,
@@ -81,7 +80,6 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    // private serviceSOApi: SsoService,
     private serviceSalesApi: SsalesService,
     private router: Router,
     private fb: FormBuilder

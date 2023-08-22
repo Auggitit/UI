@@ -19,7 +19,6 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SsalesService } from 'src/app/services/ssales.service';
 import { GrnserviceService } from 'src/app/services/grnservice.service';
 
 export interface VendorDropDown {
@@ -56,8 +55,8 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
     {
       title: 'Vendor Detail',
       sortable: 0,
@@ -65,7 +64,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -95,8 +94,8 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'pono', needToShow: true },
         {
           title: 'Vendor Detail',
           sortable: 0,
@@ -109,7 +108,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'podate', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -140,9 +139,9 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('servicegrn');
   }
 
-  onClickSono(data: any): void {
+  onClickPono(data: any): void {
     this.router.navigate(['/service-grn-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { pono: data.pono },
     });
   }
 
@@ -392,7 +391,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Ref ID',
@@ -404,23 +403,23 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'podate',
             },
             {
               header: 'Quantity',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Price',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'pono',
             },
           ],
           startY: (topValue += 30),
@@ -434,7 +433,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('serviceSOTable')!;
+      let element = document.getElementById('serviceGrnTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {

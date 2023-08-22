@@ -8,7 +8,6 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { SsalesService } from 'src/app/services/ssales.service';
 import { GrnserviceService } from 'src/app/services/grnservice.service';
 @Component({
   selector: 'app-service-grn-details',
@@ -24,7 +23,6 @@ export class ServiceGrnDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    // private serviceSalesApi: SsalesService,
     private serviceGrnApi: GrnserviceService,
     private router: ActivatedRoute,
     private navigate: Router,
@@ -37,7 +35,7 @@ export class ServiceGrnDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['pono'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -53,11 +51,11 @@ export class ServiceGrnDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
+    let params = this.router.snapshot.queryParams['pono'];
     console.log(params, 'params');
 
     this.serviceGrnApi
-      .getServiceGrnDetail({ sono: params })
+      .getServiceGrnDetail({ pono: params })
       .subscribe((res: any) => {
         console.log(res, '...........reponae');
 
