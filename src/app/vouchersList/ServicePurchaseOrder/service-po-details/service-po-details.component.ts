@@ -8,6 +8,7 @@ import {
 import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { PoserviceService } from 'src/app/services/poservice.service';
 
 @Component({
   selector: 'app-service-po-details',
@@ -16,18 +17,19 @@ import { jsPDF } from 'jspdf';
 })
 export class ServicePoDetailsComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  salesOrderDetailsForm!: FormGroup;
+  purchaseOrderDetailsForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
-  salesOrderData: any;
+  purchaseOrderData: any;
   productsData: any[] = [];
 
   constructor(
-    private salesOrderApi: SoService,
+    // private salesOrderApi: SoService,
+    private servicePoApi: PoserviceService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
   ) {
-    this.salesOrderDetailsForm = this.fb.group({
+    this.purchaseOrderDetailsForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
     });
   }
@@ -50,10 +52,12 @@ export class ServicePoDetailsComponent implements OnInit {
 
   loadData() {
     let params = this.router.snapshot.queryParams['sono'];
-    this.salesOrderApi.getSoDetail({ sono: params }).subscribe((res: any) => {
-      this.salesOrderData = res;
-      this.productsData = res.soDetailLists;
-    });
+    this.servicePoApi
+      .getServicePoDetail({ sono: params })
+      .subscribe((res: any) => {
+        this.purchaseOrderData = res;
+        this.productsData = res.soDetailLists;
+      });
   }
 
   downloadAsPDF() {

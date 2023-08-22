@@ -15,24 +15,24 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { PoService } from 'src/app/services/po.service';
+import { GrnService } from 'src/app/services/grn.service';
 
 @Component({
-  selector: 'app-purchase-order-list',
-  templateUrl: './purchase-order-list.component.html',
-  styleUrls: ['./purchase-order-list.component.scss'],
+  selector: 'app-grn-list',
+  templateUrl: './grn-list.component.html',
+  styleUrls: ['./grn-list.component.scss'],
 })
-export class PurchaseOrderListComponent implements OnInit {
+export class GrnListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  purchaseOrderForm!: FormGroup;
+  grnForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredPurchaseOrderData: any[] = [];
+  filteredGrnData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
@@ -60,13 +60,12 @@ export class PurchaseOrderListComponent implements OnInit {
   ];
 
   constructor(
-    // private salesOrderApi: SoService,
-    private poApi: PoService,
+    private grnApi: GrnService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
   ) {
-    this.purchaseOrderForm = this.fb.group({
+    this.grnForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[3].id],
       startDate: [''],
@@ -109,18 +108,18 @@ export class PurchaseOrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData(this.purchaseOrderForm.value, true);
-    this.purchaseOrderForm.valueChanges.subscribe((values) => {
+    this.loadData(this.grnForm.value, true);
+    this.grnForm.valueChanges.subscribe((values) => {
       this.loadData(values);
     });
   }
 
   gotoReportsPage(): void {
-    this.router.navigateByUrl('po-report');
+    this.router.navigateByUrl('grn-report');
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('po');
+    this.router.navigateByUrl('grn');
   }
 
   onClickEdit() {
@@ -157,7 +156,7 @@ export class PurchaseOrderListComponent implements OnInit {
   }
 
   onClickViewMore(data: any) {
-    this.router.navigate(['/purchase-order-details'], {
+    this.router.navigate(['/grn-details'], {
       queryParams: { sono: data.sono },
     });
   }
@@ -166,7 +165,7 @@ export class PurchaseOrderListComponent implements OnInit {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Purchase Order',
+        title: 'Total GRN',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -178,7 +177,7 @@ export class PurchaseOrderListComponent implements OnInit {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Purchase Order',
+        title: 'Completed GRN',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -190,7 +189,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Purchase Order',
+        title: 'Pending GRN',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -203,7 +202,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Purchase Order',
+        title: 'Cancelled GRN',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -216,7 +215,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Purchase Order Value',
+        title: 'GRN Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
@@ -239,7 +238,7 @@ export class PurchaseOrderListComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredPurchaseOrderData = newArr;
+    this.filteredGrnData = newArr;
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -269,7 +268,7 @@ export class PurchaseOrderListComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.poApi.getAllPoList(params).subscribe((res: any) => {
+    this.grnApi.getAllGrnList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
@@ -288,36 +287,35 @@ export class PurchaseOrderListComponent implements OnInit {
   }
 
   downloadAsPDF() {
-    if (this.purchaseOrderForm.value.SelectSaveOptions === 0) {
+    if (this.grnForm.value.SelectSaveOptions === 0) {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.purchaseOrderForm.value.filterData - 1].name;
+        this.filterByOptions[this.grnForm.value.filterData - 1].name;
       console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.text(' GRN Summary(' + timeDuration + ')', 200, 50);
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredPurchaseOrderData.flatMap((item) => item);
+        let tableData = this.filteredGrnData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Purchase Order', 240, (topValue += 50));
+        pdf.text('Recent GRN', 240, (topValue += 50));
         pdf.setFontSize(12);
-        let startDate: String =
-          this.purchaseOrderForm.value?.startDate.toString();
-        let endDate: String = this.purchaseOrderForm.value?.endDate.toString();
+        let startDate: String = this.grnForm.value?.startDate.toString();
+        let endDate: String = this.grnForm.value?.endDate.toString();
         console.log(
           startDate,
           endDate,
-          '=======purchaseOrderForm Values========',
-          this.purchaseOrderForm.value
+          '=======grnForm Values========',
+          this.grnForm.value
         );
-        if (this.purchaseOrderForm.value.startDate != '')
+        if (this.grnForm.value.startDate != '')
           pdf.text(
             'From :' +
               startDate.substring(4, 14) +
@@ -326,24 +324,23 @@ export class PurchaseOrderListComponent implements OnInit {
             50,
             (topValue += 70)
           );
-        if (this.purchaseOrderForm.value.reportStatus != '')
+        if (this.grnForm.value.reportStatus != '')
           pdf.text(
             'Status : ' +
-              this.reportStatusOptions[
-                this.purchaseOrderForm.value.reportStatus - 1
-              ].name,
+              this.reportStatusOptions[this.grnForm.value.reportStatus - 1]
+                .name,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.grnForm.value.vendorcode != '')
           pdf.text(
             'Vendor Name : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.grnForm.value.vendorcode != '')
           pdf.text(
-            'Purchase Person : ' + tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -382,7 +379,7 @@ export class PurchaseOrderListComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Purchase Order Report.pdf');
+        pdf.save('GRN Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -390,11 +387,11 @@ export class PurchaseOrderListComponent implements OnInit {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('purchaseOrderTable')!;
+      let element = document.getElementById('grnTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Purchase Order Report',
+        Title: 'GRN Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -408,9 +405,7 @@ export class PurchaseOrderListComponent implements OnInit {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
-        origin: 'E1',
-      });
+      XLSX.utils.sheet_add_aoa(ws, [['GRN Summary']], { origin: 'E1' });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
@@ -427,7 +422,7 @@ export class PurchaseOrderListComponent implements OnInit {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'GRN Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

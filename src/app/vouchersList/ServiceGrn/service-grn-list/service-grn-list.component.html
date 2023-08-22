@@ -2,8 +2,8 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Service Goods Receipt Note (GRN) Details"
-        [reportFormGroupName]="serviceSalesOrderForm"
+        title="SERVICE GRN DETAILS"
+        [reportFormGroupName]="serviceGrnForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
@@ -11,57 +11,37 @@
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Service GRN"
+        (onClickDownload)="downloadAsPDF()"
+        buttonTitle="Create Service GRN"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
-      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+    <div id="contentToSave" #contentToSave>
+      <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+        <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
+          <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <!-- <div class="p-3"> -->
-      <div
-        class="d-flex flex-wrap align-items-center justify-content-between p-3"
-      >
-        <div class="d-flex flex-wrap align-items-center">
-          <p
-            style="
-              font-weight: 600;
-              font-size: 1.125rem;
-              padding-right: 8px;
-              margin: 0;
-            "
-          >
-            Recent Service Goods Receipt Note (GRN)
-          </p>
-          <p
-            style="
-              color: #0d894f;
-              background-color: #e7f4ee;
-              border-radius: 100px;
-              padding: 8px;
-              margin: 0;
-            "
-          >
-            +2 Orders
-          </p>
-        </div>
-
+      <p style="padding: 12px; font-weight: 600; font-size: 1.125rem">
+        Recent Service GRN
+      </p>
+      <div class="pl-2 pb-2">
         <app-table-filters
+          [searchControlName]="'searchValues'"
           [vendorDropDownData]="vendorDropDownData"
           [statusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="serviceSalesOrderForm"
+          [tableFiltersGroupName]="serviceGrnForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
       </div>
-      <!-- </div> -->
       <app-mat-table
+        id="serviceGrnTable"
         [columns]="columns"
-        [filteredData]="filteredServiceSalesOrderData"
+        [filteredData]="filteredServiceGrnData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -103,7 +83,7 @@
               "
             >
               <a href="" style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue
+                data.orderedvalue | currency : "INR"
               }}</a>
             </td>
             <td
@@ -141,8 +121,8 @@
                 text-align: left;
                 min-width: 109px;
                 max-width: 109px;
-                border-top: 1px solid #f0f1f3;
                 padding-left: 20px;
+                border-top: 1px solid #f0f1f3;
               "
             >
               {{ data.received }}
@@ -171,22 +151,23 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">{{ data.ordered }}</p>
+              <p class="mb-0">{{ data.ordered - data.received }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
+                align-items: center;
                 min-width: 114px;
                 max-width: 114px;
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -195,7 +176,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="
@@ -209,6 +190,7 @@
               </div>
             </td>
             <td
+              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -219,6 +201,11 @@
               "
             >
               <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
                 class="bi bi-three-dots-vertical"
                 [matMenuTriggerFor]="threeDotOptions"
               >
@@ -259,7 +246,7 @@
                 >
                   Cancel Order
                 </button>
-                <button mat-menu-item (click)="onClickViewMore()">
+                <button mat-menu-item (click)="onClickViewMore(data)">
                   View More
                 </button>
               </mat-menu>

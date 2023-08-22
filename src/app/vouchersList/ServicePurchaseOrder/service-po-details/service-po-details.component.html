@@ -12,7 +12,7 @@
       </app-mat-button>
       <app-mat-select-box
         [controlName]="'SelectSaveOptions'"
-        [groupName]="salesOrderDetailsForm"
+        [groupName]="purchaseOrderDetailsForm"
         [formOptions]="saveAsOptions"
         selectWidth="130px"
         IconHeightWidth="23px"
@@ -57,18 +57,18 @@
             "
           >
             VOUCH APPLICAITON PRIVATE LIMITED
-            <!-- {{ salesOrderData.companydisplayname }} -->
+            <!-- {{ purchaseOrderData.companydisplayname }} -->
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            <!-- {{ salesOrderData.companyaddress.split(", ")[0] }} -->
+            <!-- {{ purchaseOrderData.companyaddress.split(", ")[0] }} -->
             96, MANGADU SWAMY STREET,
 
-            <!-- {{ salesOrderData.companyaddress.split(",")[1] }} -->
+            <!-- {{ purchaseOrderData.companyaddress.split(",")[1] }} -->
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            <!-- {{ salesOrderData.companyaddress.split(",")[2] }}
-          {{ salesOrderData.companyaddress.split(",")[3] }}
-          {{ salesOrderData.companyaddress.split(",")[4] }} -->
+            <!-- {{ purchaseOrderData.companyaddress.split(",")[2] }}
+          {{ purchaseOrderData.companyaddress.split(",")[3] }}
+          {{ purchaseOrderData.companyaddress.split(",")[4] }} -->
             CHENNAI, TAMIL NADU, INDIA
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
@@ -86,10 +86,10 @@
             <p style="color: #333843">Reference PO NO</p>
           </div>
           <div>
-            <p style="color: #419fc7">{{ salesOrderData.sono }}</p>
-            <p style="color: #419fc7">{{ salesOrderData.sodate }}</p>
+            <p style="color: #419fc7">{{ purchaseOrderData.sono }}</p>
+            <p style="color: #419fc7">{{ purchaseOrderData.sodate }}</p>
             <p style="color: #419fc7">45 Days</p>
-            <p style="color: #419fc7">{{ salesOrderData.refno }}</p>
+            <p style="color: #419fc7">{{ purchaseOrderData.refno }}</p>
           </div>
         </div>
       </div>
@@ -119,22 +119,22 @@
               font-weight: 400;
             "
           >
-            {{ salesOrderData.companydisplayname }}
+            {{ purchaseOrderData.companydisplayname }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ salesOrderData.companyaddress.split(", ")[0] }}
-            {{ salesOrderData.companyaddress.split(",")[1] }}
+            {{ purchaseOrderData.companyaddress.split(", ")[0] }}
+            {{ purchaseOrderData.companyaddress.split(",")[1] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ salesOrderData.companyaddress.split(",")[2] }}
-            {{ salesOrderData.companyaddress.split(",")[3] }}
-            {{ salesOrderData.companyaddress.split(",")[4] }}
+            {{ purchaseOrderData.companyaddress.split(",")[2] }}
+            {{ purchaseOrderData.companyaddress.split(",")[3] }}
+            {{ purchaseOrderData.companyaddress.split(",")[4] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ salesOrderData.gstno }}
+            GST- {{ purchaseOrderData.gstno }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ salesOrderData.contactphone }}
+            Contact:{{ purchaseOrderData.contactphone }}
           </p>
         </div>
         <div>
@@ -157,19 +157,19 @@
             LTI Limited
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ salesOrderData.deliveryaddress.split(", ")[0] }}
-            {{ salesOrderData.deliveryaddress.split(",")[1] }}
+            {{ purchaseOrderData.deliveryaddress.split(", ")[0] }}
+            {{ purchaseOrderData.deliveryaddress.split(",")[1] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ salesOrderData.deliveryaddress.split(",")[2] }}
-            {{ salesOrderData.deliveryaddress.split(",")[3] }}
-            {{ salesOrderData.deliveryaddress.split(",")[4] }}
+            {{ purchaseOrderData.deliveryaddress.split(",")[2] }}
+            {{ purchaseOrderData.deliveryaddress.split(",")[3] }}
+            {{ purchaseOrderData.deliveryaddress.split(",")[4] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ salesOrderData.gstno }}
+            GST- {{ purchaseOrderData.gstno }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ salesOrderData.contactphone }}
+            Contact:{{ purchaseOrderData.contactphone }}
           </p>
         </div>
       </div>

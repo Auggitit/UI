@@ -46,10 +46,10 @@ import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesa
 import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
 // import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
 // import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
-import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
-import { GrnReportComponent } from './reports/grn-report/grn-report.component';
-import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
-import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
+// import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
+// import { GrnReportComponent } from './reports/grn-report/grn-report.component';
+// import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
+// import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
 import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-list/sales-order-list.component';
 // import { PurchaseOrderListComponent } from './vouchersList/purchase-order-list/purchase-order-list.component';
 import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.component';
@@ -71,6 +71,12 @@ import { PurchaseOrderReportsComponent } from './vouchersList/PurchaseOrder/purc
 import { PurchaseDetailsComponent } from './vouchersList/PurchaseOrder/purchase-details/purchase-details.component';
 import { SevicePurchaseOrderComponent } from './vouchersList/ServicePurchaseOrder/sevice-purchase-order/sevice-purchase-order.component';
 import { SevicePurchaseOrderReportComponent } from './vouchersList/ServicePurchaseOrder/sevice-purchase-order-report/sevice-purchase-order-report.component';
+import { GrnListComponent } from './vouchersList/Grn/grn-list/grn-list.component';
+import { GrnDetailsComponent } from './vouchersList/Grn/grn-details/grn-details.component';
+import { GrnReportComponent } from './vouchersList/Grn/grn-report/grn-report.component';
+import { ServiceGrnListComponent } from './vouchersList/ServiceGrn/service-grn-list/service-grn-list.component';
+import { ServiceGrnDetailsComponent } from './vouchersList/ServiceGrn/service-grn-details/service-grn-details.component';
+import { ServiceGrnReportComponent } from './vouchersList/ServiceGrn/service-grn-report/service-grn-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -151,6 +157,8 @@ const routes: Routes = [
   { path: 'service-sales-details', component: ServiceSalesDetailsComponent },
   { path: 'purchase-order-details', component: PurchaseDetailsComponent },
   { path: 'service-po-details', component: PurchaseDetailsComponent },
+  { path: 'grn-details', component: GrnDetailsComponent },
+  { path: 'service-grn-details', component: ServiceGrnDetailsComponent },
 ];
 
 @NgModule({

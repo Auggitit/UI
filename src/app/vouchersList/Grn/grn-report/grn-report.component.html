@@ -2,7 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="SERVICE GOODS RECEIPT NOTE (GRN) SUMMARY"
+        title="GRN SUMMARY"
         [reportFormGroupName]="form"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
@@ -10,7 +10,6 @@
         [SelectSaveOptions]="'SelectSaveOptions'"
         (onClickDownload)="downloadAsPDF()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Service SO"
       ></app-reports-header>
     </div>
     <div id="contentToSave" #contentToSave>
@@ -29,61 +28,34 @@
         <div class="col-8 col-8 col-8 col-8 pr-0">
           <app-mat-area-graph
             [chart-options]="chartOptions"
-            title="Service Sales"
-            subTitle="Service Goods Receipt Note (GRN) Summary"
+            title="GRN"
+            subTitle="GRN Summary"
           ></app-mat-area-graph>
         </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <div class="pl-2 pt-3 pb-3">
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between p-3"
-        >
-          <div class="d-flex flex-wrap align-items-center">
-            <p
-              style="
-                font-size: 1.125rem;
-                font-weight: 600;
-                padding-right: 8px;
-                margin: 0;
-              "
-            >
-              Recent Service Goods Receipt Note (GRN)
-            </p>
-            <p
-              style="
-                color: #0d894f;
-                background-color: #e7f4ee;
-                border-radius: 100px;
-                padding: 8px;
-                margin: 0;
-              "
-            >
-              +2 Orders
-            </p>
-          </div>
-          <span>
-            <app-table-filters
-              [vendorDropDownData]="vendorDropDownData"
-              [statusOptions]="reportStatusOptions"
-              [tableFiltersGroupName]="form"
-              [searchSuggestionsList]="searchSuggestionsList"
-              [reportStatus]="'reportStatus'"
-              [vendorcode]="'vendorcode'"
-              [filterColumnName]="'columnFilter'"
-              [columnList]="columns"
-            ></app-table-filters>
-          </span>
-        </div>
+      <div class="pl-3 pt-3 pb-3">
+        <p style="font-size: 1.125rem; font-weight: 600">Recent GRN</p>
+        <app-table-filters
+          [searchControlName]="'searchValues'"
+          [vendorDropDownData]="vendorDropDownData"
+          [statusOptions]="reportStatusOptions"
+          [tableFiltersGroupName]="form"
+          [searchSuggestionsList]="searchSuggestionsList"
+          [reportStatus]="'reportStatus'"
+          [vendorcode]="'vendorcode'"
+          [filterColumnName]="'columnFilter'"
+          [columnList]="columns"
+        ></app-table-filters>
       </div>
 
       <script src="libs/jspdf.umd.js"></script>
       <script src="../dist/jspdf.plugin.autotable.js"></script>
       <app-mat-table
-        id="serviceSalesOrderTable"
+        id="grnTable"
         [columns]="columns"
-        [filteredData]="filteredServiceSalesOrderData"
+        [filteredData]="filteredGrnData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -98,8 +70,8 @@
               style="
                 min-width: 90px;
                 /* max-width: 90px; */
-                border-top: 1px solid #f0f1f3;
                 align-items: center;
+                border-top: 1px solid #f0f1f3;
                 justify-content: left;
                 height: inherit;
                 padding-left: 35px;
@@ -125,9 +97,11 @@
                 max-width: 100px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.sono
-              }}</a>
+              <a
+                (click)="onClickSono(data)"
+                style="color: #13b2e4; font-weight: 600"
+                >{{ data.sono }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -168,10 +142,10 @@
               "
             >
               <p class="m-0" style="color: #333843; font-weight: 600">
-                {{ data.solistDetails[0].pname }}
+                {{ data.orderDetails[0].pname }}
               </p>
               <p style="font-weight: 400; color: #667085">
-                + {{ data.solistDetails.length }} other products
+                + {{ data.orderDetails.length }} other products
               </p>
             </td>
             <td
@@ -205,7 +179,9 @@
                 <span style="font-weight: 500">{{ data.received }}</span>
               </p>
               <p class="mb-0" style="font-weight: 600">
-                Back Order -<span style="font-weight: 500">{{ 30 }}</span>
+                Back Order -<span style="font-weight: 500">{{
+                  data.ordered - data.received
+                }}</span>
               </p>
             </td>
             <td
@@ -218,13 +194,16 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">Price - {{ data.orderedvalue }}</p>
-              <p class="mb-0">GST- 3000</p>
+              <p class="mb-0">
+                Price - {{ data.orderedvalue | currency : "INR" }}
+              </p>
+              <p class="mb-0">GST- 3,000</p>
               <p class="mb-0">
                 Total-
-                <span style="font-weight: 600"
-                  >₹{{ data.solistDetails.length * data.orderedvalue }}</span
-                >
+                <span style="font-weight: 600">{{
+                  data.orderDetails.length * data.orderedvalue
+                    | currency : "INR"
+                }}</span>
               </p>
             </td>
             <td
@@ -237,10 +216,10 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
-                    background-color: #fdf1e8;
+                    background-color: #feedec;
                     padding: 8px;
                     border-radius: 100px;
                     color: #e46a11;
@@ -249,7 +228,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="

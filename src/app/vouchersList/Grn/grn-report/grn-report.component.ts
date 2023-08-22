@@ -1,6 +1,18 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { ApexChart } from 'ng-apexcharts';
+import { Subscription } from 'rxjs';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { Router } from '@angular/router';
 import {
   VendorDropDown,
   dateFilterOptions,
@@ -8,165 +20,133 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { Router } from '@angular/router';
-import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { SoService } from 'src/app/services/so.service';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { PoService } from 'src/app/services/po.service';
+import { GrnService } from 'src/app/services/grn.service';
 
 @Component({
-  selector: 'app-purchase-order-list',
-  templateUrl: './purchase-order-list.component.html',
-  styleUrls: ['./purchase-order-list.component.scss'],
+  selector: 'app-grn-report',
+  templateUrl: './grn-report.component.html',
+  styleUrls: ['./grn-report.component.scss'],
 })
-export class PurchaseOrderListComponent implements OnInit {
+export class GrnReportComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  form!: FormGroup;
-  vendorDropDownData: any[] = [];
-  purchaseOrderForm!: FormGroup;
-  cardsDetails: any[] = [];
-  saveAsOptions: dropDownData[] = exportOptions;
-  filterByOptions: dropDownData[] = dateFilterOptions;
+  formSubscription!: Subscription;
+  statusId: any = 0;
+  filteredGrnData: any[] = [];
+  vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredPurchaseOrderData: any[] = [];
+  form!: FormGroup;
+  orderValue: number = 0;
+  confirmedStatus: number = 0;
+  totalPending: number = 0;
+  totalOrder: number = 0;
+  cardsDetails: any[] = [];
+  public chartOptions: any = {};
   isIconNeeded: boolean = true;
+  searchSuggestionsList: string[] = ['SearchValue1', 'InputValue2', 'Value3'];
+  saveAsOptions: dropDownData[] = exportOptions;
+  filterByOptions: dropDownData[] = dateFilterOptions;
   reportStatusOptions: dropDownData[] = statusOptions;
+  searchValues!: FormControlName;
+  columnFilter!: FormControlName;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
   columns: any[] = [
+    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
-      title: 'Order Value',
+      title: 'Vendor Detail',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'vendorname',
       needToShow: true,
     },
-    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
-    {
-      title: 'Order Qty',
-      sortable: 0,
-      name: 'ordered',
-      needToShow: true,
-    },
-    { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
+    { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
+    { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+    { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
-    { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
+  chartSpec: Partial<ApexChart> = {
+    fontFamily: 'Inter',
+    height: 265,
+    type: 'area',
+    toolbar: {
+      show: false,
+    },
+  };
+
   constructor(
-    // private salesOrderApi: SoService,
-    private poApi: PoService,
-    private fb: FormBuilder,
-    public dialog: MatDialog,
-    public router: Router
+    private grnApi: GrnService,
+    private router: Router,
+    private fb: FormBuilder
   ) {
-    this.purchaseOrderForm = this.fb.group({
-      SelectSaveOptions: [exportOptions[0].id],
-      filterData: [dateFilterOptions[3].id],
-      startDate: [''],
-      searchValues: [''],
-      endDate: [''],
+    this.form = this.fb.group({
       vendorcode: [''],
+      endDate: [''],
+      startDate: [''],
+      filterData: [dateFilterOptions[3].id],
       reportStatus: [''],
+      SelectSaveOptions: [exportOptions[0].id],
+      searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
+        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Order Value',
+          title: 'Vendor Detail',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'vendorname',
           needToShow: true,
         },
-        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
         {
-          title: 'Order Qty',
+          title: 'Product Detail',
           sortable: 0,
-          name: 'ordered',
+          name: 'pname',
           needToShow: true,
         },
-        { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
-        {
-          title: 'Back Order Qty',
-          sortable: 0,
-          name: 'ordered',
-          needToShow: true,
-        },
-        {
-          title: 'Status',
-          sortable: 0,
-          name: 'orderedvalue',
-          needToShow: true,
-        },
-        { title: 'Action', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
+        { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
+        { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
       ],
     });
   }
 
+  onClickNext(): void {
+    this.paginationIndex += 1;
+  }
+
+  onClickPrev(): void {
+    this.paginationIndex -= 1;
+  }
+
+  onClickPaginationNo(i: number): void {
+    this.paginationIndex = i;
+  }
+
   ngOnInit(): void {
-    this.loadData(this.purchaseOrderForm.value, true);
-    this.purchaseOrderForm.valueChanges.subscribe((values) => {
+    this.loadData(this.form.value, true);
+    this.formSubscription = this.form.valueChanges.subscribe((values) => {
       this.loadData(values);
     });
   }
 
-  gotoReportsPage(): void {
-    this.router.navigateByUrl('po-report');
-  }
-
   onClickButton(): void {
-    this.router.navigateByUrl('po');
+    this.router.navigateByUrl('grn');
   }
-
-  onClickEdit() {
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'EditData',
-        contentText: 'Do You Want To Modify Data ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickDelete() {
-    console.log('Clicked Delete');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Delete Data ?',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickCancelOrder() {
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Cancel Order ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickViewMore(data: any) {
-    this.router.navigate(['/purchase-order-details'], {
+  onClickSono(data: any): void {
+    this.router.navigate(['/grn-details'], {
       queryParams: { sono: data.sono },
     });
   }
 
-  getFilterData(serverData: any) {
+  getFilterData(formValues: any, serverData: any) {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Purchase Order',
+        title: 'Total GRN',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -178,7 +158,7 @@ export class PurchaseOrderListComponent implements OnInit {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Purchase Order',
+        title: 'Completed GRN',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -190,7 +170,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Purchase Order',
+        title: 'Pending GRN',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -203,7 +183,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Purchase Order',
+        title: 'Cancelled GRN',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -216,11 +196,13 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Purchase Order Value',
+        title: 'GRN Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
+        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
+        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -239,7 +221,63 @@ export class PurchaseOrderListComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredPurchaseOrderData = newArr;
+    this.filteredGrnData = newArr;
+
+    let seriesData: any[] = [];
+    let graphLabels = [
+      ['Yesterday', 'Today'],
+      ['Last Week', 'This Week'],
+      ['Last Month', 'This Month'],
+      ['Last Year', 'This Year'],
+    ];
+
+    if (serverData.graphData.length) {
+      for (let [index, value] of serverData.graphData.entries()) {
+        let graphValue = Object.entries(value);
+        if (formValues.filterData === 1 || formValues.filterData === 3) {
+          graphValue = Object.entries(value).sort();
+        }
+
+        let graphArrayData = [];
+        for (let item of graphValue) {
+          graphArrayData.push(item[1]);
+        }
+
+        seriesData.push({
+          name: graphLabels[formValues.filterData - 1][index],
+          color: index == 0 ? '#E46A11' : '#419FC7',
+          data: graphArrayData,
+        });
+      }
+    }
+    console.log(seriesData, 'series data');
+
+    let chartCategories = Object.keys(serverData.graphData[0]);
+    if (formValues.filterData === 1 || formValues.filterData === 3) {
+      chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
+
+    this.chartOptions = {
+      series: seriesData,
+      chart: this.chartSpec,
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        colors: ['#419FC7', '#E46A11'],
+        gradient: {
+          opacityFrom: 0.38,
+          opacityTo: 0.2,
+        },
+      },
+      stroke: {
+        colors: ['#E46A11', '#419FC7'],
+        curve: 'smooth',
+      },
+      xaxis: {
+        categories: chartCategories,
+      },
+    };
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -269,8 +307,10 @@ export class PurchaseOrderListComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.poApi.getAllPoList(params).subscribe((res: any) => {
-      console.log(res, '-------------res');
+
+    this.grnApi.getAllGrnList(params).subscribe((res: any) => {
+      console.log(res, 'response...........');
+      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -283,41 +323,40 @@ export class PurchaseOrderListComponent implements OnInit {
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
       }
-      this.getFilterData(res);
+      this.getFilterData(formValues, res);
+      // }
     });
   }
 
+  ngOnDestroy(): void {
+    this.formSubscription.unsubscribe();
+  }
+
   downloadAsPDF() {
-    if (this.purchaseOrderForm.value.SelectSaveOptions === 0) {
+    if (this.form.value.SelectSaveOptions === 0) {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.purchaseOrderForm.value.filterData - 1].name;
+        this.filterByOptions[this.form.value.filterData - 1].name;
       console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
-        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
+        pdf.text(' GRN Summary(' + timeDuration + ')', 200, 50);
+        pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredPurchaseOrderData.flatMap((item) => item);
+        let tableData = this.filteredGrnData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Purchase Order', 240, (topValue += 50));
+        pdf.text('Recent GRN', 240, (topValue += 50));
         pdf.setFontSize(12);
-        let startDate: String =
-          this.purchaseOrderForm.value?.startDate.toString();
-        let endDate: String = this.purchaseOrderForm.value?.endDate.toString();
-        console.log(
-          startDate,
-          endDate,
-          '=======purchaseOrderForm Values========',
-          this.purchaseOrderForm.value
-        );
-        if (this.purchaseOrderForm.value.startDate != '')
+        let startDate: String = this.form.value?.startDate.toString();
+        let endDate: String = this.form.value?.endDate.toString();
+        console.log('=======Form Values========', this.form.value);
+        if (this.form.value.startDate != '')
           pdf.text(
             'From :' +
               startDate.substring(4, 14) +
@@ -326,24 +365,22 @@ export class PurchaseOrderListComponent implements OnInit {
             50,
             (topValue += 70)
           );
-        if (this.purchaseOrderForm.value.reportStatus != '')
+        if (this.form.value.reportStatus != '')
           pdf.text(
             'Status : ' +
-              this.reportStatusOptions[
-                this.purchaseOrderForm.value.reportStatus - 1
-              ].name,
+              this.reportStatusOptions[this.form.value.reportStatus].name,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.form.value.vendorcode != '')
           pdf.text(
             'Vendor Name : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.form.value.vendorcode != '')
           pdf.text(
-            'Purchase Person : ' + tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -351,28 +388,32 @@ export class PurchaseOrderListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Order ID',
+              dataKey: 'sono',
             },
             {
-              header: 'Vendor',
+              header: 'Ref ID',
+              dataKey: 'vendorcode',
+            },
+            {
+              header: 'Vendor Detail',
               dataKey: 'vendorname',
             },
             {
-              header: 'Order Quantity',
-              dataKey: 'ordered',
-            },
-            {
-              header: 'Received Quantity',
-              dataKey: 'received',
+              header: 'Product Detail',
+              dataKey: 'vendorname',
             },
             {
               header: 'Data & Time',
               dataKey: 'sodate',
             },
             {
-              header: 'Back Order Quantity',
-              dataKey: 'received',
+              header: 'Quantity',
+              dataKey: 'ordered',
+            },
+            {
+              header: 'Price',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
@@ -382,7 +423,7 @@ export class PurchaseOrderListComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Purchase Order Report.pdf');
+        pdf.save('GRN Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -390,11 +431,11 @@ export class PurchaseOrderListComponent implements OnInit {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('purchaseOrderTable')!;
+      let element = document.getElementById('grnTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Purchase Order Report',
+        Title: 'GRN Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -408,26 +449,26 @@ export class PurchaseOrderListComponent implements OnInit {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
-        origin: 'E1',
-      });
+      XLSX.utils.sheet_add_aoa(ws, [['GRN Summary']], { origin: 'E1' });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
           [
-            'Order Value',
-            'Vendor',
-            'Order Quantity',
-            'Received Quantity',
+            'Sr No',
+            'Order ID',
+            'Ref ID',
+            'Vendor Detail',
+            'Product Detail',
             'Date & Time',
-            'Back Order Quantity',
+            'Quantity',
+            'Price',
             'Status',
           ],
         ],
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'GRN Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

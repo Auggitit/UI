@@ -1,35 +1,36 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  dateFilterOptions,
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { SalesService } from 'src/app/services/sales.service';
-import { PoService } from 'src/app/services/po.service';
-
+import { SsalesService } from 'src/app/services/ssales.service';
+import { GrnserviceService } from 'src/app/services/grnservice.service';
 @Component({
-  selector: 'app-purchase-details',
-  templateUrl: './purchase-details.component.html',
-  styleUrls: ['./purchase-details.component.scss'],
+  selector: 'app-service-grn-details',
+  templateUrl: './service-grn-details.component.html',
+  styleUrls: ['./service-grn-details.component.scss'],
 })
-export class PurchaseDetailsComponent implements OnInit {
+export class ServiceGrnDetailsComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  purchaseOrderDetailsForm!: FormGroup;
+  serviceGrnDetailsForm!: FormGroup;
+  filterByOptions: dropDownData[] = dateFilterOptions;
   saveAsOptions: dropDownData[] = exportOptions;
-  purchaseOrderData: any;
+  serviceGnData: any;
   productsData: any[] = [];
 
   constructor(
-    // private salesApi: SalesService,
-    private poApi: PoService,
+    // private serviceSalesApi: SsalesService,
+    private serviceGrnApi: GrnserviceService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
   ) {
-    this.purchaseOrderDetailsForm = this.fb.group({
+    this.serviceGrnDetailsForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
     });
   }
@@ -48,28 +49,32 @@ export class PurchaseDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('sales');
+    this.navigate.navigateByUrl('servicegrn');
   }
 
   loadData() {
     let params = this.router.snapshot.queryParams['sono'];
     console.log(params, 'params');
-    this.poApi.getPoDetail({ sono: params }).subscribe((res: any) => {
-      this.purchaseOrderData = res;
-      this.productsData = res.soDetailLists;
-    });
+
+    this.serviceGrnApi
+      .getServiceGrnDetail({ sono: params })
+      .subscribe((res: any) => {
+        console.log(res, '...........reponae');
+
+        this.serviceGnData = res;
+        this.productsData = res.soDetailLists;
+      });
   }
 
   downloadAsPDF() {
-    console.log('clicked');
     var data = this.contentToSave.nativeElement;
     html2canvas(data, { scale: 2 }).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Purchase Details', 200, 50);
+      pdf.text('Service GRN Details', 200, 50);
       pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
       pdf.addPage();
-      pdf.save('Purchase Details Report.pdf');
+      pdf.save('Service GRN Details Report.pdf');
     });
   }
 }

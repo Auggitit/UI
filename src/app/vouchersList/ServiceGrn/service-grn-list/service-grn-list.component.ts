@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import {
   VendorDropDown,
   dateFilterOptions,
@@ -8,36 +9,34 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { Router } from '@angular/router';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { SoService } from 'src/app/services/so.service';
+import { SsoService } from 'src/app/services/sso.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { PoService } from 'src/app/services/po.service';
+import { GrnserviceService } from 'src/app/services/grnservice.service';
 
 @Component({
-  selector: 'app-purchase-order-list',
-  templateUrl: './purchase-order-list.component.html',
-  styleUrls: ['./purchase-order-list.component.scss'],
+  selector: 'app-service-grn-list',
+  templateUrl: './service-grn-list.component.html',
+  styleUrls: ['./service-grn-list.component.scss'],
 })
-export class PurchaseOrderListComponent implements OnInit {
+export class ServiceGrnListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  purchaseOrderForm!: FormGroup;
+  serviceGrnForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
   filterByOptions: dropDownData[] = dateFilterOptions;
   paginationIndex: number = 0;
   pageCount: number = 10;
-  filteredPurchaseOrderData: any[] = [];
+  filteredServiceGrnData: any[] = [];
   isIconNeeded: boolean = true;
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
   columns: any[] = [
     {
       title: 'Order Value',
@@ -60,17 +59,16 @@ export class PurchaseOrderListComponent implements OnInit {
   ];
 
   constructor(
-    // private salesOrderApi: SoService,
-    private poApi: PoService,
+    // private serviceSOApi: SsoService,
+    private serviceGrnApi: GrnserviceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
   ) {
-    this.purchaseOrderForm = this.fb.group({
+    this.serviceGrnForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
       filterData: [dateFilterOptions[3].id],
       startDate: [''],
-      searchValues: [''],
       endDate: [''],
       vendorcode: [''],
       reportStatus: [''],
@@ -89,7 +87,12 @@ export class PurchaseOrderListComponent implements OnInit {
           name: 'ordered',
           needToShow: true,
         },
-        { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
+        {
+          title: 'Received Qty',
+          sortable: 0,
+          name: 'received',
+          needToShow: true,
+        },
         { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
         {
           title: 'Back Order Qty',
@@ -97,76 +100,32 @@ export class PurchaseOrderListComponent implements OnInit {
           name: 'ordered',
           needToShow: true,
         },
-        {
-          title: 'Status',
-          sortable: 0,
-          name: 'orderedvalue',
-          needToShow: true,
-        },
-        { title: 'Action', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
 
   ngOnInit(): void {
-    this.loadData(this.purchaseOrderForm.value, true);
-    this.purchaseOrderForm.valueChanges.subscribe((values) => {
+    this.loadData(this.serviceGrnForm.value, true);
+    this.serviceGrnForm.valueChanges.subscribe((values) => {
       this.loadData(values);
     });
   }
 
   gotoReportsPage(): void {
-    this.router.navigateByUrl('po-report');
+    this.router.navigateByUrl('service-grn-report');
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('po');
-  }
-
-  onClickEdit() {
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'EditData',
-        contentText: 'Do You Want To Modify Data ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickDelete() {
-    console.log('Clicked Delete');
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Delete Data ?',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickCancelOrder() {
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Cancel Order ?',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
-  onClickViewMore(data: any) {
-    this.router.navigate(['/purchase-order-details'], {
-      queryParams: { sono: data.sono },
-    });
+    this.router.navigateByUrl('servicegrn');
   }
 
   getFilterData(serverData: any) {
     this.cardsDetails = [
       {
         icon: 'bi bi-cash-stack',
-        title: 'Total Purchase Order',
+        title: 'Total Service GRN',
         count: serverData.totalOrders,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
@@ -178,7 +137,7 @@ export class PurchaseOrderListComponent implements OnInit {
       {
         icon: 'bi bi-cart-check',
         count: serverData.completedOrders,
-        title: 'Completed Purchase Order',
+        title: 'Completed Service GRN',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
@@ -190,7 +149,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-dash',
-        title: 'Pending Purchase Order',
+        title: 'Pending Service GRN',
         count: serverData.pendingOrders,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
@@ -203,7 +162,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-x',
-        title: 'Cancelled Purchase Order',
+        title: 'Cancelled  Service GRN',
         count: serverData.cancelledOrders,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
@@ -216,7 +175,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Purchase Order Value',
+        title: 'Service GRN Value',
         count: serverData.orderValues,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
@@ -239,7 +198,56 @@ export class PurchaseOrderListComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
-    this.filteredPurchaseOrderData = newArr;
+
+    this.filteredServiceGrnData = newArr;
+
+    console.log('data in table', this.filteredServiceGrnData);
+  }
+
+  onClickEdit() {
+    console.log('Clicked Edit');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: 'Do You Want To Modify Data ?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
+  onClickDelete() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
+  onClickCancelOrder() {
+    console.log('Clicked Delete');
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Cancel Order ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+  }
+
+  onClickViewMore(data: any) {
+    this.router.navigate(['/service-grn-details'], {
+      queryParams: { sono: data.sono },
+    });
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -269,7 +277,7 @@ export class PurchaseOrderListComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.poApi.getAllPoList(params).subscribe((res: any) => {
+    this.serviceGrnApi.getAllServiceGrnList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
@@ -288,36 +296,35 @@ export class PurchaseOrderListComponent implements OnInit {
   }
 
   downloadAsPDF() {
-    if (this.purchaseOrderForm.value.SelectSaveOptions === 0) {
+    if (this.serviceGrnForm.value.SelectSaveOptions === 0) {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
-        this.filterByOptions[this.purchaseOrderForm.value.filterData - 1].name;
+        this.filterByOptions[this.serviceGrnForm.value.filterData - 1].name;
       console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
         let pdf = new jsPDF('p', 'pt', 'a4');
-        pdf.text(' Purchase Order Summary(' + timeDuration + ')', 200, 50);
+        pdf.text('Service GRN Summary(' + timeDuration + ')', 200, 50);
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredPurchaseOrderData.flatMap((item) => item);
+        let tableData = this.filteredServiceGrnData.flatMap((item) => item);
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
-        pdf.text('Recent Purchase Order', 240, (topValue += 50));
+        pdf.text('Recent Service GRN', 240, (topValue += 50));
         pdf.setFontSize(12);
-        let startDate: String =
-          this.purchaseOrderForm.value?.startDate.toString();
-        let endDate: String = this.purchaseOrderForm.value?.endDate.toString();
+        let startDate: String = this.serviceGrnForm.value?.startDate.toString();
+        let endDate: String = this.serviceGrnForm.value?.endDate.toString();
         console.log(
           startDate,
           endDate,
-          '=======purchaseOrderForm Values========',
-          this.purchaseOrderForm.value
+          '=======serviceGrnForm Values========',
+          this.serviceGrnForm.value
         );
-        if (this.purchaseOrderForm.value.startDate != '')
+        if (this.serviceGrnForm.value.startDate != '')
           pdf.text(
             'From :' +
               startDate.substring(4, 14) +
@@ -326,24 +333,24 @@ export class PurchaseOrderListComponent implements OnInit {
             50,
             (topValue += 70)
           );
-        if (this.purchaseOrderForm.value.reportStatus != '')
+        if (this.serviceGrnForm.value.reportStatus != '')
           pdf.text(
             'Status : ' +
               this.reportStatusOptions[
-                this.purchaseOrderForm.value.reportStatus - 1
+                this.serviceGrnForm.value.reportStatus - 1
               ].name,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.serviceGrnForm.value.vendorcode != '')
           pdf.text(
             'Vendor Name : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
-        if (this.purchaseOrderForm.value.vendorcode != '')
+        if (this.serviceGrnForm.value.vendorcode != '')
           pdf.text(
-            'Purchase Person : ' + tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.vendorname,
             50,
             (topValue += 20)
           );
@@ -382,7 +389,7 @@ export class PurchaseOrderListComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Purchase Order Report.pdf');
+        pdf.save('Service GRN Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -390,11 +397,11 @@ export class PurchaseOrderListComponent implements OnInit {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('purchaseOrderTable')!;
+      let element = document.getElementById('serviceGrnTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Purchase Order Report',
+        Title: 'Service GRN Report',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
@@ -408,7 +415,7 @@ export class PurchaseOrderListComponent implements OnInit {
         { wch: 50 },
       ];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Purchase Order Summary']], {
+      XLSX.utils.sheet_add_aoa(ws, [['Service GRN Summary']], {
         origin: 'E1',
       });
       XLSX.utils.sheet_add_aoa(
@@ -427,7 +434,7 @@ export class PurchaseOrderListComponent implements OnInit {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Purchase Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'GRN Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

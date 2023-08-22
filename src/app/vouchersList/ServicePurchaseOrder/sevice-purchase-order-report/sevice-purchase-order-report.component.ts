@@ -20,6 +20,7 @@ import {
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { SsoService } from 'src/app/services/sso.service';
+import { PoserviceService } from 'src/app/services/poservice.service';
 
 export interface VendorDropDown {
   id: string;
@@ -79,7 +80,8 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private serviceSOApi: SsoService,
+    // private serviceSOApi: SsoService,
+    private servicePoApi: PoserviceService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -312,9 +314,8 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
 
     console.log(params, 'params........');
 
-    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
+    this.servicePoApi.getAllServicePoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
         res.orders
@@ -328,7 +329,6 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
         this.vendorDropDownData = [...newMap.values()];
       }
       this.getFilterData(formValues, res);
-      // }
     });
   }
 

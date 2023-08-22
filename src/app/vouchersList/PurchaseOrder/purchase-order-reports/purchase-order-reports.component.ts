@@ -20,6 +20,7 @@ import {
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { SsoService } from 'src/app/services/sso.service';
+import { PoService } from 'src/app/services/po.service';
 
 export interface VendorDropDown {
   id: string;
@@ -79,7 +80,8 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private serviceSOApi: SsoService,
+    // private serviceSOApi: SsoService,
+    private poApi: PoService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -312,7 +314,7 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
 
     console.log(params, 'params........');
 
-    this.serviceSOApi.getAllServiceSoList(params).subscribe((res: any) => {
+    this.poApi.getAllPoList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
       // if (res.orders.length) {
       if (isInitialFetchData) {

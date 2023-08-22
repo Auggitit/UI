@@ -12,14 +12,8 @@
       </app-mat-button>
       <app-mat-select-box
         [controlName]="'SelectSaveOptions'"
-        [groupName]="purchaseOrderDetailsForm"
+        [groupName]="grnForm"
         [formOptions]="saveAsOptions"
-        selectWidth="145px"
-      ></app-mat-select-box>
-
-      <app-mat-select-box
-        [controlName]="'SelectSaveOptions'"
-        [groupName]="'salesOrderDetailsForm'"
         selectWidth="130px"
         IconHeightWidth="23px"
         label="Download As"
@@ -63,11 +57,18 @@
             "
           >
             VOUCH APPLICAITON PRIVATE LIMITED
+            <!-- {{ grnData.companydisplayname }} -->
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+            <!-- {{ grnData.companyaddress.split(", ")[0] }} -->
             96, MANGADU SWAMY STREET,
+
+            <!-- {{ grnData.companyaddress.split(",")[1] }} -->
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+            <!-- {{ grnData.companyaddress.split(",")[2] }}
+          {{ grnData.companyaddress.split(",")[3] }}
+          {{ grnData.companyaddress.split(",")[4] }} -->
             CHENNAI, TAMIL NADU, INDIA
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
@@ -85,10 +86,10 @@
             <p style="color: #333843">Reference PO NO</p>
           </div>
           <div>
-            <p style="color: #419fc7">{{ purchaseOrderData.sono }}</p>
-            <p style="color: #419fc7">{{ purchaseOrderData.sodate }}</p>
+            <p style="color: #419fc7">{{ grnData.sono }}</p>
+            <p style="color: #419fc7">{{ grnData.sodate }}</p>
             <p style="color: #419fc7">45 Days</p>
-            <p style="color: #419fc7">{{ purchaseOrderData.refno }}</p>
+            <p style="color: #419fc7">{{ grnData.refno }}</p>
           </div>
         </div>
       </div>
@@ -118,22 +119,22 @@
               font-weight: 400;
             "
           >
-            {{ purchaseOrderData.companydisplayname }}
+            {{ grnData.companydisplayname }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ purchaseOrderData.companyaddress.split(", ")[0] }}
-            {{ purchaseOrderData.companyaddress.split(",")[1] }}
+            {{ grnData.companyaddress.split(", ")[0] }}
+            {{ grnData.companyaddress.split(",")[1] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ purchaseOrderData.companyaddress.split(",")[2] }}
-            {{ purchaseOrderData.companyaddress.split(",")[3] }}
-            {{ purchaseOrderData.companyaddress.split(",")[4] }}
+            {{ grnData.companyaddress.split(",")[2] }}
+            {{ grnData.companyaddress.split(",")[3] }}
+            {{ grnData.companyaddress.split(",")[4] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ purchaseOrderData.gstno }}
+            GST- {{ grnData.gstno }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ purchaseOrderData.contactphone }}
+            Contact:{{ grnData.contactphone }}
           </p>
         </div>
         <div>
@@ -156,19 +157,19 @@
             LTI Limited
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ purchaseOrderData.deliveryaddress.split(", ")[0] }}
-            {{ purchaseOrderData.deliveryaddress.split(",")[1] }}
+            {{ grnData.deliveryaddress.split(", ")[0] }}
+            {{ grnData.deliveryaddress.split(",")[1] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ purchaseOrderData.deliveryaddress.split(",")[2] }}
-            {{ purchaseOrderData.deliveryaddress.split(",")[3] }}
-            {{ purchaseOrderData.deliveryaddress.split(",")[4] }}
+            {{ grnData.deliveryaddress.split(",")[2] }}
+            {{ grnData.deliveryaddress.split(",")[3] }}
+            {{ grnData.deliveryaddress.split(",")[4] }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ purchaseOrderData.gstno }}
+            GST- {{ grnData.gstno }}
           </p>
           <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ purchaseOrderData.contactphone }}
+            Contact:{{ grnData.contactphone }}
           </p>
         </div>
       </div>

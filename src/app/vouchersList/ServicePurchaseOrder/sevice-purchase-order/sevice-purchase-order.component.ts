@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { PoserviceService } from 'src/app/services/poservice.service';
 
 @Component({
   selector: 'app-sevice-purchase-order',
@@ -59,7 +60,8 @@ export class SevicePurchaseOrderComponent implements OnInit {
   ];
 
   constructor(
-    private salesOrderApi: SoService,
+    // private salesOrderApi: SoService,
+    private servicePoApi: PoserviceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -267,7 +269,7 @@ export class SevicePurchaseOrderComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.servicePoApi.getAllServicePoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();

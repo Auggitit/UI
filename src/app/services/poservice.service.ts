@@ -131,4 +131,65 @@ export class PoserviceService {
         vtype
     );
   }
+  getAllServicePoList({
+    statusId,
+    vendorId,
+    globalFilterId,
+    search,
+    fromDate,
+    toDate,
+  }: {
+    statusId?: number;
+    vendorId?: number;
+    globalFilterId?: number;
+    search?: string;
+    fromDate?: string;
+    toDate?: string;
+  }) {
+    let params = new HttpParams();
+    if (statusId) {
+      params = params.append('statusId', statusId);
+    }
+    if (vendorId) {
+      params = params.append('vendorId', vendorId);
+    }
+    if (globalFilterId) {
+      params = params.append('globalFilterId', globalFilterId);
+    }
+    if (search) {
+      params = params.append('search', search);
+    }
+    if (fromDate) {
+      params = params.append('fromDate', fromDate);
+    }
+    if (toDate) {
+      params = params.append('toDate', toDate);
+    }
+    return this.http
+      .get<any>(this.URL + 'api/vServicePurchaseOrder/getSPOLists', {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getServicePoDetail({ sono }: { sono: string }) {
+    let params = new HttpParams();
+    if (sono) {
+      params = params.append('sono', sono);
+    }
+
+    return this.http
+      .get<any>(this.URL + 'api/vServicePurchaseOrder/getSPO', {
+        params: params,
+      })
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
 }
