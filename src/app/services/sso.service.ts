@@ -181,10 +181,10 @@ export class SsoService {
       );
   }
 
-  getServiceSoDetail({ sono }: { sono: string }) {
+  getServiceSoDetail({ id }: { id: string }) {
     let params = new HttpParams();
-    if (sono) {
-      params = params.append('sono', sono);
+    if (id) {
+      params = params.append('id', id);
     }
 
     return this.http

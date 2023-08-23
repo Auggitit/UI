@@ -35,7 +35,7 @@ export class ServiceGrnDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['pono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['id'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -51,11 +51,11 @@ export class ServiceGrnDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['pono'];
+    let params = this.router.snapshot.queryParams['id'];
     console.log(params, 'params');
 
     this.serviceGrnApi
-      .getServiceGrnDetail({ pono: params })
+      .getServiceGrnDetail({ id: params })
       .subscribe((res: any) => {
         console.log(res, '...........reponae');
 

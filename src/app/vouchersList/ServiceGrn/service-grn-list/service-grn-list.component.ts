@@ -245,7 +245,7 @@ export class ServiceGrnListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/service-grn-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

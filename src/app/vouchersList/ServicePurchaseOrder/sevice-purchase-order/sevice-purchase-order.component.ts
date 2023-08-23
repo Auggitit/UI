@@ -156,8 +156,9 @@ export class SevicePurchaseOrderComponent implements OnInit {
   }
 
   onClickViewMore(data: any) {
+    console.log(data, '------------data');
     this.router.navigate(['/service-po-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

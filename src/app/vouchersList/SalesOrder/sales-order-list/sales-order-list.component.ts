@@ -157,7 +157,7 @@ export class SalesOrderListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/sales-order-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { id: data.id },
     });
   }
 

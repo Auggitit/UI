@@ -33,7 +33,7 @@ export class SalesDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['id'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -49,9 +49,9 @@ export class SalesDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
+    let params = this.router.snapshot.queryParams['id'];
     console.log(params, 'params');
-    this.salesApi.getSalesDetail({ sono: params }).subscribe((res: any) => {
+    this.salesApi.getSalesDetail({ id: params }).subscribe((res: any) => {
       this.salesData = res;
       this.productsData = res.soDetailLists;
     });

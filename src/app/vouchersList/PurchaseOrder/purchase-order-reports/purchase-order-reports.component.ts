@@ -141,7 +141,7 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
 
   onClickPono(data: any): void {
     this.router.navigate(['/purchase-order-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

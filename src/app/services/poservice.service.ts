@@ -176,10 +176,10 @@ export class PoserviceService {
       );
   }
 
-  getServicePoDetail({ pono }: { pono: string }) {
+  getServicePoDetail({ id }: { id: string }) {
     let params = new HttpParams();
-    if (pono) {
-      params = params.append('pono', pono);
+    if (id) {
+      params = params.append('id', id);
     }
 
     return this.http

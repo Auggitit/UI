@@ -35,7 +35,7 @@ export class ServiceSalesDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['id'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -51,11 +51,11 @@ export class ServiceSalesDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
+    let params = this.router.snapshot.queryParams['id'];
     console.log(params, 'params');
 
     this.serviceSalesApi
-      .getServiceSalesDetail({ sono: params })
+      .getServiceSalesDetail({ id: params })
       .subscribe((res: any) => {
         console.log(res, '...........reponae');
 

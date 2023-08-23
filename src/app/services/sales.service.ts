@@ -245,7 +245,7 @@ export class SalesService {
       params = params.append('toDate', toDate);
     }
     return this.http
-      .get<any>(this.URL + 'api/vSalesOrder/getSOLists', { params: params })
+      .get<any>(this.URL + 'api/vSales/getSalesLists', { params: params })
       .pipe(
         map((res: any) => {
           return res;
@@ -253,10 +253,10 @@ export class SalesService {
       );
   }
 
-  getSalesDetail({ sono }: { sono: string }) {
+  getSalesDetail({ id }: { id: string }) {
     let params = new HttpParams();
-    if (sono) {
-      params = params.append('sono', sono);
+    if (id) {
+      params = params.append('id', id);
     }
 
     return this.http

@@ -247,7 +247,7 @@ export class SalesListsComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/sales-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { id: data.id },
     });
   }
 

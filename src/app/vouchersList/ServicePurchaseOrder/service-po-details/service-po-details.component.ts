@@ -49,10 +49,14 @@ export class ServicePoDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['pono'];
+    let params = this.router.snapshot.queryParams['id'];
+    console.log(params, 'params');
+
     this.servicePoApi
-      .getServicePoDetail({ pono: params })
+      .getServicePoDetail({ id: params })
       .subscribe((res: any) => {
+        console.log(res, '---------res');
+
         this.purchaseOrderData = res;
         this.productsData = res.soDetailLists;
       });

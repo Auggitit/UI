@@ -156,7 +156,7 @@ export class PurchaseOrderListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/purchase-order-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

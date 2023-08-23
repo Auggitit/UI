@@ -260,10 +260,10 @@ export class SsalesService {
       );
   }
 
-  getServiceSalesDetail({ sono }: { sono: string }) {
+  getServiceSalesDetail({ id }: { id: string }) {
     let params = new HttpParams();
-    if (sono) {
-      params = params.append('sono', sono);
+    if (id) {
+      params = params.append('id', id);
     }
 
     return this.http

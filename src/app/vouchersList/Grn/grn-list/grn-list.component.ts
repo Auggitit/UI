@@ -156,7 +156,7 @@ export class GrnListComponent implements OnInit {
 
   onClickViewMore(data: any) {
     this.router.navigate(['/grn-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

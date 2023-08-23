@@ -34,7 +34,7 @@ export class PurchaseDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['pono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['id'], 'router.........');
   }
 
   clickDownload(e: any): void {
@@ -50,9 +50,9 @@ export class PurchaseDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['pono'];
+    let params = this.router.snapshot.queryParams['id'];
     console.log(params, 'params');
-    this.poApi.getPoDetail({ pono: params }).subscribe((res: any) => {
+    this.poApi.getPoDetail({ id: params }).subscribe((res: any) => {
       this.purchaseOrderData = res;
       this.productsData = res.soDetailLists;
     });

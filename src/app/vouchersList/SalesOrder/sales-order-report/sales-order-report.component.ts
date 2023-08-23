@@ -137,7 +137,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   }
   onClickSono(data: any): void {
     this.router.navigate(['/sales-order-details'], {
-      queryParams: { sono: data.sono },
+      queryParams: { id: data.id },
     });
   }
 

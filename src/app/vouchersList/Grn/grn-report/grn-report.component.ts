@@ -137,7 +137,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
   }
   onClickPono(data: any): void {
     this.router.navigate(['/grn-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 

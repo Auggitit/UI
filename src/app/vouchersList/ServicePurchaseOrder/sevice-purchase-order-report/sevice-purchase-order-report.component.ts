@@ -139,8 +139,9 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
   }
 
   onClickPono(data: any): void {
+    console.log(data, '-----------data-----');
     this.router.navigate(['/service-po-details'], {
-      queryParams: { pono: data.pono },
+      queryParams: { id: data.id },
     });
   }
 
@@ -203,7 +204,6 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-
         neededRupeeSign: true,
       },
     ];
@@ -388,6 +388,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             50,
             (topValue += 20)
           );
+        let product = tableData[0].orderDetails[0].pname;
         autoTable(pdf, {
           body: tableData,
           columns: [
@@ -397,7 +398,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'vendorcode',
+              dataKey: 'pono',
             },
             {
               header: 'Vendor Detail',
@@ -405,7 +406,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'pono',
+              dataKey: 'orderDetails[0].pname',
             },
             {
               header: 'Data & Time',
@@ -413,11 +414,11 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'pono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'pono',
+              dataKey: 'orderedValue',
             },
             {
               header: 'Status',

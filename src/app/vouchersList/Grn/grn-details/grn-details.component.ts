@@ -49,8 +49,8 @@ export class GrnDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['pono'];
-    this.grnApi.getGrnDetail({ pono: params }).subscribe((res: any) => {
+    let params = this.router.snapshot.queryParams['id'];
+    this.grnApi.getGrnDetail({ id: params }).subscribe((res: any) => {
       this.grnData = res;
       this.productsData = res.soDetailLists;
     });

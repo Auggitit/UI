@@ -8,6 +8,7 @@ import {
 import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { SsoService } from 'src/app/services/sso.service';
 
 @Component({
   selector: 'app-service-sales-order-details',
@@ -22,7 +23,7 @@ export class ServiceSalesOrderDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    private salesOrderApi: SoService,
+    private salesOrderApi: SsoService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
@@ -34,7 +35,7 @@ export class ServiceSalesOrderDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    console.log(this.router.snapshot.queryParams['sono'], 'router.........');
+    console.log(this.router.snapshot.queryParams['id'], 'router.........');
   }
 
   gotoReportsPage(): void {
@@ -46,11 +47,13 @@ export class ServiceSalesOrderDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
-    this.salesOrderApi.getSoDetail({ sono: params }).subscribe((res: any) => {
-      this.ServiceSOData = res;
-      this.productsData = res.soDetailLists;
-    });
+    let params = this.router.snapshot.queryParams['id'];
+    this.salesOrderApi
+      .getServiceSoDetail({ id: params })
+      .subscribe((res: any) => {
+        this.ServiceSOData = res;
+        this.productsData = res.soDetailLists;
+      });
   }
 
   downloadAsPDF() {

@@ -49,8 +49,8 @@ export class SalesOrderDetailsComponent implements OnInit {
   }
 
   loadData() {
-    let params = this.router.snapshot.queryParams['sono'];
-    this.salesOrderApi.getSoDetail({ sono: params }).subscribe((res: any) => {
+    let params = this.router.snapshot.queryParams['id'];
+    this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
       this.salesOrderData = res;
       this.productsData = res.soDetailLists;
     });
