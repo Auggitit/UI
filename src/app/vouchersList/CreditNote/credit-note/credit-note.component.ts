@@ -44,7 +44,8 @@ export class CreditNoteComponent implements OnInit {
       name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Order Qty',
       sortable: 0,
@@ -80,7 +81,13 @@ export class CreditNoteComponent implements OnInit {
           name: 'orderedvalue',
           needToShow: true,
         },
-        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
+        {
+          title: 'Vendor',
+          sortable: 0,
+          name: 'customername',
+          needToShow: true,
+        },
         {
           title: 'Order Qty',
           sortable: 0,
@@ -301,19 +308,13 @@ export class CreditNoteComponent implements OnInit {
         pdf.addPage();
 
         let tableData = this.filteredCreditNoteData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Credit Note', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.creditForm.value?.startDate.toString();
         let endDate: String = this.creditForm.value?.endDate.toString();
-        console.log(
-          startDate,
-          endDate,
-          '=======creditForm Values========',
-          this.creditForm.value
-        );
+
         if (this.creditForm.value.startDate != '')
           pdf.text(
             'From :' +
@@ -349,6 +350,10 @@ export class CreditNoteComponent implements OnInit {
             {
               header: 'Order Value',
               dataKey: 'orderedvalue',
+            },
+            {
+              header: 'Cr ID',
+              dataKey: 'vchno',
             },
             {
               header: 'Vendor',
@@ -410,6 +415,7 @@ export class CreditNoteComponent implements OnInit {
         [
           [
             'Order Value',
+            ' Cr ID',
             'Vendor',
             'Order Quantity',
             'Received Quantity',

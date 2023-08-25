@@ -52,8 +52,8 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Vendor Detail',
       sortable: 0,
@@ -91,8 +91,8 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
         {
           title: 'Vendor Detail',
           sortable: 0,
@@ -135,7 +135,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
   onClickButton(): void {
     this.router.navigateByUrl('so');
   }
-  onClickSono(data: any): void {
+  onClickVchNo(data: any): void {
     this.router.navigate(['/credit-note-details'], {
       queryParams: { id: data.id },
     });
@@ -381,10 +381,10 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'sono',
+              dataKey: 'vchno',
             },
             {
-              header: 'Ref ID',
+              header: 'Cr ID',
               dataKey: 'vendorcode',
             },
             {
@@ -448,7 +448,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
           [
             'Sr No',
             'Order ID',
-            'Ref ID',
+            'Cr ID',
             'Vendor Detail',
             'Product Detail',
             'Date & Time',

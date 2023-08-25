@@ -20,7 +20,7 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
+import { DrnoteService } from 'src/app/services/debit.service';
 
 @Component({
   selector: 'app-debit-note-report',
@@ -52,8 +52,8 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-    { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Vendor Detail',
       sortable: 0,
@@ -61,7 +61,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -77,7 +77,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private salesOrderApi: SoService,
+    private debitApi: DrnoteService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -91,8 +91,8 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
-        { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
         {
           title: 'Vendor Detail',
           sortable: 0,
@@ -105,7 +105,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -135,7 +135,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
   onClickButton(): void {
     this.router.navigateByUrl('so');
   }
-  onClickSono(data: any): void {
+  onClickVchNo(data: any): void {
     this.router.navigate(['/debit-note-details'], {
       queryParams: { id: data.id },
     });
@@ -305,7 +305,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
       toDate: lastDate,
     };
 
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.debitApi.getAllDebitList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
       if (isInitialFetchData) {
         const newMap = new Map();
@@ -382,10 +382,10 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'sono',
+              dataKey: 'vchno',
             },
             {
-              header: 'Ref ID',
+              header: 'Dr ID',
               dataKey: 'vendorcode',
             },
             {
@@ -398,7 +398,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Quantity',
@@ -449,7 +449,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
           [
             'Sr No',
             'Order ID',
-            'Ref ID',
+            'Dr ID',
             'Vendor Detail',
             'Product Detail',
             'Date & Time',

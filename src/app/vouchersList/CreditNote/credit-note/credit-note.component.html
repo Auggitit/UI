@@ -99,9 +99,22 @@
               "
             >
               <p class="m-0" style="font-weight: 600; color: #13b2e4">
-                {{ data.vendorname }}
+                {{ data.customername }}
               </p>
-              <a href="" style="color: #667085">{{ data.sono }}</a>
+              <a href="" style="color: #667085">{{ data.vchno }}</a>
+            </td>
+            <td
+              *ngIf="columns[2].needToShow"
+              scope="col"
+              style="
+                min-width: 111px;
+                max-width: 111px;
+                border-top: 1px solid #f0f1f3;
+                text-align: left;
+                padding-left: 20px;
+              "
+            >
+              {{ data.customername }}
             </td>
             <td
               *ngIf="columns[2].needToShow"

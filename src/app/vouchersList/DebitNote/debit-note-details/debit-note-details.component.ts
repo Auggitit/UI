@@ -5,9 +5,9 @@ import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { DrnoteService } from 'src/app/services/debit.service';
 
 @Component({
   selector: 'app-debit-note-details',
@@ -22,7 +22,7 @@ export class DebitNoteDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    private salesOrderApi: SoService,
+    private debitApi: DrnoteService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
@@ -50,7 +50,7 @@ export class DebitNoteDetailsComponent implements OnInit {
 
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
-    this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
+    this.debitApi.getDebitDetail({ id: params }).subscribe((res: any) => {
       this.debitNoteData = res;
       this.productsData = res.soDetailLists;
     });

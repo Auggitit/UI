@@ -10,11 +10,11 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { DrnoteService } from 'src/app/services/debit.service';
 
 @Component({
   selector: 'app-debit-note',
@@ -44,7 +44,8 @@ export class DebitNoteComponent implements OnInit {
       name: 'orderedvalue',
       needToShow: true,
     },
-    { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Vendor', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Order Qty',
       sortable: 0,
@@ -52,14 +53,14 @@ export class DebitNoteComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
-    private salesOrderApi: SoService,
+    private debitApi: DrnoteService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -80,7 +81,8 @@ export class DebitNoteComponent implements OnInit {
           name: 'orderedvalue',
           needToShow: true,
         },
-        { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Vendor', sortable: 0, name: 'vchno', needToShow: true },
         {
           title: 'Order Qty',
           sortable: 0,
@@ -88,7 +90,7 @@ export class DebitNoteComponent implements OnInit {
           needToShow: true,
         },
         { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
@@ -269,7 +271,7 @@ export class DebitNoteComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.debitApi.getAllDebitList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
@@ -359,7 +361,7 @@ export class DebitNoteComponent implements OnInit {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Back Order Quantity',

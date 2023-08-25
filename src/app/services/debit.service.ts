@@ -181,7 +181,7 @@ export class DrnoteService {
       params = params.append('toDate', toDate);
     }
     return this.http
-      .get<any>(this.api.URL + 'api/vSalesOrder/getSOLists', { params: params })
+      .get<any>(this.api.URL + 'api/vDebitNote/getDNLists', { params: params })
       .pipe(
         map((res: any) => {
           return res;
@@ -196,7 +196,7 @@ export class DrnoteService {
     }
 
     return this.http
-      .get<any>(this.api.URL + 'api/vSalesOrder/getSO', { params: params })
+      .get<any>(this.api.URL + 'api/vDebitNote/getDN', { params: params })
       .pipe(
         map((res: any) => {
           return res;
