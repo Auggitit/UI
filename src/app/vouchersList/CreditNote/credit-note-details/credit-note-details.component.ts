@@ -5,29 +5,29 @@ import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
+import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { PoserviceService } from 'src/app/services/poservice.service';
 
 @Component({
-  selector: 'app-service-po-details',
-  templateUrl: './service-po-details.component.html',
-  styleUrls: ['./service-po-details.component.scss'],
+  selector: 'app-credit-note-details',
+  templateUrl: './credit-note-details.component.html',
+  styleUrls: ['./credit-note-details.component.scss'],
 })
-export class ServicePoDetailsComponent implements OnInit {
+export class CreditNoteDetailsComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  purchaseOrderDetailsForm!: FormGroup;
+  creditNoteDetailsForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
-  purchaseOrderData: any;
+  creditNoteData: any;
   productsData: any[] = [];
 
   constructor(
-    private servicePoApi: PoserviceService,
+    private salesOrderApi: SoService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
   ) {
-    this.purchaseOrderDetailsForm = this.fb.group({
+    this.creditNoteDetailsForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
     });
   }
@@ -45,18 +45,15 @@ export class ServicePoDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('poservice');
+    this.navigate.navigateByUrl('so');
   }
 
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
-    console.log(params, 'params');
-    this.servicePoApi
-      .getServicePoDetail({ id: params })
-      .subscribe((res: any) => {
-        this.purchaseOrderData = res;
-        this.productsData = res.soDetailLists;
-      });
+    this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
+      this.creditNoteData = res;
+      this.productsData = res.soDetailLists;
+    });
   }
 
   downloadAsPDF() {
@@ -65,10 +62,10 @@ export class ServicePoDetailsComponent implements OnInit {
     html2canvas(data, { scale: 2 }).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Service Po Details', 200, 50);
+      pdf.text(' Credit Note Details', 200, 50);
       pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
       pdf.addPage();
-      pdf.save('Service Po Details Report.pdf');
+      pdf.save('Credit Details Report.pdf');
     });
   }
 }

@@ -2,66 +2,45 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
-        title="Debit Note Details"
-        [reportFormGroupName]="salesOrderForm"
+        title="DEBIT NOTE DETAILS"
+        [reportFormGroupName]="debitForm"
         [filterByOptions]="filterByOptions"
         [saveTypesOptions]="saveAsOptions"
         [filterData]="'filterData'"
         [SelectSaveOptions]="'SelectSaveOptions'"
         svgIconToDisplay="ReportsIcon"
         (onClickGoto)="gotoReportsPage()"
+        (onClickDownload)="downloadAsPDF()"
         (onClickCreateButton)="onClickButton()"
-        buttonTitle="Create New Debit Note"
       ></app-reports-header>
     </div>
-    <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
-      <div *ngFor="let item of cardsDetails" class="col-sm pl-0 pr-2">
-        <app-content-cards [contentToDisplay]="item"></app-content-cards>
+    <div id="contentToSave" #contentToSave>
+      <div class="d-flex flex-wrap pb-4" style="max-width: 100%">
+        <div *ngFor="let item of debitDetails" class="col-sm pl-0 pr-2">
+          <app-content-cards [contentToDisplay]="item"></app-content-cards>
+        </div>
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <!-- <div class="p-3"> -->
-      <div
-        class="d-flex flex-wrap align-items-center p-3"
-        style="justify-content: space-between"
-      >
-        <div class="d-flex flex-wrap align-items-center">
-          <p
-            style="
-              font-weight: 600;
-              font-size: 1.125rem;
-              padding-right: 8px;
-              margin: 0;
-            "
-          >
-            Recent Debit Notes
-          </p>
-          <p
-            style="
-              color: #0d894f;
-              background-color: #e7f4ee;
-              border-radius: 100px;
-              padding: 8px;
-              margin: 0;
-            "
-          >
-            +2 Orders
-          </p>
-        </div>
+      <p style="padding: 12px; font-weight: 600; font-size: 1.125rem">
+        Recent Debit Notes
+      </p>
+      <div class="pl-2 pb-2">
         <app-table-filters
           [vendorDropDownData]="vendorDropDownData"
           [statusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="salesOrderForm"
+          [tableFiltersGroupName]="debitForm"
+          [searchControlName]="'searchValues'"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
       </div>
-      <!-- </div> -->
       <app-mat-table
+        id="debitNoteTable"
         [columns]="columns"
-        [filteredData]="filteredSalesOrderData"
+        [filteredData]="filteredDebitNoteData"
         [paginationIndex]="paginationIndex"
         [pageCount]="pageCount"
         [selectAllCheckbox]="selectAllCheckbox"
@@ -105,7 +84,8 @@
                 max-width: 128px;
               "
             >
-              <a href="" style="font-weight: 600; color: #13b2e4">{{
+              <!-- href="/sales-order-details" -->
+              <a style="font-weight: 600; color: #13b2e4">{{
                 data.orderedvalue
               }}</a>
             </td>
@@ -144,8 +124,9 @@
                 text-align: left;
                 min-width: 109px;
                 max-width: 109px;
-                border-top: 1px solid #f0f1f3;
                 padding-left: 20px;
+
+                border-top: 1px solid #f0f1f3;
               "
             >
               {{ data.received }}
@@ -174,7 +155,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="mb-0">{{ data.ordered }}</p>
+              <p class="mb-0">{{ data.ordered - data.received }}</p>
             </td>
             <td
               *ngIf="columns[6].needToShow"
@@ -187,7 +168,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <div *ngIf="data.received === '0'">
+              <div *ngIf="data.received !== data.ordered">
                 <span
                   style="
                     background-color: #feedec;
@@ -199,7 +180,7 @@
                   >Pending</span
                 >
               </div>
-              <div *ngIf="data.received !== '0'">
+              <div *ngIf="data.received === data.ordered">
                 <span
                   class="completed"
                   style="
@@ -224,6 +205,11 @@
               "
             >
               <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
                 class="bi bi-three-dots-vertical"
                 [matMenuTriggerFor]="threeDotOptions"
               >
@@ -264,7 +250,7 @@
                 >
                   Cancel Order
                 </button>
-                <button mat-menu-item (click)="onClickViewMore()">
+                <button mat-menu-item (click)="onClickViewMore(data)">
                   View More
                 </button>
               </mat-menu>

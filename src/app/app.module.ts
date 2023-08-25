@@ -81,16 +81,16 @@ import { ServicesaleupdateComponent } from './vouchers/salesservicevch/servicesa
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from './shared/shared.module';
 // import { PurchaseOrderReportsComponent } from './reports/purchase-order-reports/purchase-order-reports.component';
-import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
+// import { DebitNoteReportComponent } from './reports/debit-note-report/debit-note-report.component';
 // import { SevicePurchaseOrderComponent } from './vouchersList/sevice-purchase-order/sevice-purchase-order.component';
 // import { SevicePurchaseOrderReportComponent } from './reports/sevice-purchase-order-report/sevice-purchase-order-report.component';
 // import { GrnListComponent } from './vouchersList/grn-list/grn-list.component';
 // import { GrnReportComponent } from './reports/grn-report/grn-report.component';
 // import { ServiceGrnListComponent } from './vouchersList/service-grn-list/service-grn-list.component';
 // import { ServiceGrnReportComponent } from './reports/service-grn-report/service-grn-report.component';
-import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
-import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.component';
-import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
+// import { DebitNoteComponent } from './vouchersList/debit-note/debit-note.component';
+// import { CreditNoteComponent } from './vouchersList/credit-note/credit-note.component';
+// import { CreditNoteReportsComponent } from './reports/credit-note-reports/credit-note-reports.component';
 import { SalesOrderDetailsComponent } from './vouchersList/SalesOrder/sales-order-details/sales-order-details.component';
 import { SalesOrderListComponent } from './vouchersList/SalesOrder/sales-order-list/sales-order-list.component';
 import { TargetAndAchievementComponent } from './shared/components/target-and-achievement/target-and-achievement.component';
@@ -117,6 +117,12 @@ import { GrnReportComponent } from './vouchersList/Grn/grn-report/grn-report.com
 import { ServiceGrnDetailsComponent } from './vouchersList/ServiceGrn/service-grn-details/service-grn-details.component';
 import { ServiceGrnListComponent } from './vouchersList/ServiceGrn/service-grn-list/service-grn-list.component';
 import { ServiceGrnReportComponent } from './vouchersList/ServiceGrn/service-grn-report/service-grn-report.component';
+import { CreditNoteDetailsComponent } from './vouchersList/CreditNote/credit-note-details/credit-note-details.component';
+import { CreditNoteComponent } from './vouchersList/CreditNote/credit-note/credit-note.component';
+import { CreditNoteReportsComponent } from './vouchersList/CreditNote/credit-note-reports/credit-note-reports.component';
+import { DebitNoteComponent } from './vouchersList/DebitNote/debit-note/debit-note.component';
+import { DebitNoteDetailsComponent } from './vouchersList/DebitNote/debit-note-details/debit-note-details.component';
+import { DebitNoteReportComponent } from './vouchersList/DebitNote/debit-note-report/debit-note-report.component';
 
 @NgModule({
   declarations: [
@@ -203,6 +209,8 @@ import { ServiceGrnReportComponent } from './vouchersList/ServiceGrn/service-grn
     ServicePoDetailsComponent,
     GrnDetailsComponent,
     ServiceGrnDetailsComponent,
+    CreditNoteDetailsComponent,
+    DebitNoteDetailsComponent,
   ],
   imports: [
     BrowserModule,
