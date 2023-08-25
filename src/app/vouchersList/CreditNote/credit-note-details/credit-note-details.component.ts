@@ -5,9 +5,9 @@ import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { CrnoteService } from 'src/app/services/credit.service';
 
 @Component({
   selector: 'app-credit-note-details',
@@ -22,7 +22,7 @@ export class CreditNoteDetailsComponent implements OnInit {
   productsData: any[] = [];
 
   constructor(
-    private salesOrderApi: SoService,
+    private creditApi: CrnoteService,
     private router: ActivatedRoute,
     private navigate: Router,
     private fb: FormBuilder
@@ -50,7 +50,7 @@ export class CreditNoteDetailsComponent implements OnInit {
 
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
-    this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
+    this.creditApi.getCreditDetail({ id: params }).subscribe((res: any) => {
       this.creditNoteData = res;
       this.productsData = res.soDetailLists;
     });

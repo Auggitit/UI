@@ -20,7 +20,7 @@ import {
   exportOptions,
   statusOptions,
 } from 'src/app/reports/stub/salesOrderStub';
-import { SoService } from 'src/app/services/so.service';
+import { CrnoteService } from 'src/app/services/credit.service';
 
 @Component({
   selector: 'app-credit-note-reports',
@@ -61,7 +61,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -77,7 +77,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private salesOrderApi: SoService,
+    private creditApi: CrnoteService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -105,7 +105,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -156,52 +156,50 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Credit Note',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Credit Note',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Credit Note',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Credit Note Value',
-        count: serverData.orderValues,
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -209,7 +207,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -307,12 +305,11 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       toDate: lastDate,
     };
 
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.creditApi.getAllCreditList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      // if (res.orders.length) {
       if (isInitialFetchData) {
         const newMap = new Map();
-        res.orders
+        res.result
           .map((item: any) => {
             return {
               name: item.vendorname,
@@ -323,7 +320,6 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
         this.vendorDropDownData = [...newMap.values()];
       }
       this.getFilterData(formValues, res);
-      // }
     });
   }
 
@@ -337,7 +333,6 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.form.value.filterData - 1].name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -347,14 +342,12 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
         pdf.addPage();
 
         let tableData = this.filteredCreditNoteData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Credit Note', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
-        console.log('=======Form Values========', this.form.value);
         if (this.form.value.startDate != '')
           pdf.text(
             'From :' +
@@ -404,7 +397,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Quantity',

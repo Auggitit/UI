@@ -64,7 +64,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -108,7 +108,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           name: 'pname',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
         { title: 'Price', sortable: 0, name: 'orderedvalue', needToShow: true },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -150,7 +150,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Service Sales',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -160,47 +160,47 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Service Sales',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Service Sales',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Service Sales',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Service Service Sales Value',
-        count: serverData.orderValues,
+        title: 'Service Sales Value',
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
@@ -211,7 +211,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -302,7 +302,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     }
     let params = {
       statusId: formValues.reportStatus,
-      vendorId: formValues.vendorcode,
+      ledgerId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
       fromDate: firstDate,
@@ -315,10 +315,9 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       .getAllServiceSalesList(params)
       .subscribe((res: any) => {
         console.log(res, 'response...........');
-        // if (res.orders.length) {
         if (isInitialFetchData) {
           const newMap = new Map();
-          res.orders
+          res.result
             .map((item: any) => {
               return {
                 name: item.vendorname,
@@ -327,7 +326,6 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             })
             .forEach((item: VendorDropDown) => newMap.set(item.id, item));
           this.vendorDropDownData = [...newMap.values()];
-          // }
           this.getFilterData(formValues, res);
         }
       });
@@ -342,7 +340,6 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.form.value.filterData - 1].name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -352,14 +349,12 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
         pdf.addPage();
 
         let tableData = this.filteredServiceSalesData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Sales', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.form.value?.startDate.toString();
         let endDate: String = this.form.value?.endDate.toString();
-        console.log('=======Form Values========', this.form.value);
         if (this.form.value.startDate != '')
           pdf.text(
             'From :' +
@@ -409,7 +404,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Quantity',
@@ -427,7 +422,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Report.pdf');
+        pdf.save('Service Sales Report.pdf');
       });
     } else {
       //Code for Excel Format Download

@@ -53,7 +53,7 @@ export class SalesListsComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
@@ -93,7 +93,7 @@ export class SalesListsComponent implements OnInit {
           name: 'received',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
@@ -125,7 +125,7 @@ export class SalesListsComponent implements OnInit {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Sales',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -135,47 +135,47 @@ export class SalesListsComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Sales ',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Sales ',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Sales ',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
-        title: 'Sales  Value',
-        count: serverData.orderValues,
+        title: 'Sales Value',
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
@@ -186,7 +186,7 @@ export class SalesListsComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -272,7 +272,7 @@ export class SalesListsComponent implements OnInit {
     }
     let params = {
       statusId: formValues.reportStatus,
-      vendorId: formValues.vendorcode,
+      ledgerId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
       fromDate: firstDate,
@@ -281,7 +281,7 @@ export class SalesListsComponent implements OnInit {
     this.salesApi.getAllSalesList(params).subscribe((res: any) => {
       if (isInitialFetchData) {
         const newMap = new Map();
-        res.orders
+        res.result
           .map((item: any) => {
             return {
               name: item.vendorname,
@@ -311,19 +311,13 @@ export class SalesListsComponent implements OnInit {
         pdf.addPage();
 
         let tableData = this.filteredSalesData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Sales', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.salesForm.value?.startDate.toString();
         let endDate: String = this.salesForm.value?.endDate.toString();
-        console.log(
-          startDate,
-          endDate,
-          '=======salesForm Values========',
-          this.salesForm.value
-        );
+
         if (this.salesForm.value.startDate != '')
           pdf.text(
             'From :' +
@@ -374,7 +368,7 @@ export class SalesListsComponent implements OnInit {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Back Order Quantity',

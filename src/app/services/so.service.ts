@@ -114,14 +114,14 @@ export class SoService {
 
   getAllSoList({
     statusId,
-    vendorId,
+    ledgerId,
     globalFilterId,
     search,
     fromDate,
     toDate,
   }: {
     statusId?: number;
-    vendorId?: number;
+    ledgerId?: number;
     globalFilterId?: number;
     search?: string;
     fromDate?: string;
@@ -131,8 +131,8 @@ export class SoService {
     if (statusId) {
       params = params.append('statusId', statusId);
     }
-    if (vendorId) {
-      params = params.append('vendorId', vendorId);
+    if (ledgerId) {
+      params = params.append('ledgerId', ledgerId);
     }
     if (globalFilterId) {
       params = params.append('globalFilterId', globalFilterId);

@@ -10,11 +10,11 @@ import {
 } from 'src/app/reports/stub/salesOrderStub';
 import { Router } from '@angular/router';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
-import { SoService } from 'src/app/services/so.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { CrnoteService } from 'src/app/services/credit.service';
 
 @Component({
   selector: 'app-credit-note',
@@ -52,14 +52,14 @@ export class CreditNoteComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
   constructor(
-    private salesOrderApi: SoService,
+    private creditApi: CrnoteService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router
@@ -88,7 +88,7 @@ export class CreditNoteComponent implements OnInit {
           needToShow: true,
         },
         { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
@@ -119,7 +119,6 @@ export class CreditNoteComponent implements OnInit {
   }
 
   onClickButton(): void {
-    // this.router.navigateByUrl('so');
     console.log('clicked');
   }
 
@@ -167,7 +166,7 @@ export class CreditNoteComponent implements OnInit {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Credit Note',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -177,47 +176,47 @@ export class CreditNoteComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Credit Note',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Credit Note',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Credit Note',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Credit Note Value',
-        count: serverData.orderValues,
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
@@ -228,7 +227,7 @@ export class CreditNoteComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -269,11 +268,11 @@ export class CreditNoteComponent implements OnInit {
       fromDate: firstDate,
       toDate: lastDate,
     };
-    this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
+    this.creditApi.getAllCreditList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
-        res.orders
+        res.result
           .map((item: any) => {
             return {
               name: item.vendorname,
@@ -293,7 +292,6 @@ export class CreditNoteComponent implements OnInit {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.creditForm.value.filterData - 1].name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -354,7 +352,7 @@ export class CreditNoteComponent implements OnInit {
             },
             {
               header: 'Vendor',
-              dataKey: 'vendorname',
+              dataKey: 'customername',
             },
             {
               header: 'Order Quantity',
@@ -366,7 +364,7 @@ export class CreditNoteComponent implements OnInit {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Back Order Quantity',

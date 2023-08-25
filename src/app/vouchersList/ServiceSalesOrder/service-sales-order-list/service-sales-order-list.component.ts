@@ -24,7 +24,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
-  serviceSalesOrderData: any[] = [];
   serviceSalesOrderForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
@@ -51,7 +50,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
-    { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+    { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
@@ -91,7 +90,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
           name: 'received',
           needToShow: true,
         },
-        { title: 'Date & Time', sortable: 0, name: 'sodate', needToShow: true },
+        { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
@@ -124,7 +123,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Service SO',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -134,52 +133,50 @@ export class ServiceSalesOrderListComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Service SO',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Service SO',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled  Service SO',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Service SO Value',
-        count: serverData.orderValues,
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
-        // badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        // badgeValue: '+23%',
         neededRupeeSign: true,
       },
     ];
@@ -187,7 +184,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -271,7 +268,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
     }
     let params = {
       statusId: formValues.reportStatus,
-      vendorId: formValues.vendorcode,
+      ledgerId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
       fromDate: firstDate,
@@ -281,7 +278,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
-        res.orders
+        res.result
           .map((item: any) => {
             return {
               name: item.vendorname,
@@ -302,7 +299,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
       let timeDuration: string =
         this.filterByOptions[this.serviceSalesOrderForm.value.filterData - 1]
           .name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -314,7 +310,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
         let tableData = this.filteredServiceSalesOrderData.flatMap(
           (item) => item
         );
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Sales Order', 240, (topValue += 50));
@@ -323,12 +318,6 @@ export class ServiceSalesOrderListComponent implements OnInit {
           this.serviceSalesOrderForm.value?.startDate.toString();
         let endDate: String =
           this.serviceSalesOrderForm.value?.endDate.toString();
-        console.log(
-          startDate,
-          endDate,
-          '=======serviceSalesOrderForm Values========',
-          this.serviceSalesOrderForm.value
-        );
         if (this.serviceSalesOrderForm.value.startDate != '')
           pdf.text(
             'From :' +
@@ -380,7 +369,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
             },
             {
               header: 'Data & Time',
-              dataKey: 'sodate',
+              dataKey: 'date',
             },
             {
               header: 'Back Order Quantity',
@@ -394,7 +383,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Service Sales Order Report.pdf');
+        pdf.save('Service SO Report.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -439,7 +428,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
+      XLSX.utils.book_append_sheet(wb, ws, 'Service SO Summary');
       XLSX.writeFile(wb, 'Report.xlsx');
     }
   }

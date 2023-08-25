@@ -167,7 +167,7 @@ export class DebitNoteComponent implements OnInit {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Debit Note',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -177,47 +177,47 @@ export class DebitNoteComponent implements OnInit {
       },
       {
         icon: 'bi bi-cart-check',
-        count: serverData.completedOrders,
+        count: serverData.completed,
         title: 'Completed Debit Note',
         cardIconStyles: 'display:flex; color: #9FD24E',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#9FD24E33',
         badgeStyles: 'background-color:#9FD24E33;color: #9FD24E',
-        badgeValue: `${Number.parseFloat(
-          serverData.completedOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.completedPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-dash',
         title: 'Pending Debit Note',
-        count: serverData.pendingOrders,
+        count: serverData.pending,
         cardIconStyles: 'display:flex; color: #FFCB7C;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#FFCB7C33',
         badgeStyles: 'background-color:#FFCB7C33;color: #FFCB7C',
-        badgeValue: `${Number.parseFloat(
-          serverData.pendingOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.pendingPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-cart-x',
         title: 'Cancelled Debit Note',
-        count: serverData.cancelledOrders,
+        count: serverData.cancelled,
         cardIconStyles: 'display:flex; color: #F04438;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#F0443833',
         badgeStyles: 'background-color:#F0443833;color: #F04438',
-        badgeValue: `${Number.parseFloat(
-          serverData.cancelledOrdersPercent
-        ).toFixed(2)}%`,
+        badgeValue: `${Number.parseFloat(serverData.cancelledPercent).toFixed(
+          2
+        )}%`,
         neededRupeeSign: false,
       },
       {
         icon: 'bi bi-wallet',
         title: 'Debit Note Value',
-        count: serverData.orderValues,
+        count: serverData.totalAmounts,
         cardIconStyles: 'display:flex; color: #41A0C8;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#41A0C833',
@@ -228,7 +228,7 @@ export class DebitNoteComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.orders) {
+    for (let data of serverData.result) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -273,7 +273,7 @@ export class DebitNoteComponent implements OnInit {
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
-        res.orders
+        res.result
           .map((item: any) => {
             return {
               name: item.vendorname,
@@ -293,7 +293,6 @@ export class DebitNoteComponent implements OnInit {
       var data = this.contentToSave.nativeElement;
       let timeDuration: string =
         this.filterByOptions[this.debitForm.value.filterData - 1].name;
-      console.log(timeDuration, 'timeduration');
 
       html2canvas(data, { scale: 2 }).then((canvas) => {
         const contentDataURL = canvas.toDataURL('image/png');
@@ -303,19 +302,13 @@ export class DebitNoteComponent implements OnInit {
         pdf.addPage();
 
         let tableData = this.filteredDebitNoteData.flatMap((item) => item);
-        console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
         pdf.text('Recent Debit Note', 240, (topValue += 50));
         pdf.setFontSize(12);
         let startDate: String = this.debitForm.value?.startDate.toString();
         let endDate: String = this.debitForm.value?.endDate.toString();
-        console.log(
-          startDate,
-          endDate,
-          '=======debitForm Values========',
-          this.debitForm.value
-        );
+
         if (this.debitForm.value.startDate != '')
           pdf.text(
             'From :' +

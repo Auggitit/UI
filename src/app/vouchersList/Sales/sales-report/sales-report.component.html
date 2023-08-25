@@ -146,10 +146,10 @@
               "
             >
               <p class="m-0" style="color: #333843; font-weight: 600">
-                {{ data.orderDetails[0].pname }}
+                {{ data.products[0].pname }}
               </p>
               <p style="font-weight: 400; color: #667085">
-                + {{ data.orderDetails.length }} other products
+                + {{ data.products.length }} other products
               </p>
             </td>
             <td
@@ -162,7 +162,7 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              {{ data.sodate }}
+              {{ data.date }}
             </td>
             <td
               *ngIf="columns[5].needToShow"
@@ -205,8 +205,7 @@
               <p class="mb-0">
                 Total-
                 <span style="font-weight: 600">{{
-                  data.orderDetails.length * data.orderedvalue
-                    | currency : "INR"
+                  data.products.length * data.orderedvalue | currency : "INR"
                 }}</span>
               </p>
             </td>
