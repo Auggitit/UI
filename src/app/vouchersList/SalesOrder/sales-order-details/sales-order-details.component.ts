@@ -19,6 +19,10 @@ export class SalesOrderDetailsComponent implements OnInit {
   salesOrderDetailsForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   salesOrderData: any;
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
   productsData: any[] = [];
 
   constructor(
@@ -51,8 +55,23 @@ export class SalesOrderDetailsComponent implements OnInit {
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
     this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
+      console.log(res, '-----response');
       this.salesOrderData = res;
       this.productsData = res.soDetailLists;
+
+      let companyAddress = this.salesOrderData.companyaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+      let deliveryAddress = this.salesOrderData.deliveryaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
     });
   }
 

@@ -21,6 +21,10 @@ export class ServiceSalesDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   serviceSalesData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private serviceSalesApi: SsalesService,
@@ -61,6 +65,20 @@ export class ServiceSalesDetailsComponent implements OnInit {
 
         this.serviceSalesData = res;
         this.productsData = res.soDetailLists;
+
+        let companyAddress = this.serviceSalesData.companyaddress
+          .replace(/[\n]/g, '')
+          .replace(/, +|,+/g, ',')
+          .split(',');
+        let deliveryAddress = this.serviceSalesData.deliveryaddress
+          .replace(/[\n]/g, '')
+          .replace(/, +|,+/g, ',')
+          .split(',');
+
+        this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+        this.addressLine2 = companyAddress.slice(2).join(', ');
+        this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+        this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
       });
   }
 

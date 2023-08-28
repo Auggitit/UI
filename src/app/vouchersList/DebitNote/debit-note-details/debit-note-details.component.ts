@@ -20,6 +20,10 @@ export class DebitNoteDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   debitNoteData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private debitApi: DrnoteService,
@@ -51,8 +55,23 @@ export class DebitNoteDetailsComponent implements OnInit {
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
     this.debitApi.getDebitDetail({ id: params }).subscribe((res: any) => {
+      console.log(res, '-----------response');
+
       this.debitNoteData = res;
       this.productsData = res.soDetailLists;
+      let companyAddress = this.debitNoteData.companyaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+      let deliveryAddress = this.debitNoteData.deliveryaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
     });
   }
 

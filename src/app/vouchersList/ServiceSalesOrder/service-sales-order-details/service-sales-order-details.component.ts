@@ -21,6 +21,10 @@ export class ServiceSalesOrderDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   ServiceSOData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private salesOrderApi: SsoService,
@@ -51,8 +55,24 @@ export class ServiceSalesOrderDetailsComponent implements OnInit {
     this.salesOrderApi
       .getServiceSoDetail({ id: params })
       .subscribe((res: any) => {
+        console.log(res, '--------------response');
+
         this.ServiceSOData = res;
         this.productsData = res.soDetailLists;
+
+        let companyAddress = this.ServiceSOData.companyaddress
+          .replace(/[\n]/g, '')
+          .replace(/, +|,+/g, ',')
+          .split(',');
+        let deliveryAddress = this.ServiceSOData.deliveryaddress
+          .replace(/[\n]/g, '')
+          .replace(/, +|,+/g, ',')
+          .split(',');
+
+        this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+        this.addressLine2 = companyAddress.slice(2).join(', ');
+        this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+        this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
       });
   }
 

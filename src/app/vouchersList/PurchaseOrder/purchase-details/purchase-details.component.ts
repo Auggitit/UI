@@ -20,6 +20,10 @@ export class PurchaseDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   purchaseOrderData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private poApi: PoService,
@@ -53,8 +57,24 @@ export class PurchaseDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['id'];
     console.log(params, 'params');
     this.poApi.getPoDetail({ id: params }).subscribe((res: any) => {
+      console.log(res, '..........res');
+
       this.purchaseOrderData = res;
       this.productsData = res.soDetailLists;
+
+      let companyAddress = this.purchaseOrderData.companyaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+      let deliveryAddress = this.purchaseOrderData.deliveryaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
     });
   }
 

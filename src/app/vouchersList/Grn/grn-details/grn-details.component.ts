@@ -20,6 +20,10 @@ export class GrnDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   grnData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private grnApi: GrnService,
@@ -51,8 +55,24 @@ export class GrnDetailsComponent implements OnInit {
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
     this.grnApi.getGrnDetail({ id: params }).subscribe((res: any) => {
+      console.log(res, 'responseeeeeeee---------------');
+
       this.grnData = res;
       this.productsData = res.soDetailLists;
+
+      let companyAddress = this.grnData.companyaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+      let deliveryAddress = this.grnData.deliveryaddress
+        .replace(/[\n]/g, '')
+        .replace(/, +|,+/g, ',')
+        .split(',');
+
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
     });
   }
 

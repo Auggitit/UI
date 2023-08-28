@@ -284,8 +284,8 @@ export class SalesListsComponent implements OnInit {
         res.result
           .map((item: any) => {
             return {
-              name: item.vendorname,
-              id: item.vendorcode,
+              name: item.customername,
+              id: item.customercode,
             };
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
@@ -337,13 +337,13 @@ export class SalesListsComponent implements OnInit {
           );
         if (this.salesForm.value.vendorcode != '')
           pdf.text(
-            'Vendor Name : ' + tableData[0]?.vendorname,
+            'Vendor Name : ' + tableData[0]?.customername,
             50,
             (topValue += 20)
           );
         if (this.salesForm.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.customername,
             50,
             (topValue += 20)
           );
@@ -356,7 +356,7 @@ export class SalesListsComponent implements OnInit {
             },
             {
               header: 'Vendor',
-              dataKey: 'vendorname',
+              dataKey: 'customername',
             },
             {
               header: 'Order Quantity',

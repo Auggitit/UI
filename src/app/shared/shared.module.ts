@@ -40,6 +40,7 @@ import { ConfirmationDialogBoxComponent } from './components/confirmation-dialog
 import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/export-pdf-dialog-box.component';
 import { TableColumnDisplayFilterComponent } from './components/table-column-display-filter/table-column-display-filter.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AddressCardComponent } from './components/address-card/address-card.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ConfirmationDialogBoxComponent,
     ExportPdfDialogBoxComponent,
     TableColumnDisplayFilterComponent,
+    AddressCardComponent,
   ],
   imports: [
     CommonModule,
@@ -96,6 +98,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TableFiltersComponent,
     MatMenuModule,
     MatDialogModule,
+    AddressCardComponent,
   ],
 })
 export class SharedModule {}

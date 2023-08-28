@@ -1,0 +1,30 @@
+<div>
+  <div *ngIf="!addressHeader">
+    <img
+      src="assets/LogoAuggitSvg.svg"
+      alt="AdminLTE Logo"
+      style="width: 40%; margin-bottom: 8px"
+    />
+  </div>
+  <p
+    *ngIf="addressHeader"
+    style="color: rgba(102, 112, 133, 0.8); font-size: 1rem; font-weight: 500"
+  >
+    {{ addressHeader }}
+  </p>
+  <p style="color: rgba(51, 56, 67, 1); font-size: 1.25rem; font-weight: 400">
+    {{ addressTitle }}
+  </p>
+  <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+    {{ addressLine1 }},
+  </p>
+  <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+    {{ addressLine2 }}
+  </p>
+  <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+    GST- {{ gstNumber }}
+  </p>
+  <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
+    Contact: {{ contactNumber }}
+  </p>
+</div>

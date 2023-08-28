@@ -20,6 +20,10 @@ export class CreditNoteDetailsComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   creditNoteData: any;
   productsData: any[] = [];
+  addressLine1: string = '';
+  addressLine2: string = '';
+  deliveryAddressLine1: string = '';
+  deliveryAddressLine2: string = '';
 
   constructor(
     private creditApi: CrnoteService,
@@ -51,8 +55,30 @@ export class CreditNoteDetailsComponent implements OnInit {
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
     this.creditApi.getCreditDetail({ id: params }).subscribe((res: any) => {
+      console.log(res, '--------------res');
+
       this.creditNoteData = res;
       this.productsData = res.soDetailLists;
+      let companyAddress =
+        this.creditNoteData.companyaddress !== ''
+          ? this.creditNoteData.companyaddress
+              .replace(/[\n]/g, '')
+              .replace(/, +|,+/g, ',')
+              .split(',')
+          : '';
+      let deliveryAddress =
+        this.creditNoteData.deliveryaddress !== ''
+          ? this.creditNoteData.deliveryaddress
+              .replace(/[\n]/g, '')
+              .replace(/, +|,+/g, ',')
+              .split(',')
+          : ' ';
+
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
+      console.log(deliveryAddress, companyAddress, 'addredddddddddddddd');
     });
   }
 

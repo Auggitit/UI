@@ -60,7 +60,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     {
       title: 'Vendor Detail',
       sortable: 0,
-      name: 'vendorname',
+      name: 'customername',
       needToShow: true,
     },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
@@ -99,7 +99,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
         {
           title: 'Vendor Detail',
           sortable: 0,
-          name: 'vendorname',
+          name: 'customername',
           needToShow: true,
         },
         {
@@ -320,8 +320,8 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           res.result
             .map((item: any) => {
               return {
-                name: item.vendorname,
-                id: item.vendorcode,
+                name: item.customername,
+                id: item.customercode,
               };
             })
             .forEach((item: VendorDropDown) => newMap.set(item.id, item));
@@ -373,13 +373,13 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Vendor Name : ' + tableData[0]?.vendorname,
+            'Vendor Name : ' + tableData[0]?.customername,
             50,
             (topValue += 20)
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.vendorname,
+            'Sales Person : ' + tableData[0]?.customername,
             50,
             (topValue += 20)
           );
@@ -392,11 +392,11 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'vendorcode',
+              dataKey: 'customercode',
             },
             {
               header: 'Vendor Detail',
-              dataKey: 'vendorname',
+              dataKey: 'customername',
             },
             {
               header: 'Product Detail',

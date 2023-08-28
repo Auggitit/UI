@@ -43,45 +43,36 @@
           margin-bottom: 4px;
         "
       >
+        <app-address-card></app-address-card>
         <div>
-          <img
-            src="assets/LogoAuggitSvg.svg"
-            alt="AdminLTE Logo"
-            style="width: 40%; margin-bottom: 8px"
-          />
-          <p
-            style="
-              color: rgba(51, 56, 67, 1);
-              font-size: 1.25rem;
-              font-weight: 400;
-            "
+          <div
+            class="d-flex flex-wrap justify-content-between"
+            style="gap: 20px"
           >
-            VOUCH APPLICAITON PRIVATE LIMITED
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            96, MANGADU SWAMY STREET,
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            CHENNAI, TAMIL NADU, INDIA
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- 44DDRET4343Q2Q3
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact: 044-0449 9900
-          </p>
-        </div>
-        <div class="d-flex flex-wrap" style="gap: 30px">
-          <div>
             <p style="color: #333843">Sales Order</p>
-            <p style="color: #333843">Sales Order Date</p>
-            <p style="color: #333843">Due Date</p>
-            <p style="color: #333843">Reference PO NO</p>
+            <p style="color: #419fc7">{{ creditNoteData.vchno }}</p>
           </div>
-          <div>
-            <p style="color: #419fc7">{{ creditNoteData.sono }}</p>
-            <p style="color: #419fc7">{{ creditNoteData.sodate }}</p>
+          <div
+            class="d-flex flex-wrap justify-content-between"
+            style="gap: 20px"
+          >
+            <p style="color: #333843">Sales Order Date</p>
+            <p style="color: #419fc7">
+              {{ creditNoteData.vchdate.split(" ")[0] }}
+            </p>
+          </div>
+          <div
+            class="d-flex flex-wrap justify-content-between"
+            style="gap: 20px"
+          >
+            <p style="color: #333843">Due Date</p>
             <p style="color: #419fc7">45 Days</p>
+          </div>
+          <div
+            class="d-flex flex-wrap justify-content-between"
+            style="gap: 20px"
+          >
+            <p style="color: #333843">Reference PO NO</p>
             <p style="color: #419fc7">{{ creditNoteData.refno }}</p>
           </div>
         </div>
@@ -95,76 +86,22 @@
           border: 1px solid #e0e2e7;
         "
       >
-        <div>
-          <p
-            style="
-              color: rgba(102, 112, 133, 0.8);
-              font-size: 1rem;
-              font-weight: 500;
-            "
-          >
-            NAME OF THE CLIENT
-          </p>
-          <p
-            style="
-              color: rgba(51, 56, 67, 1);
-              font-size: 1.25rem;
-              font-weight: 400;
-            "
-          >
-            {{ creditNoteData.companydisplayname }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ creditNoteData.companyaddress.split(", ")[0] }}
-            {{ creditNoteData.companyaddress.split(",")[1] }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ creditNoteData.companyaddress.split(",")[2] }}
-            {{ creditNoteData.companyaddress.split(",")[3] }}
-            {{ creditNoteData.companyaddress.split(",")[4] }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ creditNoteData.gstno }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ creditNoteData.contactphone }}
-          </p>
-        </div>
-        <div>
-          <p
-            style="
-              color: rgba(102, 112, 133, 0.8);
-              font-size: 1.125rem;
-              font-weight: 500;
-            "
-          >
-            DELIVERY ADDRESSS
-          </p>
-          <p
-            style="
-              color: rgba(51, 56, 67, 1);
-              font-size: 1.5rem;
-              font-weight: 400;
-            "
-          >
-            LTI Limited
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ creditNoteData.deliveryaddress.split(", ")[0] }}
-            {{ creditNoteData.deliveryaddress.split(",")[1] }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            {{ creditNoteData.deliveryaddress.split(",")[2] }}
-            {{ creditNoteData.deliveryaddress.split(",")[3] }}
-            {{ creditNoteData.deliveryaddress.split(",")[4] }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            GST- {{ creditNoteData.gstno }}
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-            Contact:{{ creditNoteData.contactphone }}
-          </p>
-        </div>
+        <app-address-card
+          [addressHeader]="'NAME OF THE CLIENT'"
+          [addressTitle]="creditNoteData.companydisplayname"
+          [addressLine1]="addressLine1"
+          [addressLine2]="addressLine2"
+          [gstNumber]="creditNoteData.gstno"
+          [contactNumber]="creditNoteData.contactphone"
+        ></app-address-card>
+        <app-address-card
+          [addressHeader]="'DELIVERY ADDRESSES'"
+          [addressTitle]="'LTI Limited'"
+          [addressLine1]="deliveryAddressLine1"
+          [addressLine2]="deliveryAddressLine2"
+          [gstNumber]="creditNoteData.gstno"
+          [contactNumber]="creditNoteData.contactphone"
+        ></app-address-card>
       </div>
       <div
         style="
