@@ -351,7 +351,21 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredServicePoData.flatMap((item) => item);
+        let tableData = this.filteredServicePoData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Purchase Order', 240, (topValue += 50));
@@ -386,7 +400,6 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             50,
             (topValue += 20)
           );
-        let product = tableData[0].orderDetails[0].pname;
         autoTable(pdf, {
           body: tableData,
           columns: [
@@ -396,7 +409,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'pono',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -404,7 +417,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'orderDetails[0].pname',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -416,11 +429,11 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Price',
-              dataKey: 'orderedValue',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'pono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -448,8 +461,9 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
         { wch: 40 },
         { wch: 50 },
         { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 40 },
+        { wch: 40 },
+        { wch: 20 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['Service Purchase Order Summary']], {
@@ -474,7 +488,7 @@ export class SevicePurchaseOrderReportComponent implements OnInit, OnDestroy {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'Service Purchase Order Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'SPO Report.xlsx');
     }
   }
 }

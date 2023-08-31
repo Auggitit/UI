@@ -346,7 +346,21 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredServiceGrnData.flatMap((item) => item);
+        let tableData = this.filteredServiceGrnData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service GRN', 240, (topValue += 50));
@@ -398,7 +412,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'pono',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -406,15 +420,15 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'pono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'pono',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'pono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

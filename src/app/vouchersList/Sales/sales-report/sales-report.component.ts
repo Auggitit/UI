@@ -347,7 +347,21 @@ export class SalesReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredSalesData.flatMap((item) => item);
+        let tableData = this.filteredSalesData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Sales ', 240, (topValue += 50));
@@ -391,7 +405,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'customercode',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -399,7 +413,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'sono',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -407,15 +421,15 @@ export class SalesReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'sono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'sono',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -467,7 +481,7 @@ export class SalesReportComponent implements OnInit, OnDestroy {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'Sales Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'Sales Report.xlsx');
     }
   }
 }

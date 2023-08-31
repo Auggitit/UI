@@ -40,9 +40,9 @@ export class SalesOrderListComponent implements OnInit {
 
   columns: any[] = [
     {
-      title: 'Order Value',
+      title: 'Order Id',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'sono',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -55,6 +55,12 @@ export class SalesOrderListComponent implements OnInit {
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
@@ -76,9 +82,9 @@ export class SalesOrderListComponent implements OnInit {
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
         {
-          title: 'Order Value',
+          title: 'Order Id',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'sono',
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -94,6 +100,12 @@ export class SalesOrderListComponent implements OnInit {
           title: 'Back Order Qty',
           sortable: 0,
           name: 'ordered',
+          needToShow: true,
+        },
+        {
+          title: 'Order Value',
+          sortable: 0,
+          name: 'orderedvalue',
           needToShow: true,
         },
         {
@@ -300,8 +312,19 @@ export class SalesOrderListComponent implements OnInit {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredSalesOrderData.flatMap((item) => item);
-
+        let tableData = this.filteredSalesOrderData
+          .flatMap((item) => item)
+          .map((item) => {
+            let result = '';
+            let backOrderCount = item.ordered - item.received;
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, backOrder: backOrderCount };
+          });
+        console.log(tableData, 'tabledata');
         pdf.setLineWidth(2);
         pdf.text('Recent Sales Order', 240, (topValue += 50));
         pdf.setFontSize(12);
@@ -341,8 +364,8 @@ export class SalesOrderListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Order Id',
+              dataKey: 'sono',
             },
             {
               header: 'Vendor',
@@ -362,17 +385,21 @@ export class SalesOrderListComponent implements OnInit {
             },
             {
               header: 'Back Order Quantity',
-              dataKey: 'received',
+              dataKey: 'backOrder',
+            },
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
           theme: 'striped',
         });
-        pdf.save('Sales Order Report.pdf');
+        pdf.save('Sales Order.pdf');
       });
     } else {
       //Code for Excel Format Download
@@ -384,18 +411,18 @@ export class SalesOrderListComponent implements OnInit {
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Sales Order Report',
+        Title: 'Sales Order List',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
         { wch: 7 },
         { wch: 15 },
-        { wch: 15 },
-        { wch: 40 },
-        { wch: 50 },
-        { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 45 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 35 },
+        { wch: 20 },
+        { wch: 30 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['Sales Order Summary']], { origin: 'E1' });
@@ -403,12 +430,14 @@ export class SalesOrderListComponent implements OnInit {
         ws,
         [
           [
-            'Order Value',
+            'So.No',
+            'Order Id',
             'Vendor',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',
             'Back Order Quantity',
+            'Order Value',
             'Status',
           ],
         ],
@@ -416,7 +445,7 @@ export class SalesOrderListComponent implements OnInit {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'Sales Order Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'SO Report.xlsx');
     }
   }
 }

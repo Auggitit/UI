@@ -39,9 +39,9 @@ export class GrnListComponent implements OnInit {
 
   columns: any[] = [
     {
-      title: 'Order Value',
+      title: 'Order Id',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'grnno',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
@@ -53,8 +53,14 @@ export class GrnListComponent implements OnInit {
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
-    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
-    { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'pending', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
+    { title: 'Status', sortable: 0, name: 'received', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
@@ -75,9 +81,9 @@ export class GrnListComponent implements OnInit {
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
         {
-          title: 'Order Value',
+          title: 'Order Id',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'grnno',
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
@@ -87,21 +93,32 @@ export class GrnListComponent implements OnInit {
           name: 'ordered',
           needToShow: true,
         },
-        { title: 'Received Qty', sortable: 0, name: 'pname', needToShow: true },
+        {
+          title: 'Received Qty',
+          sortable: 0,
+          name: 'received',
+          needToShow: true,
+        },
         { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
         {
           title: 'Back Order Qty',
           sortable: 0,
-          name: 'ordered',
+          name: 'pending',
+          needToShow: true,
+        },
+        {
+          title: 'Order Value',
+          sortable: 0,
+          name: 'orderedvalue',
           needToShow: true,
         },
         {
           title: 'Status',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'received',
           needToShow: true,
         },
-        { title: 'Action', sortable: 0, name: 'pending', needToShow: true },
+        { title: 'Action', sortable: 0, name: '', needToShow: true },
       ],
     });
   }
@@ -299,7 +316,19 @@ export class GrnListComponent implements OnInit {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredGrnData.flatMap((item) => item);
+        let tableData = this.filteredGrnData
+          .flatMap((item) => item)
+          .map((item) => {
+            let result = '';
+            let backOrderCount = item.ordered - item.received;
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, backOrder: backOrderCount };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent GRN', 240, (topValue += 50));
@@ -340,9 +369,10 @@ export class GrnListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Order Id',
+              dataKey: 'grnno',
             },
+
             {
               header: 'Vendor',
               dataKey: 'vendorname',
@@ -361,11 +391,15 @@ export class GrnListComponent implements OnInit {
             },
             {
               header: 'Back Order Quantity',
-              dataKey: 'received',
+              dataKey: 'backOrder',
+            },
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -389,12 +423,13 @@ export class GrnListComponent implements OnInit {
       var wsCols = [
         { wch: 7 },
         { wch: 15 },
-        { wch: 15 },
-        { wch: 40 },
-        { wch: 50 },
+        { wch: 45 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 30 },
+        { wch: 20 },
         { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 30 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['GRN Summary']], { origin: 'E1' });
@@ -402,12 +437,14 @@ export class GrnListComponent implements OnInit {
         ws,
         [
           [
-            'Order Value',
+            'So No',
+            'Order Id',
             'Vendor',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',
             'Back Order Quantity',
+            'Order Value',
             'Status',
           ],
         ],
@@ -415,7 +452,7 @@ export class GrnListComponent implements OnInit {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'GRN Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'GRN Report.xlsx');
     }
   }
 }

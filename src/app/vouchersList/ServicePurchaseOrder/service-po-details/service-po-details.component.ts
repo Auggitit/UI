@@ -61,7 +61,7 @@ export class ServicePoDetailsComponent implements OnInit {
         console.log(res, '-------------response');
 
         this.purchaseOrderData = res;
-        this.productsData = res.soDetailLists;
+        this.productsData = res.products;
 
         let companyAddress = this.purchaseOrderData.companyaddress
           .replace(/[\n]/g, '')

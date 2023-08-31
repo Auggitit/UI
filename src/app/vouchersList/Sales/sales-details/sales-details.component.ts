@@ -58,7 +58,7 @@ export class SalesDetailsComponent implements OnInit {
     this.salesApi.getSalesDetail({ id: params }).subscribe((res: any) => {
       console.log(res, '--------------response');
       this.salesData = res;
-      this.productsData = res.soDetailLists;
+      this.productsData = res.products;
 
       let companyAddress = this.salesData.companyaddress
         .replace(/[\n]/g, '')

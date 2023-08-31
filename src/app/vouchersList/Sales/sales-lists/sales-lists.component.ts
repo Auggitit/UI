@@ -40,9 +40,9 @@ export class SalesListsComponent implements OnInit {
 
   columns: any[] = [
     {
-      title: 'Order Value',
+      title: 'Order Id',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'invno',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -54,7 +54,13 @@ export class SalesListsComponent implements OnInit {
     },
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
-    { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
+    { title: 'Back Order Qty', sortable: 0, name: 'pending', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
@@ -75,9 +81,9 @@ export class SalesListsComponent implements OnInit {
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
         {
-          title: 'Order Value',
+          title: 'Order Id',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'invno',
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -98,6 +104,12 @@ export class SalesListsComponent implements OnInit {
           title: 'Back Order Qty',
           sortable: 0,
           name: 'ordered',
+          needToShow: true,
+        },
+        {
+          title: 'Order Value',
+          sortable: 0,
+          name: 'orderedvalue',
           needToShow: true,
         },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -310,7 +322,19 @@ export class SalesListsComponent implements OnInit {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredSalesData.flatMap((item) => item);
+        let tableData = this.filteredSalesData
+          .flatMap((item) => item)
+          .map((item) => {
+            let result = '';
+            let backOrderCount = item.ordered - item.received;
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, backOrder: backOrderCount };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Sales', 240, (topValue += 50));
@@ -351,8 +375,8 @@ export class SalesListsComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Order Id',
+              dataKey: 'invno',
             },
             {
               header: 'Vendor',
@@ -372,11 +396,15 @@ export class SalesListsComponent implements OnInit {
             },
             {
               header: 'Back Order Quantity',
-              dataKey: 'received',
+              dataKey: 'backOrder',
+            },
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -400,12 +428,13 @@ export class SalesListsComponent implements OnInit {
       var wsCols = [
         { wch: 7 },
         { wch: 15 },
-        { wch: 15 },
-        { wch: 40 },
-        { wch: 50 },
+        { wch: 35 },
+        { wch: 20 },
+        { wch: 20 },
         { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 25 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['Sales Summary']], { origin: 'E1' });
@@ -413,12 +442,14 @@ export class SalesListsComponent implements OnInit {
         ws,
         [
           [
-            'Order Value',
+            'So.No',
+            'Order Id',
             'Vendor',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',
             'Back Order Quantity',
+            'Order Value',
             'Status',
           ],
         ],

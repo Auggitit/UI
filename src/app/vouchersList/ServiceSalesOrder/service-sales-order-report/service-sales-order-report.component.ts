@@ -345,9 +345,23 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredServiceSalesOrderData.flatMap(
-          (item) => item
-        );
+        let tableData = this.filteredServiceSalesOrderData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            console.log(result, data.received, data.order, 'result');
+
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Sales Order', 240, (topValue += 50));
@@ -391,7 +405,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'customercode',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -399,7 +413,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'sono',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -407,15 +421,15 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'sono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'sono',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

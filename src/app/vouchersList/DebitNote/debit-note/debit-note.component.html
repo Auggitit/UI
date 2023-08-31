@@ -85,9 +85,26 @@
               "
             >
               <!-- href="/sales-order-details" -->
-              <a style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue
-              }}</a>
+              <a
+                (click)="onClickViewMore(data)"
+                style="font-weight: 600; color: #13b2e4"
+                >{{ data.drid }}</a
+              >
+            </td>
+            <td
+              *ngIf="columns[0].needToShow"
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 128px;
+                max-width: 128px;
+              "
+            >
+              <a
+                (click)="onClickViewMore(data)"
+                style="font-weight: 600; color: #13b2e4"
+                >{{ data.vchno }}</a
+              >
             </td>
 
             <td
@@ -104,19 +121,7 @@
               </p>
               <a href="" style="color: #667085">{{ data.vchno }}</a>
             </td>
-            <td
-              *ngIf="columns[2].needToShow"
-              scope="col"
-              style="
-                min-width: 111px;
-                max-width: 111px;
-                border-top: 1px solid #f0f1f3;
-                text-align: left;
-                padding-left: 20px;
-              "
-            >
-              {{ data.vendorname }}
-            </td>
+
             <td
               *ngIf="columns[2].needToShow"
               scope="col"
@@ -170,6 +175,17 @@
               "
             >
               <p class="mb-0">{{ data.ordered - data.received }}</p>
+            </td>
+            <td
+              *ngIf="columns[0].needToShow"
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 128px;
+                max-width: 128px;
+              "
+            >
+              {{ data.orderedvalue }}
             </td>
             <td
               *ngIf="columns[6].needToShow"

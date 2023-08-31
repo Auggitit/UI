@@ -133,7 +133,8 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('so');
+    // this.router.navigateByUrl('so');
+    console.log('create');
   }
   onClickVchNo(data: any): void {
     this.router.navigate(['/debit-note-details'], {
@@ -341,7 +342,21 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredDebitNoteData.flatMap((item) => item);
+        let tableData = this.filteredDebitNoteData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
         console.log('Fil dat dabhg', tableData);
 
         pdf.setLineWidth(2);
@@ -394,7 +409,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'vendorname',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -410,7 +425,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

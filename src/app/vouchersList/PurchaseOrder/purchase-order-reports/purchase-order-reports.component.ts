@@ -347,7 +347,21 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredPoData.flatMap((item) => item);
+        let tableData = this.filteredPoData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Purchase Order', 240, (topValue += 50));
@@ -391,7 +405,7 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'vendorcode',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -399,23 +413,23 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'pono',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
-              dataKey: 'podate',
+              dataKey: 'date',
             },
             {
               header: 'Quantity',
-              dataKey: 'pono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'pono',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'pono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

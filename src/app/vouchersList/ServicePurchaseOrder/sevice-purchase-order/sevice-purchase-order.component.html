@@ -84,10 +84,11 @@
                 max-width: 128px;
               "
             >
-              <!-- href="/sales-order-details" -->
-              <a style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue
-              }}</a>
+              <a
+                (click)="onClickViewMore(data)"
+                style="font-weight: 600; color: #13b2e4"
+                >{{ data.pono }}</a
+              >
             </td>
             <td
               *ngIf="columns[1].needToShow"
@@ -156,6 +157,19 @@
               "
             >
               <p class="mb-0">{{ data.ordered - data.received }}</p>
+            </td>
+            <td
+              *ngIf="columns[0].needToShow"
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 128px;
+                max-width: 128px;
+              "
+            >
+              <a href="" style="font-weight: 600; color: #13b2e4">{{
+                data.orderedvalue | currency : "INR"
+              }}</a>
             </td>
             <td
               *ngIf="columns[6].needToShow"

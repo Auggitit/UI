@@ -24,7 +24,6 @@ export class CreditNoteDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
-
   constructor(
     private creditApi: CrnoteService,
     private router: ActivatedRoute,
@@ -49,7 +48,8 @@ export class CreditNoteDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('so');
+    // this.navigate.navigateByUrl('so');
+    console.log('clicked');
   }
 
   loadData() {
@@ -58,7 +58,7 @@ export class CreditNoteDetailsComponent implements OnInit {
       console.log(res, '--------------res');
 
       this.creditNoteData = res;
-      this.productsData = res.soDetailLists;
+      this.productsData = res.products;
       let companyAddress =
         this.creditNoteData.companyaddress !== ''
           ? this.creditNoteData.companyaddress

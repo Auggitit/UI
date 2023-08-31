@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { CrnoteService } from 'src/app/services/credit.service';
+import { setupTestingRouter } from '@angular/router/testing';
 
 @Component({
   selector: 'app-credit-note',
@@ -38,13 +39,8 @@ export class CreditNoteComponent implements OnInit {
   selectAll = { isSelected: false };
 
   columns: any[] = [
-    {
-      title: 'Order Value',
-      sortable: 0,
-      name: 'orderedvalue',
-      needToShow: true,
-    },
-    { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Cr ID', sortable: 0, name: 'crid', needToShow: true },
+    { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
     { title: 'Vendor', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Order Qty',
@@ -55,6 +51,12 @@ export class CreditNoteComponent implements OnInit {
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
@@ -75,13 +77,9 @@ export class CreditNoteComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        {
-          title: 'Order Value',
-          sortable: 0,
-          name: 'orderedvalue',
-          needToShow: true,
-        },
         { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
+
         {
           title: 'Vendor',
           sortable: 0,
@@ -100,6 +98,12 @@ export class CreditNoteComponent implements OnInit {
           title: 'Back Order Qty',
           sortable: 0,
           name: 'ordered',
+          needToShow: true,
+        },
+        {
+          title: 'Order Value',
+          sortable: 0,
+          name: 'orderedvalue',
           needToShow: true,
         },
         {
@@ -307,7 +311,19 @@ export class CreditNoteComponent implements OnInit {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredCreditNoteData.flatMap((item) => item);
+        let tableData = this.filteredCreditNoteData
+          .flatMap((item) => item)
+          .map((item) => {
+            let result = '';
+            let backOrderCount = item.ordered - item.received;
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, backOrder: backOrderCount };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Credit Note', 240, (topValue += 50));
@@ -348,11 +364,11 @@ export class CreditNoteComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Cr ID',
+              dataKey: 'crid',
             },
             {
-              header: 'Cr ID',
+              header: 'Voucher No',
               dataKey: 'vchno',
             },
             {
@@ -373,11 +389,15 @@ export class CreditNoteComponent implements OnInit {
             },
             {
               header: 'Back Order Quantity',
-              dataKey: 'received',
+              dataKey: 'backOrder',
+            },
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -400,13 +420,14 @@ export class CreditNoteComponent implements OnInit {
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [
         { wch: 7 },
-        { wch: 15 },
-        { wch: 15 },
+        { wch: 20 },
+        { wch: 20 },
         { wch: 40 },
-        { wch: 50 },
+        { wch: 20 },
+        { wch: 20 },
         { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 20 },
+        { wch: 30 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['Credit Note Summary']], { origin: 'E1' });
@@ -414,13 +435,15 @@ export class CreditNoteComponent implements OnInit {
         ws,
         [
           [
-            'Order Value',
-            ' Cr ID',
+            'So.No',
+            'Cr ID',
+            'Voucher No',
             'Vendor',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',
             'Back Order Quantity',
+            'Order Value',
             'Status',
           ],
         ],
@@ -428,7 +451,7 @@ export class CreditNoteComponent implements OnInit {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'Credit Note Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'CN Report.xlsx');
     }
   }
 }

@@ -133,7 +133,8 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
   }
 
   onClickButton(): void {
-    this.router.navigateByUrl('so');
+    // this.router.navigateByUrl('so');
+    console.log('clicked');
   }
   onClickVchNo(data: any): void {
     this.router.navigate(['/credit-note-details'], {
@@ -146,7 +147,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
       {
         icon: 'bi bi-cash-stack',
         title: 'Total Credit Note',
-        count: serverData.totalOrders,
+        count: serverData.total,
         cardIconStyles: 'display:flex; color: #419FC7;z-index:100',
         iconBackStyles:
           'max-width: fit-content; padding:12px;background-color:#419FC733',
@@ -341,7 +342,21 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredCreditNoteData.flatMap((item) => item);
+        let tableData = this.filteredCreditNoteData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Credit Note', 240, (topValue += 50));
@@ -385,7 +400,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Cr ID',
-              dataKey: 'customercode',
+              dataKey: 'crid',
             },
             {
               header: 'Vendor Detail',
@@ -393,7 +408,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'customername',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -409,7 +424,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

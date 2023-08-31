@@ -37,9 +37,9 @@ export class ServiceSalesOrderListComponent implements OnInit {
   selectAll = { isSelected: false };
   columns: any[] = [
     {
-      title: 'Order Value',
+      title: 'Order Id',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'sono',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -53,6 +53,12 @@ export class ServiceSalesOrderListComponent implements OnInit {
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
 
@@ -72,9 +78,9 @@ export class ServiceSalesOrderListComponent implements OnInit {
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
         {
-          title: 'Order Value',
+          title: 'Order Id',
           sortable: 0,
-          name: 'orderedvalue',
+          name: 'sono',
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
@@ -95,6 +101,12 @@ export class ServiceSalesOrderListComponent implements OnInit {
           title: 'Back Order Qty',
           sortable: 0,
           name: 'ordered',
+          needToShow: true,
+        },
+        {
+          title: 'Order Value',
+          sortable: 0,
+          name: 'orderedvalue',
           needToShow: true,
         },
         { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
@@ -307,9 +319,19 @@ export class ServiceSalesOrderListComponent implements OnInit {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 140);
         pdf.addPage();
 
-        let tableData = this.filteredServiceSalesOrderData.flatMap(
-          (item) => item
-        );
+        let tableData = this.filteredServiceSalesOrderData
+          .flatMap((item) => item)
+          .map((item) => {
+            let result = '';
+            let backOrderCount = item.ordered - item.received;
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, backOrder: backOrderCount };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Sales Order', 240, (topValue += 50));
@@ -352,8 +374,8 @@ export class ServiceSalesOrderListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'Order Value',
-              dataKey: 'orderedvalue',
+              header: 'Order Id',
+              dataKey: 'sono',
             },
             {
               header: 'Vendor',
@@ -373,11 +395,15 @@ export class ServiceSalesOrderListComponent implements OnInit {
             },
             {
               header: 'Back Order Quantity',
-              dataKey: 'received',
+              dataKey: 'backOrder',
+            },
+            {
+              header: 'Order Value',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -401,12 +427,13 @@ export class ServiceSalesOrderListComponent implements OnInit {
       var wsCols = [
         { wch: 7 },
         { wch: 15 },
-        { wch: 15 },
-        { wch: 40 },
-        { wch: 50 },
+        { wch: 45 },
+        { wch: 20 },
+        { wch: 20 },
         { wch: 25 },
-        { wch: 50 },
-        { wch: 50 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 20 },
       ];
       ws['!cols'] = wsCols;
       XLSX.utils.sheet_add_aoa(ws, [['Service Sales Order Summary']], {
@@ -416,12 +443,14 @@ export class ServiceSalesOrderListComponent implements OnInit {
         ws,
         [
           [
-            'Order Value',
+            'So.no',
+            'Order Id',
             'Vendor',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',
             'Back Order Quantity',
+            'Order Value',
             'Status',
           ],
         ],

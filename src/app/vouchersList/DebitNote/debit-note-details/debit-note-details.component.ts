@@ -49,7 +49,8 @@ export class DebitNoteDetailsComponent implements OnInit {
   }
 
   onClickButton(): void {
-    this.navigate.navigateByUrl('so');
+    // this.navigate.navigateByUrl('so');
+    console.log('clicked');
   }
 
   loadData() {
@@ -58,7 +59,7 @@ export class DebitNoteDetailsComponent implements OnInit {
       console.log(res, '-----------response');
 
       this.debitNoteData = res;
-      this.productsData = res.soDetailLists;
+      this.productsData = res.products;
       let companyAddress = this.debitNoteData.companyaddress
         .replace(/[\n]/g, '')
         .replace(/, +|,+/g, ',')

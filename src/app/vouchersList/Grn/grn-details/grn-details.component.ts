@@ -58,7 +58,7 @@ export class GrnDetailsComponent implements OnInit {
       console.log(res, 'responseeeeeeee---------------');
 
       this.grnData = res;
-      this.productsData = res.soDetailLists;
+      this.productsData = res.products;
 
       let companyAddress = this.grnData.companyaddress
         .replace(/[\n]/g, '')

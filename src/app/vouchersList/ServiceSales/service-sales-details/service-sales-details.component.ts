@@ -64,7 +64,7 @@ export class ServiceSalesDetailsComponent implements OnInit {
         console.log(res, '...........reponae');
 
         this.serviceSalesData = res;
-        this.productsData = res.soDetailLists;
+        this.productsData = res.products;
 
         let companyAddress = this.serviceSalesData.companyaddress
           .replace(/[\n]/g, '')

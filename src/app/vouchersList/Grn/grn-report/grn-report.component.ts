@@ -342,7 +342,21 @@ export class GrnReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredGrnData.flatMap((item) => item);
+        let tableData = this.filteredGrnData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent GRN', 240, (topValue += 50));
@@ -382,11 +396,11 @@ export class GrnReportComponent implements OnInit, OnDestroy {
           columns: [
             {
               header: 'Order ID',
-              dataKey: 'pono',
+              dataKey: 'grnno',
             },
             {
               header: 'Ref ID',
-              dataKey: 'vendorcode',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -394,7 +408,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'vendorname',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -410,7 +424,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Status',
-              dataKey: 'received',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),
@@ -462,7 +476,7 @@ export class GrnReportComponent implements OnInit, OnDestroy {
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
       XLSX.utils.book_append_sheet(wb, ws, 'GRN Summary');
-      XLSX.writeFile(wb, 'Report.xlsx');
+      XLSX.writeFile(wb, 'GRN Report.xlsx');
     }
   }
 }

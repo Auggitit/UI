@@ -348,7 +348,21 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
         pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 280);
         pdf.addPage();
 
-        let tableData = this.filteredServiceSalesData.flatMap((item) => item);
+        let tableData = this.filteredServiceSalesData
+          .flatMap((item) => item)
+          .map((item) => {
+            let product = item.products
+              .map((item: any) => item.pname)
+              .join(', ');
+            let result = '';
+            if (item.received !== item.ordered) {
+              result = 'pending';
+            } else if (item.received === item.ordered) {
+              result = 'completed';
+            }
+            return { ...item, status: result, productNames: product };
+          });
+        console.log(tableData, 'tabledata');
 
         pdf.setLineWidth(2);
         pdf.text('Recent Service Sales', 240, (topValue += 50));
@@ -392,7 +406,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Ref ID',
-              dataKey: 'customercode',
+              dataKey: 'refno',
             },
             {
               header: 'Vendor Detail',
@@ -400,7 +414,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Product Detail',
-              dataKey: 'sono',
+              dataKey: 'productNames',
             },
             {
               header: 'Data & Time',
@@ -408,15 +422,15 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             },
             {
               header: 'Quantity',
-              dataKey: 'sono',
+              dataKey: 'ordered',
             },
             {
               header: 'Price',
-              dataKey: 'sono',
+              dataKey: 'orderedvalue',
             },
             {
               header: 'Status',
-              dataKey: 'sono',
+              dataKey: 'status',
             },
           ],
           startY: (topValue += 30),

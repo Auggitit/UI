@@ -60,7 +60,7 @@ export class PurchaseDetailsComponent implements OnInit {
       console.log(res, '..........res');
 
       this.purchaseOrderData = res;
-      this.productsData = res.soDetailLists;
+      this.productsData = res.products;
 
       let companyAddress = this.purchaseOrderData.companyaddress
         .replace(/[\n]/g, '')
