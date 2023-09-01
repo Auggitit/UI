@@ -164,7 +164,7 @@
                 max-width: 128px;
               "
             >
-              {{ data.orderedvalue }}
+              {{ data.orderedvalue | currency : "INR" }}
             </td>
             <td
               *ngIf="columns[6].needToShow"

@@ -293,6 +293,19 @@ export class SalesOrderListComponent implements OnInit {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
+        const isoString1 = res.result[0].date;
+        const isoString2 = '2022-08-12T10:45:00Z';
+        console.log(isoString1, ',....................');
+
+        const date1: any = new Date(isoString1);
+        const date2: any = new Date();
+
+        const timeDifferenceInMilliseconds = date2 - date1;
+        const timeDifferenceInMinutes = Math.floor(
+          timeDifferenceInMilliseconds / 60000
+        );
+
+        console.log(`Time difference in minutes: ${timeDifferenceInMinutes}`);
       }
       this.getFilterData(res);
     });

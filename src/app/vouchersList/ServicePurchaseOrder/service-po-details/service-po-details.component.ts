@@ -59,7 +59,6 @@ export class ServicePoDetailsComponent implements OnInit {
       .getServicePoDetail({ id: params })
       .subscribe((res: any) => {
         console.log(res, '-------------response');
-
         this.purchaseOrderData = res;
         this.productsData = res.products;
 
