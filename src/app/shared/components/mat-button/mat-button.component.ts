@@ -32,7 +32,7 @@ import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
       <mat-icon
         style="width: 14px;vertical-align:revert;line-height:30px;"
         *ngIf="svgIconToDisplay"
-        [svgIcon]="svgIconToDisplay"
+        svgIcon="{{ svgIconToDisplay }}"
       >
       </mat-icon>
       {{ title }}

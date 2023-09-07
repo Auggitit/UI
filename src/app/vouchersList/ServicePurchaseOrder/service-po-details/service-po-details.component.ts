@@ -24,6 +24,7 @@ export class ServicePoDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
+  loading: boolean = true;
 
   constructor(
     private servicePoApi: PoserviceService,
@@ -54,28 +55,33 @@ export class ServicePoDetailsComponent implements OnInit {
 
   loadData() {
     let params = this.router.snapshot.queryParams['id'];
-    console.log(params, 'params');
-    this.servicePoApi
-      .getServicePoDetail({ id: params })
-      .subscribe((res: any) => {
-        console.log(res, '-------------response');
-        this.purchaseOrderData = res;
-        this.productsData = res.products;
+    console.log(params, 'paramsss');
 
-        let companyAddress = this.purchaseOrderData.companyaddress
-          .replace(/[\n]/g, '')
-          .replace(/, +|,+/g, ',')
-          .split(',');
-        let deliveryAddress = this.purchaseOrderData.deliveryaddress
-          .replace(/[\n]/g, '')
-          .replace(/, +|,+/g, ',')
-          .split(',');
+    this.servicePoApi.getServicePoDetail(params).subscribe((res: any) => {
+      console.log(res, '--------------res');
+      this.loading = false;
+      this.purchaseOrderData = res;
+      this.productsData = res.products;
+      let companyAddress =
+        this.purchaseOrderData.companyaddress !== ''
+          ? this.purchaseOrderData.companyaddress
+              .replace(/[\n]/g, '')
+              .replace(/, +|,+/g, ',')
+              .split(',')
+          : '';
+      let deliveryAddress =
+        this.purchaseOrderData.deliveryaddress !== ''
+          ? this.purchaseOrderData.deliveryaddress
+              .replace(/[\n]/g, '')
+              .replace(/, +|,+/g, ',')
+              .split(',')
+          : ' ';
 
-        this.addressLine1 = companyAddress.slice(0, 2).join(', ');
-        this.addressLine2 = companyAddress.slice(2).join(', ');
-        this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
-        this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
-      });
+      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
+      this.addressLine2 = companyAddress.slice(2).join(', ');
+      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
+      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
+    });
   }
 
   downloadAsPDF() {
@@ -84,10 +90,10 @@ export class ServicePoDetailsComponent implements OnInit {
     html2canvas(data, { scale: 2 }).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Service Po Details', 200, 50);
+      pdf.text(' Service PO Details', 200, 50);
       pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
       pdf.addPage();
-      pdf.save('Service Po Details Report.pdf');
+      pdf.save('Service PO Details Report.pdf');
     });
   }
 }

@@ -24,6 +24,7 @@ export class GrnDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
+  loading: boolean = true;
 
   constructor(
     private grnApi: GrnService,
@@ -56,7 +57,7 @@ export class GrnDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['id'];
     this.grnApi.getGrnDetail({ id: params }).subscribe((res: any) => {
       console.log(res, 'responseeeeeeee---------------');
-
+      this.loading = false;
       this.grnData = res;
       this.productsData = res.products;
 

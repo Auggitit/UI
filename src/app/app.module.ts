@@ -123,6 +123,7 @@ import { CreditNoteReportsComponent } from './vouchersList/CreditNote/credit-not
 import { DebitNoteComponent } from './vouchersList/DebitNote/debit-note/debit-note.component';
 import { DebitNoteDetailsComponent } from './vouchersList/DebitNote/debit-note-details/debit-note-details.component';
 import { DebitNoteReportComponent } from './vouchersList/DebitNote/debit-note-report/debit-note-report.component';
+import { DateAndTimePipe } from './reports/date-and-time.pipe';
 
 @NgModule({
   declarations: [
@@ -211,6 +212,7 @@ import { DebitNoteReportComponent } from './vouchersList/DebitNote/debit-note-re
     ServiceGrnDetailsComponent,
     CreditNoteDetailsComponent,
     DebitNoteDetailsComponent,
+    DateAndTimePipe,
   ],
   imports: [
     BrowserModule,

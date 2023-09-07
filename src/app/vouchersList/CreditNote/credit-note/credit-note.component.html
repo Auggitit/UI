@@ -1,4 +1,10 @@
-<div class="content-wrapper">
+<div
+  class="content-wrapper d-flex justify-content-center align-items-center"
+  *ngIf="loading"
+>
+  <div class="spinner-grow spinner-grow-lg" role="status"></div>
+</div>
+<div *ngIf="!loading" class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header

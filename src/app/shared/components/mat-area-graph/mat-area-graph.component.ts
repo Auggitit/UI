@@ -21,7 +21,23 @@ import { Component, Input, OnInit } from '@angular/core';
             <p class="pl-1 fa-sm">Last year</p>
           </div>
         </div> -->
-        <i class="bi bi-three-dots-vertical"></i>
+        <i
+          class="bi bi-three-dots-vertical"
+          [matMenuTriggerFor]="threeDotOptions"
+        ></i>
+
+        <mat-menu #threeDotOptions="matMenu" style="width: 200%">
+          <button
+            mat-menu-item
+            style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                  "
+          >
+            Year
+          </button>
+        </mat-menu>
       </div>
       <apx-chart
         [series]="chartOptions['series']"

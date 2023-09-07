@@ -41,6 +41,7 @@ import { ExportPdfDialogBoxComponent } from './components/export-pdf-dialog-box/
 import { TableColumnDisplayFilterComponent } from './components/table-column-display-filter/table-column-display-filter.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AddressCardComponent } from './components/address-card/address-card.component';
+import { DetailsTableComponent } from './components/details-table/details-table.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { AddressCardComponent } from './components/address-card/address-card.com
     ExportPdfDialogBoxComponent,
     TableColumnDisplayFilterComponent,
     AddressCardComponent,
+    DetailsTableComponent,
   ],
   imports: [
     CommonModule,
@@ -99,6 +101,7 @@ import { AddressCardComponent } from './components/address-card/address-card.com
     MatMenuModule,
     MatDialogModule,
     AddressCardComponent,
+    DetailsTableComponent,
   ],
 })
 export class SharedModule {}

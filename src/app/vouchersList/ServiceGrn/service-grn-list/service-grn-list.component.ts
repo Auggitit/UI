@@ -36,6 +36,7 @@ export class ServiceGrnListComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
   columns: any[] = [
     {
       title: 'Order Id',
@@ -197,7 +198,19 @@ export class ServiceGrnListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.grnno.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.grnno.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -288,6 +301,7 @@ export class ServiceGrnListComponent implements OnInit {
       toDate: lastDate,
     };
     this.serviceGrnApi.getAllServiceGrnList(params).subscribe((res: any) => {
+      this.loading = false;
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();

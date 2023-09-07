@@ -51,8 +51,9 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
   columnFilter!: FormControlName;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'drid', needToShow: true },
     { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
     {
       title: 'Vendor Detail',
@@ -91,7 +92,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'drid', needToShow: true },
         { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
         {
           title: 'Vendor Detail',
@@ -208,7 +209,10 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort(
+      (a: any, b: any) => Number(b.drid) - Number(a.drid)
+    );
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -308,6 +312,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
 
     this.debitApi.getAllDebitList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
+      this.loading = true;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result

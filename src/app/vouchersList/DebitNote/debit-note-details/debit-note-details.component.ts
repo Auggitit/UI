@@ -24,6 +24,7 @@ export class DebitNoteDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
+  loading: boolean = true;
 
   constructor(
     private debitApi: DrnoteService,
@@ -57,7 +58,7 @@ export class DebitNoteDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['id'];
     this.debitApi.getDebitDetail({ id: params }).subscribe((res: any) => {
       console.log(res, '-----------response');
-
+      this.loading = false;
       this.debitNoteData = res;
       this.productsData = res.products;
       let companyAddress = this.debitNoteData.companyaddress

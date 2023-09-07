@@ -37,6 +37,7 @@ export class SalesOrderListComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -239,7 +240,19 @@ export class SalesOrderListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.sono.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.sono.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -282,6 +295,7 @@ export class SalesOrderListComponent implements OnInit {
     };
     this.salesOrderApi.getAllSoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result
@@ -296,16 +310,6 @@ export class SalesOrderListComponent implements OnInit {
         const isoString1 = res.result[0].date;
         const isoString2 = '2022-08-12T10:45:00Z';
         console.log(isoString1, ',....................');
-
-        const date1: any = new Date(isoString1);
-        const date2: any = new Date();
-
-        const timeDifferenceInMilliseconds = date2 - date1;
-        const timeDifferenceInMinutes = Math.floor(
-          timeDifferenceInMilliseconds / 60000
-        );
-
-        console.log(`Time difference in minutes: ${timeDifferenceInMinutes}`);
       }
       this.getFilterData(res);
     });

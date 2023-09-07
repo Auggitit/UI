@@ -35,6 +35,7 @@ export class SalesServiceListComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -198,7 +199,19 @@ export class SalesServiceListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.invno.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.invno.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -293,6 +306,7 @@ export class SalesServiceListComponent implements OnInit {
       .getAllServiceSalesList(params)
       .subscribe((res: any) => {
         console.log(res, '-------------res');
+        this.loading = false;
         if (isInitialFetchData) {
           const newMap = new Map();
           res.result

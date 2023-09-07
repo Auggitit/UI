@@ -36,12 +36,18 @@ export class GrnListComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
+  loading: boolean = true;
   columns: any[] = [
     {
       title: 'Order Id',
       sortable: 0,
       name: 'grnno',
+      needToShow: true,
+    },
+    {
+      title: 'Ref No',
+      sortable: 0,
+      name: 'pono',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
@@ -84,6 +90,12 @@ export class GrnListComponent implements OnInit {
           title: 'Order Id',
           sortable: 0,
           name: 'grnno',
+          needToShow: true,
+        },
+        {
+          title: 'Ref No',
+          sortable: 0,
+          name: 'pono',
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
@@ -243,7 +255,19 @@ export class GrnListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.grnno.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.grnno.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -285,6 +309,7 @@ export class GrnListComponent implements OnInit {
       toDate: lastDate,
     };
     this.grnApi.getAllGrnList(params).subscribe((res: any) => {
+      this.loading = false;
       console.log(res, '-------------res');
       if (isInitialFetchData) {
         const newMap = new Map();
@@ -372,7 +397,10 @@ export class GrnListComponent implements OnInit {
               header: 'Order Id',
               dataKey: 'grnno',
             },
-
+            {
+              header: 'Ref No',
+              dataKey: 'grnno',
+            },
             {
               header: 'Vendor',
               dataKey: 'vendorname',
@@ -423,6 +451,7 @@ export class GrnListComponent implements OnInit {
       var wsCols = [
         { wch: 7 },
         { wch: 15 },
+        { wch: 15 },
         { wch: 45 },
         { wch: 20 },
         { wch: 20 },
@@ -439,6 +468,7 @@ export class GrnListComponent implements OnInit {
           [
             'So No',
             'Order Id',
+            'Ref No',
             'Vendor',
             'Order Quantity',
             'Received Quantity',

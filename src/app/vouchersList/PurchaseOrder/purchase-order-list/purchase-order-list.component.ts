@@ -36,12 +36,13 @@ export class PurchaseOrderListComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
 
   columns: any[] = [
     {
-      title: 'Order Value',
+      title: 'Order Id',
       sortable: 0,
-      name: 'orderedvalue',
+      name: 'pono',
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'pono', needToShow: true },
@@ -54,6 +55,12 @@ export class PurchaseOrderListComponent implements OnInit {
     { title: 'Received Qty', sortable: 0, name: 'received', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Back Order Qty', sortable: 0, name: 'ordered', needToShow: true },
+    {
+      title: 'Order Value',
+      sortable: 0,
+      name: 'orderedvalue',
+      needToShow: true,
+    },
     { title: 'Status', sortable: 0, name: 'pending', needToShow: true },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
@@ -232,7 +239,19 @@ export class PurchaseOrderListComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.pono.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.pono.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -275,6 +294,7 @@ export class PurchaseOrderListComponent implements OnInit {
     };
     this.poApi.getAllPoList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result

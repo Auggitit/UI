@@ -51,6 +51,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
   columnFilter!: FormControlName;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
   columns: any[] = [
     { title: 'Order ID', sortable: 0, name: 'vchno', needToShow: true },
     { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
@@ -208,7 +209,11 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort(
+      (a: any, b: any) => Number(b.crid) - Number(a.crid)
+    );
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -308,6 +313,7 @@ export class CreditNoteReportsComponent implements OnInit, OnDestroy {
 
     this.creditApi.getAllCreditList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result

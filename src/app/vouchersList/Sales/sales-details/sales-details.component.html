@@ -1,4 +1,10 @@
-<div class="content-wrapper">
+<div
+  class="content-wrapper d-flex justify-content-center align-items-center"
+  *ngIf="loading"
+>
+  <div class="spinner-grow spinner-grow-lg" role="status"></div>
+</div>
+<div *ngIf="!loading" class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="d-flex flex-wrap align-items-center justify-content-end pb-3">
       <app-mat-button
@@ -164,139 +170,7 @@
           margin-top: 4px;
         "
       >
-        <p style="font-weight: 700; font-size: 0.875rem">Summary</p>
-        <table
-          class="table col-12 p-0"
-          style="border-top: 1px solid rgba(217, 236, 244, 0.28)"
-        >
-          <tbody>
-            <tr
-              *ngFor="let data of productsData; let i = index"
-              style="
-                font-size: 0.75rem;
-                background-color: rgba(217, 236, 244, 0.28);
-                border-top: 2px;
-              "
-            >
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important ;
-                  /* padding-left: 4px; */
-                  text-align: center;
-                "
-              >
-                {{ i + 1 }}
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important ;
-                  padding-left: 4%;
-                "
-              >
-                <p>{{ data.pname }}</p>
-                <p>Material · Mild Steel</p>
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
-                "
-              >
-                <p>{{ data.sku }}</p>
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
-                "
-              >
-                <p>{{ data.hsn }}</p>
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
-                "
-              >
-                <p>{{ data.rate | currency : "INR" }}</p>
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
-                "
-              >
-                <p>{{ data.pqty }}</p>
-              </td>
-              <td
-                style="
-                  border-top: 1px solid rgba(217, 236, 244, 0.28) !important;
-                  text-align: right;
-                  margin-top: 2px;
-                "
-              >
-                <p style="margin-right: 8px">
-                  {{ data.total | currency : "INR" }}
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div
-          class="d-flex flex-wrap justify-content-between"
-          style="
-            margin-top: -12px;
-            height: 48px;
-            align-items: center;
-            padding: 8px;
-            background-color: rgba(217, 236, 244, 0.28);
-            border: 1px solid rgba(217, 236, 244, 0.28);
-          "
-        >
-          <p>CGST</p>
-          <p>1,000</p>
-        </div>
-        <div
-          style="
-            margin-top: 4px;
-            height: 48px;
-            padding: 8px;
-            align-items: center;
-            background-color: rgba(217, 236, 244, 0.28);
-            border: 1px solid rgba(217, 236, 244, 0.28);
-          "
-          class="d-flex flex-wrap justify-content-between"
-        >
-          <p>SGST</p>
-          <p>1,000</p>
-        </div>
-        <div
-          style="
-            margin-top: 4px;
-            height: 48px;
-            padding: 8px;
-            background-color: rgba(217, 236, 244, 0.28);
-            border: 1px solid rgba(217, 236, 244, 0.28);
-          "
-          class="d-flex flex-wrap justify-content-between align-items-center"
-        >
-          <p>IGST</p>
-          <p>1,000</p>
-        </div>
-        <div
-          style="
-            margin-top: 4px;
-            height: 48px;
-            padding: 8px;
-            align-items: center;
-            background-color: rgba(217, 236, 244, 0.28);
-            border: 1px solid rgba(217, 236, 244, 0.28);
-          "
-          class="d-flex flex-wrap justify-content-between"
-        >
-          <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
-            Subtotal
-          </p>
-          <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
-            1,00,000
-          </p>
-        </div>
+        <app-details-table [productsData]="productsData"></app-details-table>
       </div>
       <div style="margin-top: 8px">
         <p style="color: #333843; font-weight: 700">NOTES:</p>

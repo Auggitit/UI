@@ -24,6 +24,7 @@ export class SalesOrderDetailsComponent implements OnInit {
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
   productsData: any[] = [];
+  loading: boolean = true;
 
   constructor(
     private salesOrderApi: SoService,
@@ -56,6 +57,7 @@ export class SalesOrderDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['id'];
     this.salesOrderApi.getSoDetail({ id: params }).subscribe((res: any) => {
       console.log(res, '-----response');
+      this.loading = false;
       this.salesOrderData = res;
       this.productsData = res.products;
 

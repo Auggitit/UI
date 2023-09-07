@@ -36,7 +36,7 @@ export class DebitNoteComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
+  loading: boolean = true;
   columns: any[] = [
     { title: 'Dr ID', sortable: 0, name: 'drid', needToShow: true },
     { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
@@ -76,7 +76,7 @@ export class DebitNoteComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Dr ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Dr ID', sortable: 0, name: 'drid', needToShow: true },
         { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
 
         { title: 'Vendor', sortable: 0, name: 'vchno', needToShow: true },
@@ -233,7 +233,10 @@ export class DebitNoteComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort(
+      (a: any, b: any) => Number(b.drid) - Number(a.drid)
+    );
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -276,6 +279,7 @@ export class DebitNoteComponent implements OnInit {
     };
     this.debitApi.getAllDebitList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result

@@ -37,7 +37,7 @@ export class CreditNoteComponent implements OnInit {
   reportStatusOptions: dropDownData[] = statusOptions;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
-
+  loading: boolean = true;
   columns: any[] = [
     { title: 'Cr ID', sortable: 0, name: 'crid', needToShow: true },
     { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
@@ -77,7 +77,7 @@ export class CreditNoteComponent implements OnInit {
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Cr ID', sortable: 0, name: 'vchno', needToShow: true },
+        { title: 'Cr ID', sortable: 0, name: 'crid', needToShow: true },
         { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
 
         {
@@ -238,7 +238,11 @@ export class CreditNoteComponent implements OnInit {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort(
+      (a: any, b: any) => Number(b.crid) - Number(a.crid)
+    );
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -249,7 +253,9 @@ export class CreditNoteComponent implements OnInit {
       newArr[rowIndex].push(data);
       rowCount++;
     }
+
     this.filteredCreditNoteData = newArr;
+    console.log(this.filteredCreditNoteData, 'filtered data');
   }
 
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
@@ -281,6 +287,7 @@ export class CreditNoteComponent implements OnInit {
     };
     this.creditApi.getAllCreditList(params).subscribe((res: any) => {
       console.log(res, '-------------res');
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result

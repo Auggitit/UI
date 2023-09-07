@@ -83,6 +83,7 @@ import { CreditNoteReportsComponent } from './vouchersList/CreditNote/credit-not
 import { DebitNoteComponent } from './vouchersList/DebitNote/debit-note/debit-note.component';
 import { DebitNoteReportComponent } from './vouchersList/DebitNote/debit-note-report/debit-note-report.component';
 import { DebitNoteDetailsComponent } from './vouchersList/DebitNote/debit-note-details/debit-note-details.component';
+import { ServicePoDetailsComponent } from './vouchersList/ServicePurchaseOrder/service-po-details/service-po-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -162,7 +163,7 @@ const routes: Routes = [
   { path: 'sales-details', component: SalesDetailsComponent },
   { path: 'service-sales-details', component: ServiceSalesDetailsComponent },
   { path: 'purchase-order-details', component: PurchaseDetailsComponent },
-  { path: 'service-po-details', component: PurchaseDetailsComponent },
+  { path: 'service-po-details', component: ServicePoDetailsComponent },
   { path: 'grn-details', component: GrnDetailsComponent },
   { path: 'service-grn-details', component: ServiceGrnDetailsComponent },
   { path: 'credit-note-details', component: CreditNoteDetailsComponent },

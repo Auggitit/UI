@@ -24,6 +24,7 @@ export class PurchaseDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
+  loading: boolean = true;
 
   constructor(
     private poApi: PoService,
@@ -58,7 +59,7 @@ export class PurchaseDetailsComponent implements OnInit {
     console.log(params, 'params');
     this.poApi.getPoDetail({ id: params }).subscribe((res: any) => {
       console.log(res, '..........res');
-
+      this.loading = false;
       this.purchaseOrderData = res;
       this.productsData = res.products;
 

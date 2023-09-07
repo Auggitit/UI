@@ -54,6 +54,8 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
   columnFilter!: FormControlName;
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
+  loading: boolean = true;
+
   columns: any[] = [
     { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
     { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
@@ -211,7 +213,19 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-    for (let data of serverData.result) {
+    let sortedData = serverData.result.sort((a: any, b: any) => {
+      const nameA = Number(a.invno.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.invno.split('/')[0]); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+      return 0;
+    });
+
+    for (let data of sortedData) {
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -315,6 +329,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       .getAllServiceSalesList(params)
       .subscribe((res: any) => {
         console.log(res, 'response...........');
+        this.loading = false;
         if (isInitialFetchData) {
           const newMap = new Map();
           res.result

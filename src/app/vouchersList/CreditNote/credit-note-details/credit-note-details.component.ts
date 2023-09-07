@@ -24,6 +24,8 @@ export class CreditNoteDetailsComponent implements OnInit {
   addressLine2: string = '';
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
+  loading: boolean = true;
+
   constructor(
     private creditApi: CrnoteService,
     private router: ActivatedRoute,
@@ -56,6 +58,7 @@ export class CreditNoteDetailsComponent implements OnInit {
     let params = this.router.snapshot.queryParams['id'];
     this.creditApi.getCreditDetail({ id: params }).subscribe((res: any) => {
       console.log(res, '--------------res');
+      this.loading = false;
 
       this.creditNoteData = res;
       this.productsData = res.products;
