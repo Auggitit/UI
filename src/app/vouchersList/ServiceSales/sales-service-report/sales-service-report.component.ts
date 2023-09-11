@@ -57,7 +57,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
   loading: boolean = true;
 
   columns: any[] = [
-    { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'Order ID', sortable: 0, name: 'invno', needToShow: true },
     { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
     {
       title: 'Vendor Detail',
@@ -96,7 +96,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
       columnFilter: [
-        { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'Order ID', sortable: 0, name: 'invno', needToShow: true },
         { title: 'Ref ID', sortable: 0, name: 'sono', needToShow: true },
         {
           title: 'Vendor Detail',
@@ -253,6 +253,12 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           graphValue = Object.entries(value).sort();
         }
 
+        if (formValues.filterData === 4) {
+          let firstValue = graphValue.slice(0, 3);
+          let lastValue = graphValue.slice(3);
+          graphValue = [...lastValue, ...firstValue];
+        }
+
         let graphArrayData = [];
         for (let item of graphValue) {
           graphArrayData.push(item[1]);
@@ -270,6 +276,12 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
     let chartCategories = Object.keys(serverData.graphData[0]);
     if (formValues.filterData === 1 || formValues.filterData === 3) {
       chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
+
+    if (formValues.filterData === 4) {
+      let firstData = chartCategories.slice(0, 3);
+      let LastData = chartCategories.slice(3);
+      chartCategories = [...LastData, ...firstData];
     }
 
     this.chartOptions = {

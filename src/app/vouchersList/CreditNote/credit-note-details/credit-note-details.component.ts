@@ -25,6 +25,10 @@ export class CreditNoteDetailsComponent implements OnInit {
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
   loading: boolean = true;
+  cGst: number = 0;
+  sGst: number = 0;
+  iGst: number = 0;
+  Total: number = 0;
 
   constructor(
     private creditApi: CrnoteService,
@@ -62,6 +66,10 @@ export class CreditNoteDetailsComponent implements OnInit {
 
       this.creditNoteData = res;
       this.productsData = res.products;
+      this.cGst = Number(res.cgstTotal);
+      this.sGst = Number(res.sgstTotal);
+      this.iGst = Number(res.igstTotal);
+      this.Total = Number(res.net);
       let companyAddress =
         this.creditNoteData.companyaddress !== ''
           ? this.creditNoteData.companyaddress

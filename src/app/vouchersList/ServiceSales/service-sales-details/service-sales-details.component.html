@@ -171,7 +171,13 @@
           margin-top: 4px;
         "
       >
-        <app-details-table [productsData]="productsData"></app-details-table>
+        <app-details-table
+          [productsData]="productsData"
+          [sGstValue]="sGst"
+          [iGstValue]="iGst"
+          [totalValue]="Total"
+          [cGstValue]="cGst"
+        ></app-details-table>
       </div>
       <div style="margin-top: 8px">
         <p style="color: #333843; font-weight: 700">NOTES:</p>

@@ -249,6 +249,12 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           graphValue = Object.entries(value).sort();
         }
 
+        if (formValues.filterData === 4) {
+          let firstValue = graphValue.slice(0, 3);
+          let lastValue = graphValue.slice(3);
+          graphValue = [...lastValue, ...firstValue];
+        }
+
         let graphArrayData = [];
         for (let item of graphValue) {
           graphArrayData.push(item[1]);
@@ -266,6 +272,12 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     let chartCategories = Object.keys(serverData.graphData[0]);
     if (formValues.filterData === 1 || formValues.filterData === 3) {
       chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
+
+    if (formValues.filterData === 4) {
+      let firstData = chartCategories.slice(0, 3);
+      let LastData = chartCategories.slice(3);
+      chartCategories = [...LastData, ...firstData];
     }
 
     this.chartOptions = {
@@ -294,9 +306,20 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
+    console.log(
+      formValues?.startDate,
+      formValues?.lastDate,
+      '.............formValues?.startDate'
+    );
     if (formValues?.startDate) {
       let firstDateformat = new Date(formValues?.startDate);
       let lastDateformat = new Date(formValues?.startDate);
+      console.log(
+        firstDateformat,
+        lastDateformat,
+        '............firstDateformat'
+      );
+
       let firstDateSplit = firstDateformat
         ?.toISOString()
         .split('T')[0]
@@ -305,10 +328,18 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         ?.toISOString()
         .split('T')[0]
         .split('-');
+
+      console.log(
+        firstDateSplit,
+        lastDateSplit,
+        '.................firstDateSplit'
+      );
+
       firstDate =
         firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
       lastDate =
         lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
+      console.log(firstDate, lastDate, '.............final......firstDate');
     }
     let params = {
       statusId: formValues.reportStatus,

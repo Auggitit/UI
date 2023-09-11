@@ -214,8 +214,8 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
     let rowIndex = 0;
     let rowCount = 0;
     let sortedData = serverData.result.sort((a: any, b: any) => {
-      const nameA = Number(a.ponos.split('/')[0]); // ignore upper and lowercase
-      const nameB = Number(b.ponos.split('/')[0]); // ignore upper and lowercase
+      const nameA = Number(a.pono.split('/')[0]); // ignore upper and lowercase
+      const nameB = Number(b.pono.split('/')[0]); // ignore upper and lowercase
       if (nameA < nameB) {
         return 1;
       }
@@ -254,6 +254,12 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
           graphValue = Object.entries(value).sort();
         }
 
+        if (formValues.filterData === 4) {
+          let firstValue = graphValue.slice(0, 3);
+          let lastValue = graphValue.slice(3);
+          graphValue = [...lastValue, ...firstValue];
+        }
+
         let graphArrayData = [];
         for (let item of graphValue) {
           graphArrayData.push(item[1]);
@@ -271,6 +277,12 @@ export class PurchaseOrderReportsComponent implements OnInit, OnDestroy {
     let chartCategories = Object.keys(serverData.graphData[0]);
     if (formValues.filterData === 1 || formValues.filterData === 3) {
       chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
+
+    if (formValues.filterData === 4) {
+      let firstData = chartCategories.slice(0, 3);
+      let LastData = chartCategories.slice(3);
+      chartCategories = [...LastData, ...firstData];
     }
 
     this.chartOptions = {

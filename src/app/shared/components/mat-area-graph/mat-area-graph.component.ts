@@ -11,32 +11,12 @@ import { Component, Input, OnInit } from '@angular/core';
           </p>
           <p style="color: #667085">{{ subTitle }}</p>
         </div>
-        <!-- <div class="d-flex  flex-wrap" style="gap:8px">
-          <div class="d-flex">
-            <i class="bi bi-circle-fill fa-sm" style="color:#419FC7"></i>
-            <p class="pl-1 fa-sm">This year</p>
-          </div>
-          <div class="d-flex">
-            <i class="bi bi-circle-fill fa-sm" style="color:#E46A11"></i>
-            <p class="pl-1 fa-sm">Last year</p>
-          </div>
-        </div> -->
         <i
           class="bi bi-three-dots-vertical"
           [matMenuTriggerFor]="threeDotOptions"
         ></i>
-
-        <mat-menu #threeDotOptions="matMenu" style="width: 200%">
-          <button
-            mat-menu-item
-            style="
-                    border-bottom: 0.5px solid #959ba433;
-                    margin: 0px 10%;
-                    width: 80%;
-                  "
-          >
-            Year
-          </button>
+        <mat-menu #threeDotOptions="matMenu">
+          <button mat-menu-item>2022-2023</button>
         </mat-menu>
       </div>
       <apx-chart

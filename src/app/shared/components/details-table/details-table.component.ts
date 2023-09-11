@@ -16,6 +16,10 @@ export class DetailsTableComponent implements OnInit {
     { title: 'Total' },
   ];
   @Input() productsData: any[] = [];
+  @Input() cGstValue: number = 0;
+  @Input() sGstValue: number = 0;
+  @Input() iGstValue: number = 0;
+  @Input() totalValue: number = 0;
 
   constructor() {}
 

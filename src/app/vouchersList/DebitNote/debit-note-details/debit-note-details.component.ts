@@ -25,6 +25,10 @@ export class DebitNoteDetailsComponent implements OnInit {
   deliveryAddressLine1: string = '';
   deliveryAddressLine2: string = '';
   loading: boolean = true;
+  cGst: number = 0;
+  sGst: number = 0;
+  iGst: number = 0;
+  Total: number = 0;
 
   constructor(
     private debitApi: DrnoteService,
@@ -61,6 +65,11 @@ export class DebitNoteDetailsComponent implements OnInit {
       this.loading = false;
       this.debitNoteData = res;
       this.productsData = res.products;
+      this.cGst = Number(res.cgstTotal);
+      this.sGst = Number(res.sgstTotal);
+      this.iGst = Number(res.igstTotal);
+      this.Total = Number(res.net);
+
       let companyAddress = this.debitNoteData.companyaddress
         .replace(/[\n]/g, '')
         .replace(/, +|,+/g, ',')

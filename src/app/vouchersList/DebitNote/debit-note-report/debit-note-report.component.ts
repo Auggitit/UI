@@ -240,6 +240,12 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
           graphValue = Object.entries(value).sort();
         }
 
+        if (formValues.filterData === 4) {
+          let firstValue = graphValue.slice(0, 3);
+          let lastValue = graphValue.slice(3);
+          graphValue = [...lastValue, ...firstValue];
+        }
+
         let graphArrayData = [];
         for (let item of graphValue) {
           graphArrayData.push(item[1]);
@@ -257,6 +263,12 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
     let chartCategories = Object.keys(serverData.graphData[0]);
     if (formValues.filterData === 1 || formValues.filterData === 3) {
       chartCategories = Object.keys(serverData.graphData[0]).sort();
+    }
+
+    if (formValues.filterData === 4) {
+      let firstData = chartCategories.slice(0, 3);
+      let LastData = chartCategories.slice(3);
+      chartCategories = [...LastData, ...firstData];
     }
 
     this.chartOptions = {
@@ -312,7 +324,7 @@ export class DebitNoteReportComponent implements OnInit, OnDestroy {
 
     this.debitApi.getAllDebitList(params).subscribe((res: any) => {
       console.log(res, 'response...........');
-      this.loading = true;
+      this.loading = false;
       if (isInitialFetchData) {
         const newMap = new Map();
         res.result
