@@ -306,20 +306,9 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
-    console.log(
-      formValues?.startDate,
-      formValues?.lastDate,
-      '.............formValues?.startDate'
-    );
-    if (formValues?.startDate) {
+    if (formValues?.startDate && formValues?.endDate) {
       let firstDateformat = new Date(formValues?.startDate);
-      let lastDateformat = new Date(formValues?.startDate);
-      console.log(
-        firstDateformat,
-        lastDateformat,
-        '............firstDateformat'
-      );
-
+      let lastDateformat = new Date(formValues?.endDate);
       let firstDateSplit = firstDateformat
         ?.toISOString()
         .split('T')[0]
@@ -329,17 +318,10 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         .split('T')[0]
         .split('-');
 
-      console.log(
-        firstDateSplit,
-        lastDateSplit,
-        '.................firstDateSplit'
-      );
-
       firstDate =
         firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
       lastDate =
         lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
-      console.log(firstDate, lastDate, '.............final......firstDate');
     }
     let params = {
       statusId: formValues.reportStatus,

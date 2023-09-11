@@ -233,10 +233,8 @@ export class GrnService {
     if (search) {
       params = params.append('search', search);
     }
-    if (fromDate) {
+    if (fromDate && toDate) {
       params = params.append('fromDate', fromDate);
-    }
-    if (toDate) {
       params = params.append('toDate', toDate);
     }
     return this.http

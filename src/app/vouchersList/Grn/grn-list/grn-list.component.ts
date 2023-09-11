@@ -284,9 +284,11 @@ export class GrnListComponent implements OnInit {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
-    if (formValues?.startDate) {
-      let firstDateformat = new Date(formValues?.startDate);
-      let lastDateformat = new Date(formValues?.startDate);
+    if (formValues?.startDate && formValues?.endDate) {
+      const firstDateformat = new Date(formValues?.startDate);
+      let lastDateformat = new Date(formValues?.endDate);
+      console.log(firstDateformat, '.toISOString()');
+
       let firstDateSplit = firstDateformat
         ?.toISOString()
         .split('T')[0]

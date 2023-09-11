@@ -253,9 +253,9 @@ export class DebitNoteComponent implements OnInit {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
-    if (formValues?.startDate) {
+    if (formValues?.startDate && formValues?.endDate) {
       let firstDateformat = new Date(formValues?.startDate);
-      let lastDateformat = new Date(formValues?.startDate);
+      let lastDateformat = new Date(formValues?.endDate);
       let firstDateSplit = firstDateformat
         ?.toISOString()
         .split('T')[0]
