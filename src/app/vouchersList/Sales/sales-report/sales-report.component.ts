@@ -311,6 +311,13 @@ export class SalesReportComponent implements OnInit, OnDestroy {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
+    if (
+      (formValues?.startDate && !formValues?.endDate) ||
+      (!formValues?.startDate && formValues?.endDate)
+    ) {
+      return;
+    }
+
     if (formValues?.startDate && formValues?.endDate) {
       let firstDateformat = new Date(formValues?.startDate);
       let lastDateformat = new Date(formValues?.endDate);

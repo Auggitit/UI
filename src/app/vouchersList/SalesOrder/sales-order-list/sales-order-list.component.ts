@@ -269,6 +269,14 @@ export class SalesOrderListComponent implements OnInit {
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
+
+    if (
+      (formValues?.startDate && !formValues?.endDate) ||
+      (!formValues?.startDate && formValues?.endDate)
+    ) {
+      return;
+    }
+
     if (formValues?.startDate && formValues?.endDate) {
       let firstDateformat = new Date(formValues?.startDate);
       let lastDateformat = new Date(formValues?.endDate);
@@ -307,9 +315,6 @@ export class SalesOrderListComponent implements OnInit {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
-        const isoString1 = res.result[0].date;
-        const isoString2 = '2022-08-12T10:45:00Z';
-        console.log(isoString1, ',....................');
       }
       this.getFilterData(res);
     });
