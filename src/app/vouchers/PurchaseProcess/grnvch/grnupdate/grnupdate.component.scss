@@ -1,0 +1,87 @@
+.heading
+{
+    font-weight: 600;
+    text-align: center;
+}
+
+.details{
+    text-align: center;
+}
+
+.outstanding{
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.mat-column-product {
+    flex: none;
+    width: 400px;
+}
+/* Media query for small screens */
+@media (max-width: 768px) {
+    .mat-column-product{
+        width: 300px;
+    }
+    .mat-column-subtotal,.mat-column-taxable {
+      display: none;
+    }
+}
+  
+/* Media query for medium screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .mat-column-product{
+        width: 300px;
+    }
+    .mat-column-subtotal,.mat-column-taxable {
+        display: none;
+      }  
+}
+
+@media (min-width: 1025px) and (max-width: 1439px) {
+    .mat-column-product{
+        width: 300px;
+    }
+}
+
+@media (min-width: 1440px) and (max-width: 1979px) {
+    .mat-column-product{
+        width: 400px;
+    }
+}
+
+@media (min-width: 1980px) {
+    .mat-column-product{
+        width: 400px;
+    }
+}
+
+td[selected]:focus{
+    background-color: brown !important;
+}
+
+th{  
+    color: #fff;
+    background-color: #369cc3;
+    text-align: center;
+    font-size: 0.8rem !important;
+    border: 1px solid rgb(230, 229, 229);
+}
+.xclass
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.my-button:focus {
+    background-color: rgb(6, 247, 255);
+    border:1px solid  rgb(0, 0, 0);
+    color: rgb(0, 0, 0);
+  }
+  .fontvariation
+  {
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: 100;
+    text-transform: capitalize;
+  }

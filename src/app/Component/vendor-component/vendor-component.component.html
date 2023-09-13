@@ -1,0 +1,63 @@
+<form [formGroup]="formGRN" onkeydown="return event.key != 'Enter';">
+    <div class="row m-0 p-0">     
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xxl-12 col-xxl-12 mb-0">
+            <h5>BILL TO</h5>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 col-xxl-2 mb-0 xclass">
+          <mat-form-field appearance="outline" style="width:100%">    
+            <mat-label>Select Vendor</mat-label>
+            <input matInput #evendorname       
+                  aria-label="Vendor"
+                  [ngModel]="vendorname" formControlName="cvendorname"
+                  [matAutocomplete]="auto"
+                  [formControl]="vendorSearch" />
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let i of filteredVendors | async" [value]="i.CompanyDisplayName" (onSelectionChange)="vendorChanged($event,i)">                      
+                    <span>{{i.CompanyDisplayName}}</span> |
+                    <small>{{i.BilingAddress}}</small>
+                  </mat-option>
+                </mat-autocomplete>
+                <button class="btn btn-outline-danger btn-sm material-icons" style="padding: 5px 10px;margin-top: 8px;"  (click)="changeVendor()" matSuffix>
+                  arrow_drop_down                        
+                </button>
+          </mat-form-field> 
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">              
+            <div class="heading">Outstanding</div>
+            <hr class="p-0 m-0"/>
+            <div class="outstanding mt-3">{{ vendoroutstanding ? (vendoroutstanding | currency: 'INR') : ('0.0' | currency: 'INR') }}</div>              
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">              
+            <div class="heading">GST Details</div>   
+            <hr class="p-0 m-0"/>                         
+            <div class="details">{{vendorgstno}}</div>
+            <div class="details">{{vendorgstTreatment}}</div>  
+            <div class="details">{{vendorstate}}</div>              
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">           
+            <div class="heading">Vendor Address</div>
+            <hr class="p-0 m-0"/>
+            <div class="details">{{vendorbilling}}</div>         
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+          <div >
+            <div (click)="showPendingPODetails()" style="cursor:pointer">
+              <div class="heading">Pending PO's</div>
+              <hr class="p-0 m-0"/>  
+              <div style="font-weight:600;font-size: 1.4rem; color:#D61355; text-align: center;">{{vendorpodatacount}}</div>                  
+              <div style="font-size: 0.7rem;text-align: center;" class="p-0">Click to View</div>
+            </div>
+          </div>
+        </div>
+      </div> 
+</form>
+
+
+
+
+
+
+<!-- 
+(click)="showPendingPODetails()"
+(keyup.enter)="moveFocus(esb)" 
+-->

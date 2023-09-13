@@ -1,0 +1,101 @@
+<form [formGroup]="form" onkeydown="return event.key != 'Enter';">
+    <!-- <ng-container formGroupName="secondform"> -->
+        <div class="row mb-0 mt-2 m-0 p-0">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xxl-12 col-xxl-12 mb-0">
+                <h5 style="font-weight: bold;">BILL TO</h5>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 col-xxl-2 mb-0 xclass">
+                <mat-form-field appearance="outline" style="width:100%">
+                    <mat-label>Select Vendor</mat-label>
+                    <input matInput [ngModel]="variables.vendorname" name="vendor" formControlName="vendor" aria-label="Vendor"  [formControl]="variables.vendorSearch" [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let i of variables.filteredVendors | async" [value]="i.CompanyDisplayName" (onSelectionChange)="vendorChanged($event,i)">
+                            <span> {{i.CompanyDisplayName}}</span> |
+                            <small>{{i.BilingAddress}} </small>
+                        </mat-option>
+                    </mat-autocomplete>
+                    <button class="btn btn-sm material-icons" style="padding: 5px 10px;margin-top: 8px;" matSuffix>
+                        arrow_drop_down
+                    </button>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+                <div class="heading">Outstanding</div>
+                <hr class="p-0 m-0" />
+                <div class="outstanding mt-3">{{ variables.vendoroutstanding ? (variables.vendoroutstanding | currency: 'INR') : ('0.0' | currency: 'INR') }}</div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+                <div class="heading">GST Details</div>
+                <hr class="p-0 m-0" />                     
+                <div class="details">{{variables.vendorgstno}}</div>
+                <div class="details">{{variables.vendorgstTreatment}}</div>  
+                <div class="heading">Source of Supply</div>
+                <div class="details">{{variables.vendorstate}}</div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+                <div class="heading">Vendor Address</div>
+                <hr class="p-0 m-0" />
+                <div class="details">{{variables.vendorbilling}}</div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+                <div>
+                    <div style="cursor:pointer">
+                        <div class="heading">Pending PO's</div>
+                        <hr class="p-0 m-0" />
+                        <div style="font-weight:600;font-size: 1.4rem; color:#D61355; text-align: center;">{{variables.vendorpodatacount}}</div>
+                        <div style="font-size: 0.7rem;text-align: center;" class="p-0">Click to View</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2 mt-2 m-0 p-0">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Exp.. Delivery Date (DD/MM/YYYY)</mat-label>
+                    <input matInput formControlName="edate" [(ngModel)]="variables.expdelidate" [matDatepicker]="pickerExpDeliDate" placeholder="Select">
+                    <mat-datepicker-toggle matSuffix [for]="pickerExpDeliDate"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerExpDeliDate></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2">
+                <mat-form-field class="example-full-width" appearance="outline" style="width:100%">
+                    <mat-label>Payment Terms</mat-label>
+                    <mat-select formControlName="pterms" (selectionChange)="getPayTerm($event)">
+                        <mat-option [value]="1">15 Days</mat-option>
+                        <mat-option [value]="2">30 Days</mat-option>
+                        <mat-option [value]="3">45 Days</mat-option>
+                        <mat-option [value]="4">60 Days</mat-option>
+                        <mat-option [value]="4">90 Days</mat-option>
+                        <mat-option [value]="4">180 Days</mat-option>
+                        <mat-option [value]="4">365 Days</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Reference #</mat-label>
+                    <input type="text" formControlName="ref" [(ngModel)]="variables.refno"  matInput autocomplete="off">
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">
+                <mat-form-field appearance="outline" style="width:100%">           
+                    <mat-label>Seles Ref</mat-label>        
+                  <input matInput       
+                        formControlName="sref"              
+                        aria-label="Sale Ref"
+                        [ngModel]="variables.salerefname" 
+                        [matAutocomplete]="autosr"
+                        [formControl]="variables.refSearch" />
+                      <mat-autocomplete #autosr ="matAutocomplete">
+                        <mat-option *ngFor="let i of variables.filteredSref | async" [value]="i.refname" (onSelectionChange)="SaleRefChanged($event,i)">                      
+                          <span>{{i.refname}}</span> |                        
+                        </mat-option>
+                      </mat-autocomplete>
+                      <button class="btn btn-sm material-icons"  matSuffix>
+                        arrow_drop_down
+                        </button>
+                </mat-form-field>
+            </div>
+        </div>
+    <!-- </ng-container> -->
+</form>

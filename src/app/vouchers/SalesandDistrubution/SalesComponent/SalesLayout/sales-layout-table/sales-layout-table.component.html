@@ -1,0 +1,325 @@
+<div class="row m-0">
+<div style="overflow: auto;">
+    <table mat-table style="width: 100%;"  [dataSource]="variables.listData" class="table-bordered table-hover">
+
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> X </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+                <button class="btn btn-danger btn-sm ml-2 mr-2">
+                    X
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 250px;">PRODUCT </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+                <div>
+                    <input #eprod matInput placeholder="Product" aria-label="Product" [matAutocomplete]="stateAutoComplete" [(ngModel)]="element.product"
+                (keyup.enter)="onProdKeydown($event,i)">
+                <mat-autocomplete #stateAutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let r of filterProducts(element.product)" [value]="r.itemname"  (onSelectionChange)="prodChanged($event,r,i)">                    
+                    <span>{{r.itemname}}</span> |
+                    <small>GST : {{r.gst}}</small>
+                  </mat-option>
+                </mat-autocomplete>    
+                </div>
+                <div>
+                    <span style="display: none;">{{element.hsn}}</span>
+                </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+                <div class="row">
+                    <div title="Add More Products!">
+                        <img src="assets/add.png" height="32px" width="32px" />
+                    </div>
+                    <div title="Remove All Products!">
+                        <img src="assets/deleteall.png" height="32px" width="32px" />
+                    </div>
+                </div>
+
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="qty">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> QTY</th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <div class="row">
+                <input #eqty matInput [(ngModel)]="element.qty" class="input_right" type="number"
+                  style="padding:5px" (focusin)="variables.Empty($event)" (focusout)="variables.return($event)" (click)="variables.Empty($event)"
+                  (keyup.enter)="variables.onQtyKeydown($event,i)" />
+              </div>
+              <div class="row">
+                <div class="col-12 text-center" style="color:gray">
+                  <hr class="p-0 m-0" />
+                  {{element.uom}}
+                </div>
+              </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> BASIC RATE </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <input #erate [(ngModel)]="element.rate" type="number" (focusin)="variables.Empty($event)"
+                (focusout)="variables.return($event)" (click)="variables.Empty($event)" class="input_right" matInput
+                (ngModelChange)="variables.onRateChange($event,i)" (keyup.enter)="variables.onRateKeydown($event,i)" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="addon">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> ADDON</th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <input #etransport [(ngModel)]="element.addon" type="number" matInput
+                (keyup.enter)="variables.onAddonRateKeydown($event,i)" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="subtotal">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> SUB TOTAL </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <input #ediscvalue readonly="true" type="number" class="input_right" [(ngModel)]="element.subtotal"
+                matInput />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="disc">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> DISCOUNT %</th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <div class="row">
+                <div class="col-7 col-sm-8 col-md-9 col-lg-8 col-xl-9 col-xxl-11">
+                  <input #edisc [(ngModel)]="element.disc" type="number" style="padding:5px" class="input_right"
+                    (focusin)="variables.Empty($event)" (focusout)="variables.return($event)" (click)="variables.Empty($event)"
+                    (ngModelChange)="variables.onDiscChange($event,i)" matInput (keyup.enter)="variables.onDiscKeydown($event,i)" />
+                </div>
+                <div class="col-5 col-sm-4 col-md-3 col-lg-4 col-xl-3 col-xxl-1">
+                  %
+                </div>
+              </div>
+              <hr class="p-0 m-0" />
+              <div style="text-align: right;margin-right: 10px; padding: 5px;">{{element.discvalue | currency:'INR'
+                }}
+              </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="taxable">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> TAXABLE </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <input #ediscvalue readonly="true" type="number" class="input_right" [(ngModel)]="element.taxable"
+                matInput />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="gst">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> GST %</th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <div class="row">
+                <div class="col-7 col-sm-8 col-md-9 col-lg-8 col-xl-9 col-xxl-11">
+                  <input #etax [(ngModel)]="element.gst" type="number" (focusin)="variables.Empty($event)"
+                    (focusout)="variables.return($event)" (click)="variables.Empty($event)" style="padding:5px" class="input_right"
+                    matInput (ngModelChange)="variables.onTaxKeyChange($event,i)" (focusout)="variables.onTaxKeydown($event,i)"
+                    (keyup.enter)="variables.onTaxKeydown($event,i)" />
+                </div>
+                <div class="col-5 col-sm-4 col-md-3 col-lg-4 col-xl-3 col-xxl-1">
+                  %
+                </div>
+              </div>
+              <hr class="p-0 m-0" />
+              <div style="text-align: right;margin-right: 10px; padding: 5px;">{{element.gstvalue | currency:'INR'
+                }}
+              </div>
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;min-width: 80px;"> AMOUNT </th>
+            <td mat-cell *matCellDef="let element;let i=index">
+              <input #eamt readonly="true" matInput type="number" class="input_right" [(ngModel)]="element.amount"
+                (keyup.enter)="variables.onAmountKeydown($event,i)" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+
+    </table>
+</div>
+</div>
+<div class="m-0">
+    <div class="row p-0 m-0">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-7">
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+            <div class="card m-0 p-2">
+              <div *ngFor="let f of variables.sdef">
+                <div class="row m-1">
+                  <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+                    <input class="form-control form-control-sm" disabled [(ngModel)]="f.efieldname"
+                      [value]="f.efieldname" />
+                  </div>
+                  <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
+                    <input class="form-control form-control-sm" [(ngModel)]="f.efieldvalue" [value]="f.efieldvalue"
+                      type="text" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-5 text-end">
+        <div class="card m-0 p-0">
+          <div class="row m-0 p-0 border">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">Sub Total</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="m-1 input_right">{{this.variables.subtotal | currency:'INR'}}</div>
+            </div>
+          </div>
+          <div class="row m-0 p-0 border">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">Discount Total</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="m-1 input_right">{{this.variables.disctotal | currency:'INR'}}</div>
+            </div>
+          </div>
+          <div class="row m-0 p-0 border" *ngFor="let i of variables.acclistData.filteredData">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">{{i.accname}}</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="m-1 input_right">{{i.accvalue | currency:'INR'}}</div>
+            </div>
+          </div>
+          <div class="row m-0 p-0 border" *ngFor="let i of variables.gstlistData.filteredData; let ri = index"
+            style="background-color: #ECF8F9;">
+            <div class="col-5 lblBox">
+              <mat-form-field appearance="outline"
+                style="width: 100%; padding: 0em 0em 0em 0em !important; font-size: 0.7rem !important;">
+                <input  matInput placeholder="Select" [(ngModel)]="i.accname" aria-label="Select" 
+                  [matAutocomplete]="stateAutoComplete" (input)="variables.filterDefAccounts($event)">
+                <mat-autocomplete #stateAutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let r of variables.filteredDef" [value]="r.ledgername"
+                    (onSelectionChange)="variables.gstaccChanged($event, r, ri)">
+                    <span>{{ r.ledgername }}</span> |
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div class="col-2">
+              <mat-form-field appearance="outline"
+                style="width: 100%;padding: 0em 0em 0em 0em !important;font-size: 0.7rem !important;">
+                <input matInput   [(ngModel)]="i.accvalue" type="text" (input)="variables.calculate()" (keypress)="variables.forMoney($event)"
+                  (click)="variables.calculate()" (focusout)="variables.calculate()" matInput (change)="variables.gstInputChanged($event,ri)" />
+              </mat-form-field>
+            </div>
+            <div class="col-2">
+              <mat-form-field appearance="outline"
+                style="width: 100%;padding: 0em 0em 0em 0em !important;font-size: 0.7rem !important;">
+                <input matInput [(ngModel)]="i.accgst" (keydown)="variables.prevent($event)" matInput
+                  [matAutocomplete]="sutoComplete" />
+                <mat-autocomplete #sutoComplete="matAutocomplete">
+                  <mat-option *ngFor="let r of variables.gstArray" (click)="variables.calculate()" (focusout)="variables.calculate()"
+                    (onSelectionChange)="variables.gstDDChanged($event,ri,r)" [value]="r.gst">{{r.gst}}</mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div class="col-2 d-flex">
+              <mat-form-field appearance="outline"
+                style="width: 100%;padding: 0em 0em 0em 0em !important;font-size: 0.7rem !important;">
+                <input matInput readonly="true" [(ngModel)]="i.accgsttotvalue" />
+              </mat-form-field>
+              <button class="btn btn-danger btn-sm"
+                style="border-radius:5px;margin-left:10px;margin-right:10px;margin-top:8px;"
+                (click)="variables.gstremove(ri)">X</button>
+            </div>
+          </div>
+          <div class="row m-0 p-2 border">
+            <a style="color: blue; cursor: pointer;" (click)="variables.gstaddRow()">(+) Add Additional Charge</a>
+          </div>
+          <div class="row m-0 p-0 border">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">Total</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="m-1  input_right">{{ variables.nettotal | currency:'INR'}}</div>
+            </div>
+          </div>
+          <div class="row m-0 p-0 border">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">TCS Charge</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="row">
+                <div class="col-6" (focusout)="variables.calculate()">
+                  Rate
+                  <input class="form-control input_right" type="text" (input)="variables.calculate()"
+                    (keypress)="variables.forMoney($event)" (focusin)="variables.Empty($event)" (focusout)="variables.return($event)"
+                    (click)="variables.Empty($event)" [(ngModel)]="variables.tcsrate" (keyup.enter)="variables.calculate()" />
+                </div>
+                <div class="col-6" (focusout)="variables.calculate()">
+                  Value
+                  <input class="form-control input_right" type="text" (input)="variables.calculate()"
+                    (keypress)="variables.forMoney($event)" (focusin)="variables.Empty($event)" (focusout)="variables.return($event)"
+                    (click)="variables.Empty($event)" readonly [(ngModel)]="variables.tcsvalue" (keyup.enter)="variables.calculate()" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row m-0 p-0 border">
+            <div class="col-6 lblBox">
+              <div class="m-2">
+                <div class="lblBoxText">Rounded off</div>
+              </div>
+            </div>
+            <div class="col-6 amountFieldColor" (focusout)="variables.calculate()">
+              <input class="form-control input_right" type="text" (keypress)="variables.forMoneyCal($event)"
+                (input)="variables.calculate()" (focusin)="variables.Empty($event)" (focusout)="variables.return($event)" (click)="variables.Empty($event)"
+                [(ngModel)]="variables.roundedoff" (keyup.enter)="variables.calculate()" />
+            </div>
+          </div>
+          <div class="row m-0 p-0 border">
+            <div class="col-6 p-2">
+              <div class="m-1">Closing </div>
+            </div>
+            <div class="col-6 amountFieldColor">
+              <div class="m-1 mt-3 input_right">{{ variables.closingtotal | currency:'INR'}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card m-0 p-0 mt-2">
+          <div class="row p-2">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <div class="subDetails m-1">Remarks :</div>
+              <div>
+                <textarea class="form-control fontvariation" [(ngModel)]="variables.remarks"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <div class="subDetails m-1 ">Terms & Condition :</div>
+              <div>
+                <textarea class="form-control fontvariation" [(ngModel)]="variables.termsandcondition"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

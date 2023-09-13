@@ -128,7 +128,7 @@ export class DebitNoteComponent implements OnInit {
     console.log('clicked');
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
@@ -136,7 +136,11 @@ export class DebitNoteComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl('drupdate/' + encodeURIComponent(data.vchno));
+      }
+    });
   }
 
   onClickDelete() {

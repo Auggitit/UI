@@ -2,24 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GrnserviceService {
-  URL = 'https://localhost:7037/';
-  // URL = 'https://auggitapi.brositecom.com/';
-
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public api: ApiService) {}
 
   POST(path: string, body: Object = {}): Observable<any> {
-    console.log(JSON.stringify(body));
+    // console.log(JSON.stringify(body));
     return this.http
       .post(path, JSON.stringify(body), this.httpOptions)
       .pipe(catchError(this.formatErrors));
@@ -29,16 +27,160 @@ export class GrnserviceService {
     return throwError(error.error);
   }
 
-  getVendors() {
-    return this.http.get<any>(this.URL + 'api/vSGrns/getVendorAccounts').pipe(
-      map((res: any) => {
-        return res;
-      })
+  //#region sgrndetails
+  Insert_Bulk_GRN_Details(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSGrnDetails/insertBulk', postdata);
+  }
+  Delete_GRNDetails(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSGrnDetails/deleteSGRNDetails?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
     );
   }
+  //#endregion
 
+  //#region vSGrnCusFields
+  insertCusFields(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSGrnCusFields', postdata);
+  }
+  Delete_CusdefFields(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSGrnCusFields/deleteCusDefField?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  //#endregion
+
+  //#region  Sgrn
+  Insert_GRN(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSGrns', postdata);
+  }
+  Delete_GRN(invno: any, vtype: any, branch: any, fy: any): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSGrns/deleteGRN?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  //#endregion
+
+  //#region accountentries
+  Insert_Ledger(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/accountentries', postdata);
+  }
+  deteleAllLedger(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/accountentries/deteleAllLedger?vchno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  //#endregion
+  //#region overdue
+  Insert_Overdue(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/overdue', postdata);
+  }
+  Delete_overdue(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/overdue/deleteGRNOverdue?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  //#endregion
+
+  getAllLedgers() {
+    return this.http
+      .get<any>(this.api.URL + 'api/accountentries/getAllAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getVendors() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSGrns/getVendorAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getCusList(invno: any) {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSGrnCusFields/getcusFields?invno=' + invno)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+  get_Ledger(pono: any) {
+    return this.http
+      .get<any>(this.api.URL + 'api/accountentries/getLedger?vchno=' + pono)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
   getProducts() {
-    return this.http.get<any>(this.URL + 'api/mItems').pipe(
+    return this.http.get<any>(this.api.URL + 'api/mItems').pipe(
       map((res: any) => {
         return res;
       })
@@ -48,7 +190,7 @@ export class GrnserviceService {
   getMaxInvoiceNo(vchtype: any, branch: any, fycode: any, fy: any) {
     return this.http
       .get<any>(
-        this.URL +
+        this.api.URL +
           'api/vSGrns/getMaxInvno?vchtype=' +
           vchtype +
           '&branch=' +
@@ -65,29 +207,9 @@ export class GrnserviceService {
       );
   }
 
-  Insert_GRN(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSGrns', postdata);
-  }
-
-  Insert_Bulk_GRN_Details(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSGrnDetails/insertBulk', postdata);
-  }
-
-  Insert_Ledger(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/accountentries', postdata);
-  }
-
-  Insert_Overdue(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/overdue', postdata);
-  }
-
-  insertCusFields(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSGrnCusFields', postdata);
-  }
-
   getPendingPoServiceListAll() {
     return this.http
-      .get<any>(this.URL + 'api/vSGrns/GetPendingPOServiceListAll')
+      .get<any>(this.api.URL + 'api/vSGrns/GetPendingPOServiceListAll')
       .pipe(
         map((res: any) => {
           return res;
@@ -96,17 +218,19 @@ export class GrnserviceService {
   }
 
   getPendingPoListAll() {
-    return this.http.get<any>(this.URL + 'api/vSGrns/GetPendingPOListAll').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+    return this.http
+      .get<any>(this.api.URL + 'api/vSGrns/GetPendingPOListAll')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
 
   getPendingPoList(vendorcode: any) {
     return this.http
       .get<any>(
-        this.URL + 'api/vSGrns/GetPendingPOList?vendorcode=' + vendorcode
+        this.api.URL + 'api/vSGrns/GetPendingPOList?vendorcode=' + vendorcode
       )
       .pipe(
         map((res: any) => {
@@ -118,7 +242,9 @@ export class GrnserviceService {
   getPendingPoListDetails(vendorcode: any) {
     return this.http
       .get<any>(
-        this.URL + 'api/vSGrns/getPendingPOListDetails?vendorcode=' + vendorcode
+        this.api.URL +
+          'api/vSGrns/getPendingPOListDetails?vendorcode=' +
+          vendorcode
       )
       .pipe(
         map((res: any) => {
@@ -128,76 +254,8 @@ export class GrnserviceService {
   }
 
   getPurchaseAccounts() {
-    return this.http.get<any>(this.URL + 'api/vSGrns/getPurchaseAccounts').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  getDefaultAccounts() {
-    return this.http.get<any>(this.URL + 'api/vSGrns/getDefaultAccounts').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  getGRNListAll() {
-    return this.http.get<any>(this.URL + 'api/vSGrns/GetGRNListAll').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  Delete_GRN(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL + 'api/vSGrns/deleteSGRN?invno=' + invno + '&vtype=' + vtype
-    );
-  }
-  Delete_GRNDetails(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSGrns/deleteSGRNDetails?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-  Delete_Accounts(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSGrns/deleteSGRNAccounts?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-  Delete_overdue(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSGrns/deleteSGRNOverdue?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-
-  get_GRN(invno: any): Observable<any> {
-    return this.http.get(this.URL + 'api/vSGrns/getGRNData?invno=' + invno);
-  }
-  get_GRNDetails(invno: any): Observable<any> {
-    return this.http.get(
-      this.URL + 'api/vSGrns/getGRNDetailsData?invno=' + invno
-    );
-  }
-  getSavedAccounts(): Observable<any> {
-    return this.http.get(this.URL + 'api/purchaseDefAccs');
-  }
-  getSavedDefFields(invno: any) {
     return this.http
-      .get<any>(this.URL + 'api/vSGrns/getSGRNSavedDefData?invno=' + invno)
+      .get<any>(this.api.URL + 'api/vSGrns/getPurchaseAccounts')
       .pipe(
         map((res: any) => {
           return res;
@@ -205,6 +263,56 @@ export class GrnserviceService {
       );
   }
 
+  getDefaultAccounts() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSGrns/getDefaultAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getGRNListAll() {
+    return this.http.get<any>(this.api.URL + 'api/vSGrns/GetGRNListAll').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  get_GRN(invno: any): Observable<any> {
+    return this.http.get(this.api.URL + 'api/vSGrns/getGRNData?invno=' + invno);
+  }
+  get_GRNDetails(invno: any): Observable<any> {
+    return this.http.get(
+      this.api.URL + 'api/vSGrns/getGRNDetailsData?invno=' + invno
+    );
+  }
+  getSavedAccounts(): Observable<any> {
+    return this.http.get(this.api.URL + 'api/purchaseDefAccs');
+  }
+  getSavedDefFields(invno: any) {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSGrns/getSGRNSavedDefData?invno=' + invno)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+  // Delete_GRN(invno: any,vtype:any): Observable<any> {
+  //   return this.http.get(this.api.URL + "api/vSGrns/deleteSGRN?invno="+ invno + "&vtype=" + vtype);
+  // }
+
+  // Delete_Accounts(invno: any,vtype:any): Observable<any> {
+  //   return this.http.get(this.api.URL + "api/vSGrns/deleteSGRNAccounts?invno="+ invno + "&vtype=" + vtype);
+  // }
+  // Delete_overdue(invno: any,vtype:any): Observable<any> {
+  //   return this.http.get(this.api.URL + "api/vSGrns/deleteSGRNOverdue?invno="+ invno + "&vtype=" + vtype);
+  // }
+
+  //UI
   getAllServiceGrnList({
     statusId,
     ledgerId,
@@ -233,12 +341,16 @@ export class GrnserviceService {
     if (search) {
       params = params.append('search', search);
     }
-    if (fromDate && toDate) {
+    if (fromDate) {
       params = params.append('fromDate', fromDate);
+    }
+    if (toDate) {
       params = params.append('toDate', toDate);
     }
     return this.http
-      .get<any>(this.URL + 'api/vServiceGrn/getSGrnLists', { params: params })
+      .get<any>(this.api.URL + 'api/vServiceGrn/getSGrnLists', {
+        params: params,
+      })
       .pipe(
         map((res: any) => {
           return res;
@@ -253,7 +365,7 @@ export class GrnserviceService {
     }
 
     return this.http
-      .get<any>(this.URL + 'api/vServiceGrn/getSGrn', { params: params })
+      .get<any>(this.api.URL + 'api/vServiceGrn/getSGrn', { params: params })
       .pipe(
         map((res: any) => {
           return res;

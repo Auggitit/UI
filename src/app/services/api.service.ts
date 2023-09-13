@@ -7,8 +7,9 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApiService {
-  URL = 'https://localhost:7037/';
-  //  URL = "https://auggitapi.brositecom.com/";
+  // URL = 'http://localhost:7037/';
+  //URL = "https://devauggitapi.brositecom.com/";
+  URL = 'https://auggitapi.brositecom.com/';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -19,7 +20,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   POST(path: string, body: Object = {}): Observable<any> {
-    console.log(JSON.stringify(body));
+    //  console.log(JSON.stringify(body));
     return this.http
       .post(path, JSON.stringify(body), this.httpOptions)
       .pipe(catchError(this.formatErrors));
@@ -92,6 +93,16 @@ export class ApiService {
         })
       );
   }
+  Update_mLedgerGroup(postdata: any): Observable<any> {
+    return this.POST(
+      this.URL + 'api/mLedgerGroups/UpdateMledgerGroup',
+      postdata
+    ).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
   get_LedgerGroup() {
     return this.http.get<any>(this.URL + 'api/mLedgerGroups').pipe(
       map((res: any) => {
@@ -120,6 +131,12 @@ export class ApiService {
       })
     );
   }
+  delete_mLedgerGroup(postdata: any): Observable<any> {
+    return this.POST(
+      this.URL + 'api/mLedgerGroups/deletemLedgerGroups',
+      postdata
+    );
+  }
 
   //Vendor Details
   Inser_LedgerData(postdata: any): Observable<any> {
@@ -131,6 +148,9 @@ export class ApiService {
         return res;
       })
     );
+  }
+  Update_mLedgerData(postdata: any): Observable<any> {
+    return this.POST(this.URL + 'api/mLedgers/UpdateMledger', postdata);
   }
   get_LedgerData() {
     return this.http.get<any>(this.URL + 'api/mLedgers').pipe(
@@ -181,24 +201,49 @@ export class ApiService {
       })
     );
   }
+  delete_Ledger(id: any): Observable<any> {
+    return this.http.delete<any>(this.URL + 'api/mLedgers/' + id).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+  DeleteMledger(postdata: any): Observable<any> {
+    return this.POST(this.URL + 'api/mLedgers/DeleteMledger', postdata);
+  }
 
   //Country Details
   Inser_CountryData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mCountries', postdata);
   }
-  Update_CountryData(id: any, postdata: any): Observable<any> {
-    return this.http.put<any>(this.URL + 'api/mCountries/' + id, postdata).pipe(
+  //  Update_CountryData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mCountries/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_CountryData(postdata: any, postdatas?: any): Observable<any> {
+    return this.POST(
+      this.URL + 'api/mCountries/Update_CountryData',
+      postdata
+    ).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
+  //  Delete_CountryData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mCountries/"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
   Delete_CountryData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mCountries/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+    return this.http
+      .get<any>(this.URL + 'api/mCountries/Delete_CountryData?id=' + id)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
   get_CountryData() {
     return this.http.get<any>(this.URL + 'api/mCountries').pipe(
@@ -219,19 +264,31 @@ export class ApiService {
   Inser_StateData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mStates', postdata);
   }
-  Update_StateData(id: any, postdata: any): Observable<any> {
-    return this.http.put<any>(this.URL + 'api/mStates/' + id, postdata).pipe(
+  //  Update_StateData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mStates/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_StateData(postdata: any, postDate?: any): Observable<any> {
+    return this.POST(this.URL + 'api/mStates/Update_StateData', postdata).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
+  //  Delete_StateData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mStates/"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
   Delete_StateData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mStates/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+    return this.http
+      .get<any>(this.URL + 'api/mStates/Delete_StateData?id=' + id)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
   get_StateData() {
     return this.http.get<any>(this.URL + 'api/mStates').pipe(
@@ -252,21 +309,34 @@ export class ApiService {
   Inser_CateData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mCategories', postdata);
   }
-  Update_CateData(id: any, postdata: any): Observable<any> {
+  //  Update_CateData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mCategories/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_CateData(postdata: any, postData?: any): Observable<any> {
+    return this.POST(
+      this.URL + 'api/mCategories/Update_CateData',
+      postdata
+    ).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+  //  Delete_CateData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mCategories/"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Delete_CateData(id: any): Observable<any> {
     return this.http
-      .put<any>(this.URL + 'api/mCategories/' + id, postdata)
+      .get<any>(this.URL + 'api/mCategories/Deletecatdata?id=' + id)
       .pipe(
         map((res: any) => {
           return res;
         })
       );
-  }
-  Delete_CateData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mCategories/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
   }
   get_CategoryMaxID() {
     return this.http
@@ -305,21 +375,34 @@ export class ApiService {
   Inser_GroupData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mItemgroups', postdata);
   }
-  Update_GroupData(id: any, postdata: any): Observable<any> {
+  //  Update_GroupData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mItemgroups/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_GroupData(postdata: any, postData?: any): Observable<any> {
+    return this.POST(
+      this.URL + 'api/mItemgroups/Update_GroupData',
+      postdata
+    ).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+  //  Delete_GroupData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mItemgroups/"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Delete_GroupData(id: any): Observable<any> {
     return this.http
-      .put<any>(this.URL + 'api/mItemgroups/' + id, postdata)
+      .get<any>(this.URL + 'api/mItemgroups/DeleteMItemsgroupsdata?id=' + id)
       .pipe(
         map((res: any) => {
           return res;
         })
       );
-  }
-  Delete_GroupData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mItemgroups/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
   }
   get_GroupMaxID() {
     return this.http.get<any>(this.URL + 'api/mItemgroups/getMaxID').pipe(
@@ -356,20 +439,32 @@ export class ApiService {
   Inser_UOMData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mUoms', postdata);
   }
-  Update_UOMData(id: any, postdata: any): Observable<any> {
-    return this.http.put<any>(this.URL + 'api/mUoms/' + id, postdata).pipe(
+  //  Update_UOMData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mUoms/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_UOMData(postdata: any, postData?: any): Observable<any> {
+    return this.POST(this.URL + 'api/mUoms/Update_UOMData', postdata).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
   Delete_UOMData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mUoms/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+    return this.http
+      .get<any>(this.URL + 'api/mUoms/Delete_UOMData?id=' + id)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
+  //  Delete_UOMData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mUoms/"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
   get_UOMMaxID() {
     return this.http.get<any>(this.URL + 'api/mUoms/getMaxID').pipe(
       map((res: any) => {
@@ -405,19 +500,31 @@ export class ApiService {
   Insert_ItemData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mItems', postdata);
   }
-  Update_ItemData(id: any, postdata: any): Observable<any> {
-    return this.http.put<any>(this.URL + 'api/mItems/' + id, postdata).pipe(
+  //  Update_ItemData(id:any,postdata: any): Observable<any> {
+  //    return this.http.put<any>(this.URL + "api/mItems/"+id, postdata).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Update_ItemData(postdata: any, postData?: any): Observable<any> {
+    return this.POST(this.URL + 'api/mItems/UpdateMItem', postdata).pipe(
       map((res: any) => {
         return res;
       })
     );
   }
-  Delete_ItemData(id: any): Observable<any> {
-    return this.http.delete<any>(this.URL + 'api/mItems/' + id).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+  //  Delete_ItemData(id:any): Observable<any> {
+  //    return this.http.delete<any>(this.URL + "api/mItems/DeleteMItems"+id).pipe(map((res:any)=>{
+  //      return res;
+  //    }))
+  //  }
+  Delete_ItemData(POSTDATA: any): Observable<any> {
+    return this.http
+      .get<any>(this.URL + 'api/mItems/DeleteMItems?id=' + POSTDATA)
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
   get_ItemMaxID() {
     return this.http.get<any>(this.URL + 'api/mItems/getMaxID').pipe(
@@ -467,5 +574,103 @@ export class ApiService {
         return res;
       })
     );
+  }
+
+  getTrialBalanceData() {
+    return this.http
+      .get<any>(this.URL + 'api/accountentries/GetTrialBalanceData')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  GetProfitAndLoss() {
+    return this.http
+      .get<any>(this.URL + 'api/accountentries/GetProfitAndLoss')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getBalanceSheetData() {
+    return this.http
+      .get<any>(this.URL + 'api/accountentries/GetBalanceSheetData')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getOverdueVendor(branch: any, fy: any, ledger: any) {
+    return this.http
+      .get<any>(
+        this.URL +
+          'api/accountentries/GetVendorOverdue?branch=' +
+          branch +
+          '&fy=' +
+          fy +
+          '&ledger=' +
+          ledger
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getAllOverdueVendor(branch: any, fy: any) {
+    return this.http
+      .get<any>(
+        this.URL +
+          'api/accountentries/GetAllVendorOverdue?branch=' +
+          branch +
+          '&fy=' +
+          fy
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getOverdueCustomer(branch: any, fy: any, ledger: any) {
+    return this.http
+      .get<any>(
+        this.URL +
+          'api/accountentries/GetCustomerOverdue?branch=' +
+          branch +
+          '&fy=' +
+          fy +
+          '&ledger=' +
+          ledger
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getAllOverdueCustomer(branch: any, fy: any) {
+    return this.http
+      .get<any>(
+        this.URL +
+          'api/accountentries/GetAllCustomerOverdue?branch=' +
+          branch +
+          '&fy=' +
+          fy
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
   }
 }

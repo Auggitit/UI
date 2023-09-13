@@ -1,0 +1,118 @@
+<div class="content-wrapper" > 
+    <div class="card m-3">  
+        
+        <div class="card-header">       
+            <div class="row">
+              <div class="col-12 col-sm-6 col-md-8 col-lg-8 col-xl-9 col-xxl-10">
+                  <div class="header-title">List of Credit Notes (CN)</div>      
+              </div>  
+              <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">                
+                <div style="text-align: right;">
+                  <button type="button" class="btn btn-labeled btn-info btn-sm" (click)="createNew()">
+                    <span class="btn-label"><i class="fa fa-plus-square" style="margin-right: 5px;"></i></span>Create Credit Note
+                  </button>                  
+                </div>        
+              </div>
+            </div>
+          </div>     
+         
+
+<div class="card m-2 text-center p-4" *ngIf="!podata || podata.length==0">    
+    <div class="text-center">
+        <img src="assets/icons/exc.png" height="64px" width="64px" />
+        <p style="font-weight: 600;">No GRN Found!</p>
+    </div>
+</div>
+<div class="card m-2" *ngFor="let i of podata">    
+     <div class="card-body">
+        <div *ngIf="i.pending>0"class="ribbon ribbon-top-left"><span>Pending</span></div>
+        <div *ngIf="i.pending==0" class="ribbonsuccess ribbonsuccess-top-left"><span>Completed</span></div>
+            <div class="row m-0 p-0 " > 
+                <div class="col-12">
+                    <div class="d-flex flex-row-reverse">
+                        <div class="p-1">
+                            <button class="btn btn-danger btn-sm" (click)="deletepo(i)">                                
+                                <i class="bi bi-trash3-fill"></i>
+                            </button></div>
+                        <div class="p-1">
+                            <button class="btn btn-primary btn-sm" (click)="editpo(i)">
+                            <i class="bi bi-pencil-square"></i>
+                            </button></div>                        
+                    </div>
+                </div> 
+                <div class="col-12">  
+                    <table class="table table-bordered table-responsive">
+                        <thead>
+                            <tr>
+                            <th>VCH NO</th>
+                            <th>VCH DATE</th>
+                            <th>CUSTOMER NAME</th>                                                                              
+                            <th>SUB TOTAL</th>                            
+                            <th>DISC VALUE</th>
+                            <th>CGST VALUE</th>       
+                            <th>SGST VALUE</th>                            
+                            <th>IGST VALUE</th>                                
+                            <th>ROUNDED OFF</th>
+                            <th>NET TOTAL</th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ i.vchno }}</td>
+                            <td>{{ i.vchdate }}</td>
+                            <td>{{ i.customername }}</td>                                                                          
+                            <td>{{ i.subtotal }}</td>
+                            <td>{{ i.discounttotal }}</td>
+                            <td>{{ i.cgsttotal }}</td>
+                            <td>{{ i.sgsttotal }}</td>   
+                            <td>{{ i.igsttotal }}</td> 
+                            <td>{{ i.roundedoff }}</td>                                                  
+                            <td>{{ i.net }}</td>     
+                        </tr>
+                        </tbody>                    
+                    </table>                 
+                </div>                                           
+                <div class="col-12">
+                    <table class="table table-bordered table-responsive">
+                        <thead>
+                            <tr>
+                            <th>CODE</th>
+                            <th>NAME</th>
+                            <th>HSN</th>
+                            <th>SKU</th>
+                            <th>GODOWN</th>                          
+                            <th>RATE</th>
+                            <th>QTY</th>
+                            <th>DISC</th>
+                            <th>DISC VALUE</th>
+                            <th>TAXABLE</th>       
+                            <th>GST</th>                            
+                            <th>GST VALUE</th>    
+                            <th>TOTAL VALUE</th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let r of i.saleslistDetails">
+                            <td>{{ r.productcode }}</td>
+                            <td>{{ r.product }}</td>
+                            <td>{{ r.hsn }}</td>
+                            <td>{{ r.sku }}</td>
+                            <td>{{ r.godown }}</td>                        
+                            <td>{{ r.rate }}</td>
+                            <td>{{ r.qty }}</td>
+                            <td>{{ r.disc }}</td>
+                            <td>{{ r.discvalue }}</td>
+                            <td>{{ r.taxable }}</td>   
+                            <td>{{ r.gst }}</td> 
+                            <td>{{ r.gstvalue }}</td>   
+                            <td>{{ r.amount }}</td>                            
+                        </tr>
+                        </tbody>                    
+                    </table> 
+                </div>   
+            </div>         
+     </div>
+</div>
+</div>
+</div>
+

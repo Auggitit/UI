@@ -2,24 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SalesService {
-  URL = 'https://localhost:7037/';
-  // URL = 'https://auggitapi.brositecom.com/';
-
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public api: ApiService) {}
 
   POST(path: string, body: Object = {}): Observable<any> {
-    console.log(JSON.stringify(body));
+    // console.log(JSON.stringify(body));
     return this.http
       .post(path, JSON.stringify(body), this.httpOptions)
       .pipe(catchError(this.formatErrors));
@@ -29,16 +27,96 @@ export class SalesService {
     return throwError(error.error);
   }
 
-  getMaxInvoiceNo(vchtype: any, branch: any, fycode: any, fy: any) {
+  getMaxInvoiceNo(
+    vchtype: any,
+    branch: any,
+    fycode: any,
+    fy: any,
+    prefix: any
+  ) {
     return this.http
       .get<any>(
-        this.URL +
+        this.api.URL +
           'api/vSales/getMaxInvno?vchtype=' +
           vchtype +
           '&branch=' +
           branch +
           '&fycode=' +
           fycode +
+          '&fy=' +
+          fy +
+          '&prefix=' +
+          prefix
+      )
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getCustomers() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSales/getCustomerAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getProducts() {
+    return this.http.get<any>(this.api.URL + 'api/mItems').pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  getSalesAccounts() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSales/getSalesAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getDefaultAccounts() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSales/getDefaultAccounts')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  Insert_Sales(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSales', postdata);
+  }
+
+  Insert_Bulk_Sales_Details(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSalesDetails/insertBulk', postdata);
+  }
+
+  Insert_Ledger(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/accountentries', postdata);
+  }
+
+  Insert_Overdue(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/overdue', postdata);
+  }
+
+  getPendingSOListDetails(cuscode: any, branch: any, fy: any) {
+    return this.http
+      .get<any>(
+        this.api.URL +
+          'api/vSales/getPendingSOListDetails?customercode=' +
+          cuscode +
+          '&branch=' +
+          branch +
           '&fy=' +
           fy
       )
@@ -49,58 +127,167 @@ export class SalesService {
       );
   }
 
-  getCustomers() {
-    return this.http.get<any>(this.URL + 'api/vSales/getCustomerAccounts').pipe(
+  getPendingSOListAll() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSales/getPendingSOListAll')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+  getPendingSOListSO() {
+    return this.http
+      .get<any>(this.api.URL + 'api/vSSales/getPendingSOList')
+      .pipe(
+        map((res: any) => {
+          return res;
+        })
+      );
+  }
+
+  getPendingSOListSOService() {
+    return this.http.get<any>(this.api.URL + 'api/vSales/getPendingSSO').pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  getProducts() {
-    return this.http.get<any>(this.URL + 'api/mItems').pipe(
+  Delete_SavedDefSalesFields(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSales/deleteSalesCusFields?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  Delete_Sales(invno: any, vtype: any, branch: any, fy: any): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSales/deleteSales?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  Delete_Accounts(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSales/deleteSalesAccounts?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  Delete_SalesDetails(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSales/deleteSALESDetails?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  Delete_overdue(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/vSales/deleteSalesOverdue?invno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+  deteleAllLedger(
+    invno: any,
+    vtype: any,
+    branch: any,
+    fy: any
+  ): Observable<any> {
+    return this.http.get(
+      this.api.URL +
+        'api/accountentries/deteleAllLedger?vchno=' +
+        invno +
+        '&vtype=' +
+        vtype +
+        '&branch=' +
+        branch +
+        '&fy=' +
+        fy
+    );
+  }
+
+  getSalesListAll() {
+    return this.http.get<any>(this.api.URL + 'api/vSales/GetSalesListAll').pipe(
       map((res: any) => {
         return res;
       })
     );
   }
 
-  getSalesAccounts() {
-    return this.http.get<any>(this.URL + 'api/vSales/getSalesAccounts').pipe(
-      map((res: any) => {
-        return res;
-      })
+  get_Sales(invno: any): Observable<any> {
+    return this.http.get(
+      this.api.URL + 'api/vSales/getSalesData?invno=' + invno
     );
   }
-
-  getDefaultAccounts() {
-    return this.http.get<any>(this.URL + 'api/vSales/getDefaultAccounts').pipe(
-      map((res: any) => {
-        return res;
-      })
+  get_SalesDetails(invno: any): Observable<any> {
+    return this.http.get(
+      this.api.URL + 'api/vSales/getSalesDetailsData?invno=' + invno
     );
   }
-
-  Insert_Sales(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSales', postdata);
+  getSavedAccounts(): Observable<any> {
+    return this.http.get(this.api.URL + 'api/saleDefAccs');
   }
 
-  Insert_Bulk_Sales_Details(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSalesDetails/insertBulk', postdata);
+  insertCusFields(postdata: any): Observable<any> {
+    return this.POST(this.api.URL + 'api/vSalesCusFields', postdata);
   }
 
-  Insert_Ledger(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/accountentries', postdata);
-  }
-
-  Insert_Overdue(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/overdue', postdata);
-  }
-
-  getPendingSOListDetails(cuscode: any) {
+  getSavedDefSalesFields(invno: any) {
     return this.http
       .get<any>(
-        this.URL + 'api/vSales/getPendingSOListDetails?customercode=' + cuscode
+        this.api.URL + 'api/vSales/getSavedDefSalesFields?invno=' + invno
       )
       .pipe(
         map((res: any) => {
@@ -109,107 +296,7 @@ export class SalesService {
       );
   }
 
-  getPendingSOListAll() {
-    return this.http.get<any>(this.URL + 'api/vSalesOrder/getSOLists').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  getPendingSOListSO() {
-    return this.http.get<any>(this.URL + 'api/vSales/getPendingSOListSO').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  getPendingSOListSOService() {
-    return this.http
-      .get<any>(this.URL + 'api/vSales/getPendingSOListSOService')
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
-  }
-
-  Delete_SavedDefSalesFields(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSales/deleteSalesCusFields?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-  Delete_Sales(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL + 'api/vSales/deleteSales?invno=' + invno + '&vtype=' + vtype
-    );
-  }
-  Delete_Accounts(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSales/deleteSalesAccounts?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-  Delete_SalesDetails(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSales/deleteSALESDetails?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-  Delete_overdue(invno: any, vtype: any): Observable<any> {
-    return this.http.get(
-      this.URL +
-        'api/vSales/deleteSalesOverdue?invno=' +
-        invno +
-        '&vtype=' +
-        vtype
-    );
-  }
-
-  getSalesListAll() {
-    return this.http.get<any>(this.URL + 'api/vSales/GetSalesListAll').pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
-  }
-
-  get_Sales(invno: any): Observable<any> {
-    return this.http.get(this.URL + 'api/vSales/getSalesData?invno=' + invno);
-  }
-  get_SalesDetails(invno: any): Observable<any> {
-    return this.http.get(
-      this.URL + 'api/vSales/getSalesDetailsData?invno=' + invno
-    );
-  }
-  getSavedAccounts(): Observable<any> {
-    return this.http.get(this.URL + 'api/saleDefAccs');
-  }
-
-  insertCusFields(postdata: any): Observable<any> {
-    return this.POST(this.URL + 'api/vSalesCusFields', postdata);
-  }
-
-  getSavedDefSalesFields(invno: any) {
-    return this.http
-      .get<any>(this.URL + 'api/vSales/getSavedDefSalesFields?invno=' + invno)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
-  }
+  //UI
   getAllSalesList({
     statusId,
     ledgerId,
@@ -230,7 +317,7 @@ export class SalesService {
       params = params.append('statusId', statusId);
     }
     if (ledgerId) {
-      params = params.append('ledgerId', ledgerId);
+      params = params.append('vendorId', ledgerId);
     }
     if (globalFilterId) {
       params = params.append('globalFilterId', globalFilterId);
@@ -238,12 +325,14 @@ export class SalesService {
     if (search) {
       params = params.append('search', search);
     }
-    if (fromDate && toDate) {
+    if (fromDate) {
       params = params.append('fromDate', fromDate);
+    }
+    if (toDate) {
       params = params.append('toDate', toDate);
     }
     return this.http
-      .get<any>(this.URL + 'api/vSales/getSalesLists', { params: params })
+      .get<any>(this.api.URL + 'api/vSales/getSalesLists', { params: params })
       .pipe(
         map((res: any) => {
           return res;
@@ -258,7 +347,7 @@ export class SalesService {
     }
 
     return this.http
-      .get<any>(this.URL + 'api/vSales/getSales', { params: params })
+      .get<any>(this.api.URL + 'api/vSales/getSales', { params: params })
       .pipe(
         map((res: any) => {
           return res;

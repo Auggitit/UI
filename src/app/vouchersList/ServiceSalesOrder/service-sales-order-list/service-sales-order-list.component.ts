@@ -227,7 +227,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
     console.log('data in table', this.filteredServiceSalesOrderData);
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     console.log('Clicked Edit');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -237,8 +237,11 @@ export class ServiceSalesOrderListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
+      if (result) {
+        this.router.navigateByUrl(
+          'soserviceupdate/' + encodeURIComponent(data.sono)
+        );
+      }
     });
   }
 

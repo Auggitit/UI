@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { PoserviceService } from 'src/app/services/poservice.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-sevice-purchase-order',
@@ -66,7 +67,7 @@ export class SevicePurchaseOrderComponent implements OnInit {
   ];
 
   constructor(
-    // private salesOrderApi: SoService,
+    private viewportScroller: ViewportScroller,
     private servicePoApi: PoserviceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
@@ -126,6 +127,7 @@ export class SevicePurchaseOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
     this.loadData(this.servicePoForm.value, true);
     this.servicePoForm.valueChanges.subscribe((values) => {
       this.loadData(values);
@@ -140,7 +142,7 @@ export class SevicePurchaseOrderComponent implements OnInit {
     this.router.navigateByUrl('poservice');
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
@@ -148,7 +150,14 @@ export class SevicePurchaseOrderComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl(
+          'poserviceupdate/' + data.spoid + '/' + '23-24'
+        );
+        this.viewportScroller.scrollToPosition([0, 0]);
+      }
+    });
   }
 
   onClickDelete() {

@@ -55,7 +55,10 @@
         [isSelectAll]="selectAll"
       >
         <ng-template let-item>
-          <tr *ngFor="let data of item; let i = index">
+          <tr
+            *ngFor="let data of item; let i = index"
+            style="background-color: white"
+          >
             <td
               scope="row"
               class="d-flex pl-3"
@@ -237,7 +240,7 @@
                     margin: 0px 10%;
                     width: 80%;
                   "
-                  (click)="onClickEdit()"
+                  (click)="onClickEdit(data)"
                 >
                   Edit
                 </button>

@@ -135,7 +135,7 @@ export class SalesOrderListComponent implements OnInit {
     this.router.navigateByUrl('so');
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
@@ -143,7 +143,11 @@ export class SalesOrderListComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl('soupdate/' + encodeURIComponent(data.sono));
+      }
+    });
   }
 
   onClickDelete() {

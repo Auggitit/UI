@@ -134,7 +134,7 @@ export class PurchaseOrderListComponent implements OnInit {
     this.router.navigateByUrl('po');
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
@@ -142,7 +142,11 @@ export class PurchaseOrderListComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl('poupdate/' + data.ponoid + '/' + '23-24');
+      }
+    });
   }
 
   onClickDelete() {

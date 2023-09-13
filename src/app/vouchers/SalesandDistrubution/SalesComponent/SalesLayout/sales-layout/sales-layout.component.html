@@ -1,0 +1,63 @@
+<form [formGroup]="form" onkeydown="return event.key != 'Enter';">
+    <!-- <ng-container formGroupName="firstform"> -->
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>INVOICE NO</mat-label>
+                <input type="text" [(ngModel)]="variables.invno" readonly="true" matInput autocomplete="off"
+                    formControlName="cinvno">
+            </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>INVOICE DATE (DD/MM/YYYY)</mat-label>
+                <input matInput formControlName="cinvdate" [(ngModel)]="variables.invdate"
+                    [matDatepicker]="pickerInvdate" placeholder="Select">
+                <mat-datepicker-toggle matSuffix [for]="pickerInvdate"></mat-datepicker-toggle>
+                <mat-datepicker #pickerInvdate></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>SALES ORDER NO</mat-label>
+                <input type="text" matInput autocomplete="off" [(ngModel)]="variables.pono" formControlName="cpono">
+            </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>SO DATE (DD/MM/YYYY)</mat-label>
+                <input matInput formControlName="cpodate" [(ngModel)]="variables.podate" [matDatepicker]="pickerpoDate"
+                    placeholder="Select">
+                <mat-datepicker-toggle matSuffix [for]="pickerpoDate"></mat-datepicker-toggle>
+                <mat-datepicker #pickerpoDate></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Voucher Type</mat-label>
+                <input [(ngModel)]="variables.vchtype" type="text" matInput formControlName="cvchtype" readonly="true"
+                    autocomplete="off">
+                <!-- <button class="btn btn-outline-primary btn-sm" style="padding: 0px 8px;
+                margin-top: 0px;" matSuffix><i class="bi bi-back"></i></button> -->
+            </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-2 col-xxl-2 mb-2">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Account Name</mat-label>
+                <input matInput placeholder="Select Account" aria-label="Select Account" [matAutocomplete]="accauto"
+                    [(ngModel)]="variables.vchaccount" formControlName="cacntname" [formControl]="variables.accSearch" >
+                <mat-autocomplete #accauto="matAutocomplete">
+                    <cdk-virtual-scroll-viewport [ngStyle]="{height: '200px'}" itemSize="25">
+                        <mat-option *ngFor="let r of variables.filteredAccounts | async" [value]="r.ledgername"
+                            (onSelectionChange)="accountChanged($event,r)">
+                            <span>{{ r.ledgername }}</span>
+                        </mat-option>
+                    </cdk-virtual-scroll-viewport>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+    </div>
+    <!-- </ng-container> -->
+</form>

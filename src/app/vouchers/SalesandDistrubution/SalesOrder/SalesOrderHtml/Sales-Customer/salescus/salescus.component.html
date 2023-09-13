@@ -1,0 +1,102 @@
+<form [formGroup]="formGRN" onkeydown="return event.key != 'Enter';">
+
+  <div class="row m-0 p-0">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 mb-2">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Sales Oder No</mat-label>
+        <input #ecess type="text" matInput name="pono" formControlName="cpono" [(ngModel)]="pono" readonly="true"
+          autocomplete="off">
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2 mb-2">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Order Date (MM/DD/YYYY)</mat-label>
+        <input #epodate matInput name="podate" formControlName="cpodate" [matDatepicker]="pickerpoDate" placeholder="Select"
+          [(ngModel)]="podate">
+        <mat-datepicker-toggle matSuffix [for]="pickerpoDate"></mat-datepicker-toggle>
+        <mat-datepicker #pickerpoDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Reference</mat-label>
+        <input #ecess type="text" name="ref" matInput formControlName="crefno" [(ngModel)]="refno" autocomplete="off">
+      </mat-form-field>
+    </div>
+
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Sales Ref</mat-label>
+        <input matInput #erefname aria-label="Sale Ref" name="salesref" [ngModel]="salerefname" [matAutocomplete]="autosr"  formControlName="csrefno"
+          [formControl]="refSearch" />
+        <mat-autocomplete #autosr="matAutocomplete">
+          <mat-option *ngFor="let i of filteredSref | async" [value]="i.refname"
+            (onSelectionChange)="SaleRefChanged($event,i)">
+            <span>{{i.refname}}</span> 
+          </mat-option>
+        </mat-autocomplete>
+        <button *ngIf="!btnsaleschange" class="btn btn-sm material-icons" style="padding: 0px 0px; margin-top: -5px;" matSuffix>
+          arrow_drop_down
+        </button>
+        <button *ngIf="btnsaleschange" class="btn btn-sm material-icons btn-outline-danger"
+        style="padding: 0px 0px; margin-top: -5px;" (click)="changeRef()" matSuffix>clear</button>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row m-0 p-0">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xxl-12 col-xxl-12 mb-0">
+      <h5>BILL TO</h5>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xxl-3 col-xxl-2 mb-0 xclass">
+      <mat-form-field appearance="outline" style="width:100%">
+        <mat-label>Select Vendor</mat-label>
+        <input matInput #evendorname aria-label="Vendor" [ngModel]="vendorname" formControlName="cvendorname"
+          [matAutocomplete]="auto" name="vendor" [formControl]="vendorSearch" />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let i of filteredVendors | async" [value]="i.CompanyDisplayName"
+            (onSelectionChange)="vendorChanged($event,i)">
+            <span>{{i.CompanyDisplayName}}</span> |
+            <small>{{i.BilingAddress}}</small>
+          </mat-option>
+        </mat-autocomplete>
+        <button *ngIf="!btnvendorchange" class="btn btn-sm material-icons" style="padding: 0px 0px; margin-top: -5px;"
+          matSuffix>
+          arrow_drop_down
+        </button>
+        <button *ngIf="btnvendorchange" class="btn btn-sm material-icons btn-outline-danger"
+        style="padding: 0px 0px; margin-top: -5px;" (click)="changeVendor()" matSuffix>clear</button>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+      <div class="heading">Outstanding</div>
+      <hr class="p-0 m-0" />
+      <div class="outstanding mt-3">{{ vendoroutstanding ? (vendoroutstanding | currency: 'INR') : ('0.0' | currency:
+        'INR') }}</div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+      <div class="heading">GST Details</div>
+      <hr class="p-0 m-0" />
+      <div class="details">{{vendorgstno}}</div>
+      <div class="details">{{vendorgstTreatment}}</div>
+      <div class="details">{{vendorstate}}</div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+      <div class="heading">Vendor Address</div>
+      <hr class="p-0 m-0" />
+      <div class="details">{{vendorbilling}}</div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xxl-2 col-xxl-2 p-2 mb-0 cusbox">
+      <div>
+        <div (click)="showPendingPODetails()" style="cursor:pointer">
+          <div class="heading">Pending PO's</div>
+          <hr class="p-0 m-0" />
+          <div style="font-weight:600;font-size: 1.4rem; color:#D61355; text-align: center;">{{vendorpodatacount}}</div>
+          <div style="font-size: 0.7rem;text-align: center;" class="p-0">Click to View</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

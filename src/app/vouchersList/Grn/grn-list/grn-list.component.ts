@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { GrnService } from 'src/app/services/grn.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-grn-list',
@@ -74,7 +75,8 @@ export class GrnListComponent implements OnInit {
     private grnApi: GrnService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    private viewportScroller: ViewportScroller
   ) {
     this.grnForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -136,6 +138,7 @@ export class GrnListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
     this.loadData(this.grnForm.value, true);
     this.grnForm.valueChanges.subscribe((values) => {
       this.loadData(values);
@@ -150,7 +153,7 @@ export class GrnListComponent implements OnInit {
     this.router.navigateByUrl('grn');
   }
 
-  onClickEdit() {
+  onClickEdit(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
@@ -158,7 +161,26 @@ export class GrnListComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // const grnid = '1';
+        // const fy = '23-24';
+
+        // var navigationExtras: NavigationExtras = {
+        //   queryParams: { secureValue: data.grnno },
+        // };
+        // this.router.navigate(['grnupdate'], navigationExtras);
+        this.router.navigateByUrl(
+          'grnupdate/' + encodeURIComponent(data.grnno)
+        );
+        // var desiredValue = uuidv4();
+        // var encodedValue = encodeURIComponent(data.grnno );
+        // var url = 'grnupdate/' + desiredValue;
+        // this.router.navigateByUrl(url, { state: { originalValue: encodedValue } });
+
+        this.viewportScroller.scrollToPosition([0, 0]);
+      }
+    });
   }
 
   onClickDelete() {

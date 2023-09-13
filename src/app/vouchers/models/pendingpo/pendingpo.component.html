@@ -1,4 +1,4 @@
-<div class="card"> 
+<div class="card showpo"> 
    
     <div class="card-header">       
         <div class="row">
@@ -23,6 +23,7 @@
         <div class="card-body">
         <div class="row">
             <div class="col-12">  
+                <div style="overflow:auto;width: 100%;">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -30,7 +31,7 @@
                         <th>PO DATE</th>
                         <th>ORDER VALUE</th>
                         <th>VENDOR NAME</th>
-                        <th>EXP.. DELIVERY DATE</th>                          
+                        <!-- <th>EXP.. DELIVERY DATE</th>                           -->
                         <th>ORDER QTY</th>
                         <th>RECEIVED QTY</th>                                
                         <th>BACK ORDR QTY</th>
@@ -40,21 +41,22 @@
                     <tr>
                         <td>{{ i.pono }}</td>
                         <td>{{ i.podate }}</td>
-                        <td>{{ i.net }}</td>
+                        <td>{{ i.orderedvalue }}</td>
                         <td>{{ i.vendorname }}</td>
-                        <td>{{ i.expdelidate }}</td>                        
+                        <!-- <td>{{ i.expdelidate }}</td>                         -->
                         <td>{{ i.ordered }}</td>
                         <td>{{ i.received }}</td>
                         <td>{{ i.pending }}</td>                                
                     </tr>
                     </tbody>                    
-                </table>         
+                </table>     </div>    
             </div>  
         </div>
 
     
             <div>
-                <table class="table table-striped table-bordered">
+                <div style="overflow:auto;width: 100%;">
+                    <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
                           <th>SELECT</th>
@@ -62,7 +64,7 @@
                           <th>NAME</th>
                           <th>HSN</th>
                           <th>SKU</th>
-                          <th>GODOWN</th>                          
+                          <!-- <th>GODOWN</th>                           -->
                           <th>RATE</th>
                           <th>DISC</th>
                           <th>TAX</th>
@@ -79,14 +81,15 @@
                         <td>{{ r.pname }}</td>
                         <td>{{ r.hsn }}</td>
                         <td>{{ r.sku }}</td>
-                        <td>{{ r.godown }}</td>                        
+                        <!-- <td>{{ r.godown }}</td>                         -->
                         <td>{{ r.rate }}</td>
                         <td>{{ r.disc }}</td>
                         <td>{{ r.tax }}</td>
                         <td>{{ r.pqty }}</td>
                       </tr>
                     </tbody>
-                  </table>        
+                    </table>    
+                  </div>    
             </div>  
             <div class="text-end">                
                 <button mat-raised-button color="accent" (click)="addItems(i)">                

@@ -1,0 +1,12 @@
+table
+{
+    width: 100%;
+}
+table th 
+{
+    background-color: blue;
+    color: white;
+}
+table th:first-child {
+    min-width: 250px;
+  }
