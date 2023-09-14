@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-sales-service-list',
   templateUrl: './sales-service-list.component.html',
@@ -244,7 +245,7 @@ export class SalesServiceListComponent implements OnInit {
       }
     });
   }
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -253,8 +254,64 @@ export class SalesServiceListComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
+      if (result) {
+        // console.log(data);
+        this.serviceSalesApi
+          .Delete_Sales(data.invno, 'Service Sale', data.branch, data.fy)
+          .subscribe((res) => {
+            this.serviceSalesApi
+              .Delete_SalesDetails(
+                data.invno,
+                'Service Sale',
+                data.branch,
+                data.fy
+              )
+              .subscribe((res) => {
+                this.serviceSalesApi
+                  .Delete_Accounts(
+                    data.invno,
+                    'Service Sale',
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.serviceSalesApi
+                      .Delete_SavedDefSalesFields(
+                        data.invno,
+                        'Service Sale',
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        this.serviceSalesApi
+                          .Delete_overdue(
+                            data.invno,
+                            'Service Sale',
+                            data.branch,
+                            data.fy
+                          )
+                          .subscribe((res) => {
+                            this.serviceSalesApi
+                              .deteleAllLedger(
+                                data.invno,
+                                'Service Sale',
+                                data.branch,
+                                data.fy
+                              )
+                              .subscribe((res) => {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Deleted!',
+                                  text: 'Service SALES  Deleted Successfully',
+                                });
+                                this.loadData();
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+      }
     });
   }
 

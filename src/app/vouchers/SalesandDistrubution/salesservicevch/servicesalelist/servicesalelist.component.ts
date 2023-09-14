@@ -8,85 +8,116 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-servicesalelist',
   templateUrl: './servicesalelist.component.html',
-  styleUrls: ['./servicesalelist.component.scss']
+  styleUrls: ['./servicesalelist.component.scss'],
 })
 export class ServicesalelistComponent implements OnInit {
-
-  constructor(public salesapi:SsalesService, public router: Router, public dialog : MatDialog) { }
-  sdata:any;
+  constructor(
+    public salesapi: SsalesService,
+    public router: Router,
+    public dialog: MatDialog
+  ) {}
+  sdata: any;
   ngOnInit(): void {
-    this. loaddata();
+    this.loaddata();
   }
 
-  loaddata()
-  {
-    this.salesapi.getSalesListAll().subscribe(res=>{
+  loaddata() {
+    this.salesapi.getSalesListAll().subscribe((res) => {
       // console.log("SALES",res);
-      this.sdata=res;
-    })
-  }  
-
-  createNewSales()
-  {
-    this.router.navigateByUrl("servicesales");
+      this.sdata = res;
+    });
   }
 
-  editsales(data:any)
-  {
-    var msg = "";
-    if(data.pending==0){
-      msg = "SALES is Completed! Do you want to Edit"
+  createNewSales() {
+    this.router.navigateByUrl('servicesales');
+  }
+
+  editsales(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SALES is Completed! Do you want to Edit';
+    } else {
+      msg = 'Do you Modify data?';
     }
-    else
-    { msg = "Do you Modify data?" }
     const dialogRef = this.dialog.open(ConfirmmsgComponent, {
       width: '350px',
-      data: msg
+      data: msg,
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.router.navigateByUrl("servicesalesupdate/" + encodeURIComponent(data.invno));
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl(
+          'servicesalesupdate/' + encodeURIComponent(data.invno)
+        );
       }
-    });      
+    });
   }
 
-  deletesales(data:any)
-  {
+  deletesales(data: any) {
     const dialogRef = this.dialog.open(ConfirmmsgComponent, {
       width: '350px',
-      data: "Do you Delete data?"
+      data: 'Do you Delete data?',
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
         // console.log(data);
-        this.salesapi.Delete_Sales(data.invno,"Service Sale",data.branch,data.fy).subscribe(res=>{
-          this.salesapi.Delete_SalesDetails(data.invno,"Service Sale",data.branch,data.fy).subscribe(res=>{   
-            this.salesapi.Delete_Accounts(data.invno,"Service Sale",data.branch,data.fy).subscribe(res=>{  
-              this.salesapi.Delete_SavedDefSalesFields(data.invno,"Service Sale",data.branch,data.fy).subscribe(res=>{ 
-                this.salesapi.Delete_overdue(data.invno,"Service Sale",data.branch,data.fy).subscribe(res=>{       
-                  this.salesapi
-                  .deteleAllLedger(
-                    data.invno,"Service Sale",data.branch,data.fy
-                  ).subscribe(res=>{ 
-                  Swal.fire({
-                  icon:'success',
-                  title:'Deleted!',
-                  text:'Service SALES  Deleted Successfully'         
-                });
-              this.loaddata();
-            });  
+        this.salesapi
+          .Delete_Sales(data.invno, 'Service Sale', data.branch, data.fy)
+          .subscribe((res) => {
+            this.salesapi
+              .Delete_SalesDetails(
+                data.invno,
+                'Service Sale',
+                data.branch,
+                data.fy
+              )
+              .subscribe((res) => {
+                this.salesapi
+                  .Delete_Accounts(
+                    data.invno,
+                    'Service Sale',
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.salesapi
+                      .Delete_SavedDefSalesFields(
+                        data.invno,
+                        'Service Sale',
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        this.salesapi
+                          .Delete_overdue(
+                            data.invno,
+                            'Service Sale',
+                            data.branch,
+                            data.fy
+                          )
+                          .subscribe((res) => {
+                            this.salesapi
+                              .deteleAllLedger(
+                                data.invno,
+                                'Service Sale',
+                                data.branch,
+                                data.fy
+                              )
+                              .subscribe((res) => {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Deleted!',
+                                  text: 'Service SALES  Deleted Successfully',
+                                });
+                                this.loaddata();
+                              });
+                          });
+                      });
+                  });
+              });
           });
-          });
-          });    
-        });                               
-        })    
       }
-    });      
-  }                        
-
-  convertbill(data:any)
-  {
-    
+    });
   }
 
+  convertbill(data: any) {}
 }

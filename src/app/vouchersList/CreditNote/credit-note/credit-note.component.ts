@@ -16,6 +16,8 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { CrnoteService } from 'src/app/services/credit.service';
 import { setupTestingRouter } from '@angular/router/testing';
+import Swal from 'sweetalert2';
+import { GstdataService } from 'src/app/services/gstdata.service';
 
 @Component({
   selector: 'app-credit-note',
@@ -65,7 +67,8 @@ export class CreditNoteComponent implements OnInit {
     private creditApi: CrnoteService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public gstdataapi: GstdataService
   ) {
     this.creditForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -147,8 +150,13 @@ export class CreditNoteComponent implements OnInit {
       }
     });
   }
+  _branch: any = '001';
+  _fy: any = '001';
+  _company: any = '001';
+  _fyname: any = '23-24';
+  vchtype: any = 'Credit Note';
 
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -156,7 +164,32 @@ export class CreditNoteComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(data);
+        this.creditApi.Delete_Sales(data.vchno).subscribe((res) => {
+          this.creditApi.Delete_SalesDetails(data.vchno).subscribe((res) => {
+            this.creditApi.Delete_Accounts(data.vchno).subscribe((res) => {
+              this.gstdataapi
+                .Delete_GstData(
+                  data.vchno,
+                  this.vchtype,
+                  this._branch,
+                  this._fy
+                )
+                .subscribe((res) => {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'CN ' + data.pono + ' Deleted Successfully',
+                  });
+                  this.loadData();
+                });
+            });
+          });
+        });
+      }
+    });
   }
 
   onClickCancelOrder() {

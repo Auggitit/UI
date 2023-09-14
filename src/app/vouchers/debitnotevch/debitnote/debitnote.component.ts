@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -12,12 +19,13 @@ import { Guid } from 'guid-typescript';
 import { Observable, map, of, startWith } from 'rxjs';
 import { Ledger, gstdata } from 'src/app/Component/Interface/all-interface';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
-import { DrnoteService } from 'src/app/services/drnote.service';
+// import { DrnoteService } from 'src/app/services/drnote.service';
 import { GrnService } from 'src/app/services/grn.service';
 import { PoService } from 'src/app/services/po.service';
 import { SsoService } from 'src/app/services/sso.service';
 import { GstdataService } from 'src/app/services/gstdata.service';
 import Swal from 'sweetalert2';
+import { DrnoteService } from 'src/app/services/debit.service';
 
 export interface iaccounts {
   acccode: string;
@@ -48,10 +56,10 @@ export interface iprodutcs {
   productcode: string;
   godown: string;
   sku: string;
-  hsn: string;  
+  hsn: string;
   qty: number;
   uom: string;
-  rate: number;  
+  rate: number;
   subtotal: number;
   disc: number;
   discvalue: number;
@@ -64,7 +72,8 @@ export interface iprodutcs {
   company: string;
   branch: string;
   fy: string;
-  vchtype: string; uomcode: string;
+  vchtype: string;
+  uomcode: string;
 }
 export interface Product {
   itemname: string;
@@ -102,11 +111,9 @@ export interface Cus {
 @Component({
   selector: 'app-debitnote',
   templateUrl: './debitnote.component.html',
-  styleUrls: ['./debitnote.component.scss']
+  styleUrls: ['./debitnote.component.scss'],
 })
-
 export class DebitnoteComponent implements OnInit {
-
   ACC_DATA: iaccounts[] = [
     {
       acccode: '',
@@ -138,7 +145,7 @@ export class DebitnoteComponent implements OnInit {
       godown: '',
       qty: 0,
       uom: '',
-      rate: 0,    
+      rate: 0,
       subtotal: 0,
       disc: 0,
       discvalue: 0,
@@ -154,7 +161,8 @@ export class DebitnoteComponent implements OnInit {
       vendorcode: '',
       purchasebillno: '',
       purchasebilldate: '',
-      vchtype: '', uomcode:''
+      vchtype: '',
+      uomcode: '',
     },
   ];
   form!: FormGroup;
@@ -163,7 +171,7 @@ export class DebitnoteComponent implements OnInit {
     gid = Guid.create();
     return gid.value;
   }
-  
+
   _branch: any = '001';
   _fy: any = '001';
   _company: any = '001';
@@ -239,12 +247,12 @@ export class DebitnoteComponent implements OnInit {
   constructor(
     public router: Router,
     private fb: FormBuilder,
-    public drapi: DrnoteService,    
+    public drapi: DrnoteService,
     public soapi: SsoService,
     public grnapi: GrnService,
     public dialog: MatDialog,
     public poapi: PoService,
-    public gstdataapi : GstdataService
+    public gstdataapi: GstdataService
   ) {
     this.form = new FormGroup({
       cinvno: new FormControl(),
@@ -283,7 +291,7 @@ export class DebitnoteComponent implements OnInit {
   @ViewChild('erefname') erefname: ElementRef | undefined;
   @ViewChildren('eAddCharge') private eAddCharge!: QueryList<ElementRef>;
   @ViewChildren('eAddGstDD') private eAddGstDD!: QueryList<ElementRef>;
-  
+
   ngOnInit(): void {
     this.callChangeVoucherType();
     this.getMaxInvoiceNo();
@@ -292,7 +300,7 @@ export class DebitnoteComponent implements OnInit {
     this.loadSaleRef();
     this.addemptyrow();
     this.loadProducts();
-    this.emptyrow();    
+    this.emptyrow();
     this.loadSavedAccounts();
     this.loadDefalutAccounts();
     this.gstArray.splice(0);
@@ -304,8 +312,8 @@ export class DebitnoteComponent implements OnInit {
 
   Vprefix: any;
   callChangeVoucherType() {
-    this.Vprefix = "DN";
-    this.vchtype = "Debit Note";
+    this.Vprefix = 'DN';
+    this.vchtype = 'Debit Note';
     // let dialogRef = this.dialog.open(SalesvtypeComponent, {});
     // dialogRef.afterClosed().subscribe((result) => {
     //   this.vchtype = result.vtype;
@@ -327,7 +335,7 @@ export class DebitnoteComponent implements OnInit {
       cinvdate: ['', [Validators.required]],
       cpono: ['', [Validators.nullValidator]],
       cpodate: ['', [Validators.nullValidator]],
-      cvchtype: ['', [Validators.required]],            
+      cvchtype: ['', [Validators.required]],
       edate: ['', [Validators.nullValidator]],
       pterms: ['', [Validators.nullValidator]],
       ref: ['', [Validators.nullValidator]],
@@ -353,16 +361,15 @@ export class DebitnoteComponent implements OnInit {
         });
     });
   }
-  loadSavedAccounts()
-  {
+  loadSavedAccounts() {
     this.drapi.getSavedAccounts().subscribe((res) => {
-        console.log(res);   
-        this.salesDiscountAcc = res[0].discAcc;
-        this.transportAcc = res[0].tranAcc;
-        this.packingAcc = res[0].packAcc;
-        this.insurenceAcc = res[0].insuAcc;
-        this.tcsAcc = res[0].tcsAcc;   
-        this.roundingAcc = res[0].rounding;      
+      console.log(res);
+      this.salesDiscountAcc = res[0].discAcc;
+      this.transportAcc = res[0].tranAcc;
+      this.packingAcc = res[0].packAcc;
+      this.insurenceAcc = res[0].insuAcc;
+      this.tcsAcc = res[0].tcsAcc;
+      this.roundingAcc = res[0].rounding;
     });
   }
   loadSalesAccounts() {
@@ -395,7 +402,7 @@ export class DebitnoteComponent implements OnInit {
     );
   }
   onProdKeydown(event: any, rowindex: any) {
-    this.eqty.toArray()[rowindex].nativeElement.value = "";
+    this.eqty.toArray()[rowindex].nativeElement.value = '';
     this.eqty.toArray()[rowindex].nativeElement.select();
     this.eqty.toArray()[rowindex].nativeElement.focus();
   }
@@ -418,16 +425,17 @@ export class DebitnoteComponent implements OnInit {
     if (event.isUserInput == true) {
       console.log(data);
       this.listData.filteredData[rowindex].product = data.itemname.toString();
-      this.listData.filteredData[rowindex].productcode =data.itemcode.toString();
+      this.listData.filteredData[rowindex].productcode =
+        data.itemcode.toString();
       this.listData.filteredData[rowindex].sku = data.itemsku;
       this.listData.filteredData[rowindex].hsn = data.itemhsn;
       this.listData.filteredData[rowindex].uom = data.uom;
       this.listData.filteredData[rowindex].gst = data.gst;
-      this.listData.filteredData[rowindex].uomcode = data.uomcode.toString();        
+      this.listData.filteredData[rowindex].uomcode = data.uomcode.toString();
       //console.log(this.listData.filteredData);
     }
   }
-  
+
   loadDefalutAccounts() {
     this.soapi.getDefaultAccounts().subscribe((res) => {
       this.defaultAccounts = JSON.parse(res);
@@ -761,7 +769,7 @@ export class DebitnoteComponent implements OnInit {
   disctotal: any;
   nettotal: any;
   tdsper: any;
-  roundedoff: any;  
+  roundedoff: any;
   array: gst[] = [];
   acclistData!: MatTableDataSource<any>;
   gstlistData!: MatTableDataSource<any>;
@@ -832,7 +840,7 @@ export class DebitnoteComponent implements OnInit {
           console.log(error);
         }
       );
-      this.findGst();   
+      this.findGst();
       this.loadgstwithvalue();
       resolve({ action: 'success' });
     });
@@ -904,7 +912,7 @@ export class DebitnoteComponent implements OnInit {
       }
       this.calculate();
     }
-  }  
+  }
 
   emptyGstGrid() {
     this.gstlistData.data.splice(0, this.gstlistData.data.length);
@@ -939,48 +947,46 @@ export class DebitnoteComponent implements OnInit {
     }
   }
 
-
-  emprtyGrid() {   
+  emprtyGrid() {
     this.listData.data.splice(0, this.listData.data.length);
-      this.listData.data = [...this.listData.data]; // new ref!
-      of(this.ELEMENT_DATA).subscribe(
-        (data: iprodutcs[]) => {
-          this.listData = new MatTableDataSource(data);
-          console.log(data);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );      
+    this.listData.data = [...this.listData.data]; // new ref!
+    of(this.ELEMENT_DATA).subscribe(
+      (data: iprodutcs[]) => {
+        this.listData = new MatTableDataSource(data);
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
-  getTotal()
-  {
-    // this.totQty = 0;    
+  getTotal() {
+    // this.totQty = 0;
     // this.totSub = 0;
     // this.totTax = 0;
     // this.totTaxValue = 0;
-    // this.totAmt = 0;    
+    // this.totAmt = 0;
     // for(let i=0;i<this.listData.filteredData.length;i++)
-    // {      
-    //   this.totQty = this.totQty + parseFloat(this.listData.filteredData[i].qty);      
+    // {
+    //   this.totQty = this.totQty + parseFloat(this.listData.filteredData[i].qty);
     //   this.totSub = this.totSub + parseFloat(this.listData.filteredData[i].subtotal);
     //   this.totTax = this.totTax + parseFloat(this.listData.filteredData[i].taxable);
     //   this.totTaxValue = this.totTaxValue + parseFloat(this.listData.filteredData[i].gstvalue);
-    //   this.totAmt = this.totAmt + parseFloat(this.listData.filteredData[i].amount);      
+    //   this.totAmt = this.totAmt + parseFloat(this.listData.filteredData[i].amount);
     // }
-    // this.totQty = this.totQty.toFixed(2);    
+    // this.totQty = this.totQty.toFixed(2);
     // this.totSub = this.totSub.toFixed(2);
     // this.totTax = this.totTax.toFixed(2);
     // this.totTaxValue = this.totTaxValue.toFixed(2);
-    // this.totAmt = this.totAmt.toFixed(2);    
-  } 
-  textBoxCalculation()
-  {
-    for(let i=0;i< this.listData.filteredData.length;i++)
-    {
+    // this.totAmt = this.totAmt.toFixed(2);
+  }
+  textBoxCalculation() {
+    for (let i = 0; i < this.listData.filteredData.length; i++) {
       var qty = this.listData.filteredData[i].qty;
       var qtymt = this.listData.filteredData[i].qtymt;
-      if(qty == ""){qty="0";}      
+      if (qty == '') {
+        qty = '0';
+      }
       var totqty = parseFloat(qty);
       var rate = this.listData.filteredData[i].rate;
       var disc = this.listData.filteredData[i].disc;
@@ -988,65 +994,81 @@ export class DebitnoteComponent implements OnInit {
       var transport = this.listData.filteredData[i].transport;
       var packing = this.listData.filteredData[i].packing;
       var insurence = this.listData.filteredData[i].insurence;
-      if(transport == ""){transport="0";}
-      if(packing == ""){packing="0";}
-      if(insurence == ""){insurence="0";}
+      if (transport == '') {
+        transport = '0';
+      }
+      if (packing == '') {
+        packing = '0';
+      }
+      if (insurence == '') {
+        insurence = '0';
+      }
       this.onCalculation(totqty, rate, disc, gst, i);
     }
-    this.calculate();    
+    this.calculate();
   }
 
-  addDataRow(pcode:any,pname:any,sku:any,hsn:any,godown:any,qty:any,rate:any,disc:any,tax:any) {
+  addDataRow(
+    pcode: any,
+    pname: any,
+    sku: any,
+    hsn: any,
+    godown: any,
+    qty: any,
+    rate: any,
+    disc: any,
+    tax: any
+  ) {
     return new Promise((resolve) => {
       const newRow = {
         id: this.getGUID(),
-        vchno:'1',
+        vchno: '1',
         vchdate: this.invdate,
-        purchasebillno:'',
-        purchasebilldate:'',
-        vendorcode:'',
+        purchasebillno: '',
+        purchasebilldate: '',
+        vendorcode: '',
         product: pname,
-        productcode:pcode,
+        productcode: pcode,
         sku: sku,
         hsn: hsn,
         godown: godown,
         qty: qty,
         uom: '',
-        rate: rate,    
+        rate: rate,
         transport: 0,
         packing: 0,
-        insurence: 0,    
-        subtotal : 0,
+        insurence: 0,
+        subtotal: 0,
         disc: disc,
         discvalue: 0,
-        taxable:0,
+        taxable: 0,
         gst: tax,
         gstvalue: 0,
         amount: 0,
-        vchcreateddate: new Date,
-        vchstatus:'A',
-        company:'',
-        branch:'',
-        fy:'',                
-        vchtype:'', uomcode:''
+        vchcreateddate: new Date(),
+        vchstatus: 'A',
+        company: '',
+        branch: '',
+        fy: '',
+        vchtype: '',
+        uomcode: '',
       };
       this.ELEMENT_DATA.push(newRow);
       of(this.ELEMENT_DATA).subscribe(
         (data: iprodutcs[]) => {
-          this.listData = new MatTableDataSource(data);          
+          this.listData = new MatTableDataSource(data);
         },
         (error) => {
           console.log(error);
         }
       );
-      resolve({ action: 'success' });      
+      resolve({ action: 'success' });
     });
   }
 
-  loadSavedSdef(sono:any)
-  {
+  loadSavedSdef(sono: any) {
     this.soapi.getSavedDefSOFields(sono).subscribe((res) => {
-      this.sdef = JSON.parse(res); 
+      this.sdef = JSON.parse(res);
     });
   }
 
@@ -1175,8 +1197,7 @@ export class DebitnoteComponent implements OnInit {
             )
           )
         ].accvalue = prevCGST + _cgstvalue;
-      } 
-      else if (this.vendorstatecode != '33') {
+      } else if (this.vendorstatecode != '33') {
         var _igst = this.listData.filteredData[i].gst;
         var _igstvalue = this.listData.filteredData[i].gstvalue;
 
@@ -1300,8 +1321,7 @@ export class DebitnoteComponent implements OnInit {
             )
           )
         ].accvalue = prevSGST + _cgstvalue;
-      } 
-      else if (this.vendorstatecode != '33') {
+      } else if (this.vendorstatecode != '33') {
         var __gst = this.gstlistData.filteredData[i].accgst;
         var __gstvalue = this.gstlistData.filteredData[i].accgstvalue;
         _igstvalue = parseFloat(__gstvalue);
@@ -1433,8 +1453,9 @@ export class DebitnoteComponent implements OnInit {
       this.roundedoff = roundedvalue.toFixed(2);
       this.closingtotal = rounded.toFixed(2);
     } else {
-      this.closingtotal =
-        (parseFloat(this.closingtotal) + parseFloat(this.roundedoff)).toFixed(2);
+      this.closingtotal = (
+        parseFloat(this.closingtotal) + parseFloat(this.roundedoff)
+      ).toFixed(2);
     }
 
     //Removing Zero Values
@@ -1497,7 +1518,7 @@ export class DebitnoteComponent implements OnInit {
     this.vendorstatecode = '';
     this.vendorpodata = '';
     this.vendoroutstanding = '';
-    this.vendorpodatacount = 0;    
+    this.vendorpodatacount = 0;
   }
 
   loadVendors() {
@@ -1519,7 +1540,7 @@ export class DebitnoteComponent implements OnInit {
   }
 
   vendorChanged(event: any, data: any) {
-    if (event.isUserInput == true) {     
+    if (event.isUserInput == true) {
       this.grnapi
         .getPendingPoOutstanding(data.LedgerCode, this._branch, this._fy)
         .subscribe((res) => {
@@ -1532,7 +1553,7 @@ export class DebitnoteComponent implements OnInit {
       this.vendorbilling = data.BilingAddress;
       this.vendorgstTreatment = data.GSTTreatment;
       this.vendorstate = data.StateName;
-      this.vendorstatecode = data.stateCode;      
+      this.vendorstatecode = data.stateCode;
     }
   }
 
@@ -1633,7 +1654,6 @@ export class DebitnoteComponent implements OnInit {
     return true;
   }
 
- 
   clear() {
     this.getMaxInvoiceNo();
     // this.callChildFunction();
@@ -1677,7 +1697,7 @@ export class DebitnoteComponent implements OnInit {
     this.tcsvalue = '';
     //this.sdef.efieldvalue = '';
     this.removeAll();
-    this.calculate();    
+    this.calculate();
   }
   removeAll() {
     this.listData.data.splice(0, this.listData.data.length);
@@ -1719,8 +1739,8 @@ export class DebitnoteComponent implements OnInit {
         hsn: '',
         godown: '',
         qty: 0,
-        uom: '',        
-        rate: 0,       
+        uom: '',
+        rate: 0,
         subtotal: 0,
         disc: 0,
         discvalue: 0,
@@ -1732,8 +1752,9 @@ export class DebitnoteComponent implements OnInit {
         vchstatus: 'A',
         company: '',
         branch: '',
-        fy: '',              
-        vchtype: '', uomcode:''
+        fy: '',
+        vchtype: '',
+        uomcode: '',
       };
       this.ELEMENT_DATA.push(newRow);
 
@@ -1766,95 +1787,93 @@ export class DebitnoteComponent implements OnInit {
     }
   }
 
-  insertDNDetails()
-  {
-    if(this.billno == undefined || this.billno == ""){this.billno="0";}
-    return new Promise((resolve) => { 
-      this.dataSource.forEach(element => {
-        element.vchno = this.invno,
-        element.vchdate = this.invdate,
-        element.id = this.getGUID(),
-        element.vendorcode = this.vendorcode,
-        element.branch = this._branch,
-        element.company = this._company, 
-        element.fy = this._fy,
-        element.purchasebillno = this.billno,
-        element.purchasebilldate = this.billdate
-      });   
+  insertDNDetails() {
+    if (this.billno == undefined || this.billno == '') {
+      this.billno = '0';
+    }
+    return new Promise((resolve) => {
+      this.dataSource.forEach((element) => {
+        (element.vchno = this.invno),
+          (element.vchdate = this.invdate),
+          (element.id = this.getGUID()),
+          (element.vendorcode = this.vendorcode),
+          (element.branch = this._branch),
+          (element.company = this._company),
+          (element.fy = this._fy),
+          (element.purchasebillno = this.billno),
+          (element.purchasebilldate = this.billdate);
+      });
       this.dataSource.forEach((element, index) => {
         var amount = element.amount;
-        if(amount === 0)
-        {
-          this.dataSource.splice(index,1);
+        if (amount === 0) {
+          this.dataSource.splice(index, 1);
         }
-      });       
-      this.drapi.Insert_Bulk_DN_Details(this.dataSource).subscribe(res=>{                             
+      });
+      this.drapi.Insert_Bulk_DN_Details(this.dataSource).subscribe((res) => {
         resolve({ action: 'success' });
-      });   
-    }); 
+      });
+    });
   }
-  
-  insertDNNote()
-  {    
-    return new Promise((resolve) => { 
+
+  insertDNNote() {
+    return new Promise((resolve) => {
       var postData = {
-        id : this.getGUID(),
+        id: this.getGUID(),
         drid: this.crid,
-        vchno : this.invno,
-        vchdate : this.invdate,
-        purchasebillno : this.billno,
-        purchasebilldate : this.billdate,
-        vchtype : this.vchtype,       
-        vendorcode : this.vendorcode,
-        vendorname : this.vendorname,
-        refno : this.refno,
-        salerefname: "",
-        subtotal : this.subtotal,
-        discounttotal :this.disctotal,
-        cgsttotal : this.cgsttotal,
-        sgsttotal : this.sgsttotal,
-        igsttotal : this.igsttotal,       
-        roundedoff : this.roundedoff,
-        tcsRate : this.tcsrate,
-        tcsValue : this.tcsvalue,
-        net : this.nettotal,
-        vchcreateddate : this.invdate,
+        vchno: this.invno,
+        vchdate: this.invdate,
+        purchasebillno: this.billno,
+        purchasebilldate: this.billdate,
+        vchtype: this.vchtype,
+        vendorcode: this.vendorcode,
+        vendorname: this.vendorname,
+        refno: this.refno,
+        salerefname: '',
+        subtotal: this.subtotal,
+        discounttotal: this.disctotal,
+        cgsttotal: this.cgsttotal,
+        sgsttotal: this.sgsttotal,
+        igsttotal: this.igsttotal,
+        roundedoff: this.roundedoff,
+        tcsRate: this.tcsrate,
+        tcsValue: this.tcsvalue,
+        net: this.nettotal,
+        vchcreateddate: this.invdate,
         vchstatus: 'A',
         company: this._company,
         branch: this._branch,
-        fy: this._fy,                
-        remarks : this.remarks,
-        invoicecopy : this.invoicecopy       
-      }
-      this.drapi.Insert_DN(postData).subscribe(res=>{
+        fy: this._fy,
+        remarks: this.remarks,
+        invoicecopy: this.invoicecopy,
+      };
+      this.drapi.Insert_DN(postData).subscribe((res) => {
         resolve({ action: 'success' });
-      });        
-    });   
+      });
+    });
   }
 
   submit() {
-    this.calculate();    
+    this.calculate();
     setTimeout(() => {
       var res = this.validate();
       console.log(res);
       if (res == true) {
         if (this.form.valid) {
           this.loading = true;
-            this.getMaxInvoiceNo().then(() => {
-              this.insertDNNote().then(() => {              
-                this.insertDNDetails().then(() => {                           
-                      this.insertGstData().then(() => {
-                        this.showSuccessMsg();                                       
-                  });
-                });              
+          this.getMaxInvoiceNo().then(() => {
+            this.insertDNNote().then(() => {
+              this.insertDNDetails().then(() => {
+                this.insertGstData().then(() => {
+                  this.showSuccessMsg();
+                });
               });
             });
-        }
-        else{
-          console.log("Form Not Valid!");
+          });
+        } else {
+          console.log('Form Not Valid!');
         }
       }
-    },100);
+    }, 100);
   }
   showSuccessMsg() {
     let dialogRef = this.dialog.open(SuccessmsgComponent, {
@@ -1867,8 +1886,6 @@ export class DebitnoteComponent implements OnInit {
       //this.eitemname?.nativeElement.focus();
     });
   }
- 
-
 
   // insertOverDue() {
   //   return new Promise((resolve) => {
@@ -1996,66 +2013,69 @@ export class DebitnoteComponent implements OnInit {
     });
   }
 
-    //Region Additional Charge Functions
-    onAddtionalDDKeydown(event: any, rowindex: any) {
-      console.log(rowindex);
-      this.eAddCharge.toArray()[rowindex].nativeElement.value = '';
-      this.eAddCharge.toArray()[rowindex].nativeElement.select();
-      this.eAddCharge.toArray()[rowindex].nativeElement.focus();
+  //Region Additional Charge Functions
+  onAddtionalDDKeydown(event: any, rowindex: any) {
+    console.log(rowindex);
+    this.eAddCharge.toArray()[rowindex].nativeElement.value = '';
+    this.eAddCharge.toArray()[rowindex].nativeElement.select();
+    this.eAddCharge.toArray()[rowindex].nativeElement.focus();
+  }
+  onAddtionalAmountKeydown(event: any, rowindex: any) {
+    this.eAddGstDD.toArray()[rowindex].nativeElement.value = '';
+    this.eAddGstDD.toArray()[rowindex].nativeElement.select();
+    this.eAddGstDD.toArray()[rowindex].nativeElement.focus();
+  }
+  onAddtionalGSTKeydown(event: any, rowindex: any) {
+    //this.gstaddRow();
+  }
+  calculateAddChargeGST(event: any, i: any) {
+    var amount = event.target.value;
+    var gst = this.gstlistData.filteredData[i].accgst;
+    if (amount == '' || amount == undefined) {
+      amount = 0;
     }
-    onAddtionalAmountKeydown(event: any, rowindex: any) {
-      this.eAddGstDD.toArray()[rowindex].nativeElement.value = '';
-      this.eAddGstDD.toArray()[rowindex].nativeElement.select();
-      this.eAddGstDD.toArray()[rowindex].nativeElement.focus();
+    if (gst == '' || gst == undefined) {
+      gst = 0;
     }
-    onAddtionalGSTKeydown(event: any, rowindex: any) {
-      //this.gstaddRow();
+    if (gst != 'NO GST' && gst != '') {
+      var gstvalue = (parseFloat(amount) * parseFloat(gst)) / 100;
+      this.gstlistData.filteredData[i].accgstvalue = gstvalue;
+      this.gstlistData.filteredData[i].accgsttotvalue =
+        parseFloat(amount) + gstvalue;
+    } else {
+      var amount = this.gstlistData.filteredData[i].accvalue;
+      this.gstlistData.filteredData[i].accgstvalue = 0;
+      this.gstlistData.filteredData[i].accgsttotvalue = parseFloat(
+        amount
+      ).toFixed(2)
+        ? parseFloat(amount)
+        : 0;
     }
-    calculateAddChargeGST(event: any, i: any) {
-      var amount = event.target.value;
-      var gst = this.gstlistData.filteredData[i].accgst;
-      if (amount == '' || amount == undefined) {
-        amount = 0;
-      }
-      if (gst == '' || gst == undefined) {
-        gst = 0;
-      }
-      if (gst != 'NO GST' && gst != '') {
-        var gstvalue = (parseFloat(amount) * parseFloat(gst)) / 100;
-        this.gstlistData.filteredData[i].accgstvalue = gstvalue;
-        this.gstlistData.filteredData[i].accgsttotvalue =
-          parseFloat(amount) + gstvalue;
-      } else {
-        var amount = this.gstlistData.filteredData[i].accvalue;
-        this.gstlistData.filteredData[i].accgstvalue = 0;
-        this.gstlistData.filteredData[i].accgsttotvalue = parseFloat(amount).toFixed(2)
-          ? parseFloat(amount)
-          : 0;
+    this.calculate();
+  }
+  calculateAddChargeGST_DDChanged(event: any, i: any, r: any) {
+    if (event.isUserInput == true) {
+      if (event.source.value) {
+        var val = event.source.value;
+        if (val != 'NO GST' && val != '') {
+          var amount = this.gstlistData.filteredData[i].accvalue;
+          amount = parseFloat(amount) ? parseFloat(amount) : 0;
+          var gstvalue = (parseFloat(amount) * parseFloat(val)) / 100;
+          this.gstlistData.filteredData[i].accgstvalue = gstvalue;
+          this.gstlistData.filteredData[i].hsn = r.hsn;
+          this.gstlistData.filteredData[i].accgsttotvalue =
+            parseFloat(amount) + gstvalue;
+          this.calculate();
+        } else {
+          var amount = this.gstlistData.filteredData[i].accvalue;
+          amount = parseFloat(amount) ? parseFloat(amount) : 0;
+          this.gstlistData.filteredData[i].accgstvalue = 0;
+          this.gstlistData.filteredData[i].accgsttotvalue =
+            parseFloat(amount).toFixed(2);
+          this.calculate();
+        }
       }
       this.calculate();
     }
-    calculateAddChargeGST_DDChanged(event: any, i: any, r: any) {
-      if (event.isUserInput == true) {
-        if (event.source.value) {
-          var val = event.source.value;
-          if (val != 'NO GST' && val != '') {
-            var amount = this.gstlistData.filteredData[i].accvalue;
-            amount = parseFloat(amount) ? parseFloat(amount) : 0;
-            var gstvalue = (parseFloat(amount) * parseFloat(val)) / 100;
-            this.gstlistData.filteredData[i].accgstvalue = gstvalue;
-            this.gstlistData.filteredData[i].hsn = r.hsn;
-            this.gstlistData.filteredData[i].accgsttotvalue =
-              parseFloat(amount) + gstvalue;
-            this.calculate();
-          } else {
-            var amount = this.gstlistData.filteredData[i].accvalue;
-            amount = parseFloat(amount) ? parseFloat(amount) : 0;
-            this.gstlistData.filteredData[i].accgstvalue = 0;
-            this.gstlistData.filteredData[i].accgsttotvalue = parseFloat(amount).toFixed(2);
-            this.calculate();
-          }
-        }
-        this.calculate();
-      }
-    }
+  }
 }

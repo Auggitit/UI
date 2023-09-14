@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -12,7 +19,7 @@ import { Guid } from 'guid-typescript';
 import { Observable, map, of, startWith } from 'rxjs';
 import { Ledger, gstdata } from 'src/app/Component/Interface/all-interface';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
-import { CrnoteService } from 'src/app/services/crnote.service';
+import { CrnoteService } from 'src/app/services/credit.service';
 import { GrnService } from 'src/app/services/grn.service';
 import { GstdataService } from 'src/app/services/gstdata.service';
 import { PoService } from 'src/app/services/po.service';
@@ -49,10 +56,10 @@ export interface iprodutcs {
   productcode: string;
   godown: string;
   sku: string;
-  hsn: string;  
+  hsn: string;
   qty: number;
   uom: string;
-  rate: number;  
+  rate: number;
   subtotal: number;
   disc: number;
   discvalue: number;
@@ -103,9 +110,8 @@ export interface Cus {
 @Component({
   selector: 'app-creditnote',
   templateUrl: './creditnote.component.html',
-  styleUrls: ['./creditnote.component.scss']
+  styleUrls: ['./creditnote.component.scss'],
 })
- 
 export class CreditnoteComponent implements OnInit {
   ACC_DATA: iaccounts[] = [
     {
@@ -138,7 +144,7 @@ export class CreditnoteComponent implements OnInit {
       godown: '',
       qty: 0,
       uom: '',
-      rate: 0,    
+      rate: 0,
       subtotal: 0,
       disc: 0,
       discvalue: 0,
@@ -163,7 +169,7 @@ export class CreditnoteComponent implements OnInit {
     gid = Guid.create();
     return gid.value;
   }
-  
+
   _branch: any = '001';
   _fy: any = '001';
   _company: any = '001';
@@ -240,12 +246,12 @@ export class CreditnoteComponent implements OnInit {
   constructor(
     public router: Router,
     private fb: FormBuilder,
-    public crapi: CrnoteService,    
+    public crapi: CrnoteService,
     public soapi: SsoService,
     public grnapi: GrnService,
     public dialog: MatDialog,
     public poapi: PoService,
-    public gstdataapi : GstdataService
+    public gstdataapi: GstdataService
   ) {
     this.form = new FormGroup({
       cinvno: new FormControl(),
@@ -282,7 +288,7 @@ export class CreditnoteComponent implements OnInit {
   @ViewChild('evendorname') evendorname: ElementRef | undefined;
   @ViewChild('epodate') epodate: ElementRef | undefined;
   @ViewChild('erefname') erefname: ElementRef | undefined;
-  
+
   ngOnInit(): void {
     this.callChangeVoucherType();
     this.getMaxInvoiceNo();
@@ -291,7 +297,7 @@ export class CreditnoteComponent implements OnInit {
     this.loadSaleRef();
     this.addemptyrow();
     this.loadProducts();
-    this.emptyrow();    
+    this.emptyrow();
     this.loadSavedAccounts();
     this.loadDefalutAccounts();
     this.gstArray.splice(0);
@@ -303,8 +309,8 @@ export class CreditnoteComponent implements OnInit {
 
   Vprefix: any;
   callChangeVoucherType() {
-    this.Vprefix = "CN";
-    this.vchtype = "Credit Note";
+    this.Vprefix = 'CN';
+    this.vchtype = 'Credit Note';
     // let dialogRef = this.dialog.open(SalesvtypeComponent, {});
     // dialogRef.afterClosed().subscribe((result) => {
     //   this.vchtype = result.vtype;
@@ -363,16 +369,15 @@ export class CreditnoteComponent implements OnInit {
         });
     });
   }
-  loadSavedAccounts()
-  {
+  loadSavedAccounts() {
     this.crapi.getSavedAccounts().subscribe((res) => {
-        console.log(res);   
-        this.salesDiscountAcc = res[0].discAcc;
-        this.transportAcc = res[0].tranAcc;
-        this.packingAcc = res[0].packAcc;
-        this.insurenceAcc = res[0].insuAcc;
-        this.tcsAcc = res[0].tcsAcc;   
-        this.roundingAcc = res[0].rounding;      
+      console.log(res);
+      this.salesDiscountAcc = res[0].discAcc;
+      this.transportAcc = res[0].tranAcc;
+      this.packingAcc = res[0].packAcc;
+      this.insurenceAcc = res[0].insuAcc;
+      this.tcsAcc = res[0].tcsAcc;
+      this.roundingAcc = res[0].rounding;
     });
   }
   loadSalesAccounts() {
@@ -405,7 +410,7 @@ export class CreditnoteComponent implements OnInit {
     );
   }
   onProdKeydown(event: any, rowindex: any) {
-    this.eqty.toArray()[rowindex].nativeElement.value = "";
+    this.eqty.toArray()[rowindex].nativeElement.value = '';
     this.eqty.toArray()[rowindex].nativeElement.select();
     this.eqty.toArray()[rowindex].nativeElement.focus();
   }
@@ -436,7 +441,7 @@ export class CreditnoteComponent implements OnInit {
       // this.egodown.toArray()[rowindex].nativeElement.focus();
     }
   }
-  
+
   loadDefalutAccounts() {
     this.soapi.getDefaultAccounts().subscribe((res) => {
       this.defaultAccounts = JSON.parse(res);
@@ -911,7 +916,7 @@ export class CreditnoteComponent implements OnInit {
       }
       this.calculate();
     }
-  }  
+  }
 
   emptyGstGrid() {
     this.gstlistData.data.splice(0, this.gstlistData.data.length);
@@ -946,48 +951,46 @@ export class CreditnoteComponent implements OnInit {
     }
   }
 
-
-  emprtyGrid() {   
+  emprtyGrid() {
     this.listData.data.splice(0, this.listData.data.length);
-      this.listData.data = [...this.listData.data]; // new ref!
-      of(this.ELEMENT_DATA).subscribe(
-        (data: iprodutcs[]) => {
-          this.listData = new MatTableDataSource(data);
-          console.log(data);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );      
+    this.listData.data = [...this.listData.data]; // new ref!
+    of(this.ELEMENT_DATA).subscribe(
+      (data: iprodutcs[]) => {
+        this.listData = new MatTableDataSource(data);
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
-  getTotal()
-  {
-    // this.totQty = 0;    
+  getTotal() {
+    // this.totQty = 0;
     // this.totSub = 0;
     // this.totTax = 0;
     // this.totTaxValue = 0;
-    // this.totAmt = 0;    
+    // this.totAmt = 0;
     // for(let i=0;i<this.listData.filteredData.length;i++)
-    // {      
-    //   this.totQty = this.totQty + parseFloat(this.listData.filteredData[i].qty);      
+    // {
+    //   this.totQty = this.totQty + parseFloat(this.listData.filteredData[i].qty);
     //   this.totSub = this.totSub + parseFloat(this.listData.filteredData[i].subtotal);
     //   this.totTax = this.totTax + parseFloat(this.listData.filteredData[i].taxable);
     //   this.totTaxValue = this.totTaxValue + parseFloat(this.listData.filteredData[i].gstvalue);
-    //   this.totAmt = this.totAmt + parseFloat(this.listData.filteredData[i].amount);      
+    //   this.totAmt = this.totAmt + parseFloat(this.listData.filteredData[i].amount);
     // }
-    // this.totQty = this.totQty.toFixed(2);    
+    // this.totQty = this.totQty.toFixed(2);
     // this.totSub = this.totSub.toFixed(2);
     // this.totTax = this.totTax.toFixed(2);
     // this.totTaxValue = this.totTaxValue.toFixed(2);
-    // this.totAmt = this.totAmt.toFixed(2);    
-  } 
-  textBoxCalculation()
-  {
-    for(let i=0;i< this.listData.filteredData.length;i++)
-    {
+    // this.totAmt = this.totAmt.toFixed(2);
+  }
+  textBoxCalculation() {
+    for (let i = 0; i < this.listData.filteredData.length; i++) {
       var qty = this.listData.filteredData[i].qty;
       var qtymt = this.listData.filteredData[i].qtymt;
-      if(qty == ""){qty="0";}      
+      if (qty == '') {
+        qty = '0';
+      }
       var totqty = parseFloat(qty);
       var rate = this.listData.filteredData[i].rate;
       var disc = this.listData.filteredData[i].disc;
@@ -995,77 +998,91 @@ export class CreditnoteComponent implements OnInit {
       var transport = this.listData.filteredData[i].transport;
       var packing = this.listData.filteredData[i].packing;
       var insurence = this.listData.filteredData[i].insurence;
-      if(transport == ""){transport="0";}
-      if(packing == ""){packing="0";}
-      if(insurence == ""){insurence="0";}
+      if (transport == '') {
+        transport = '0';
+      }
+      if (packing == '') {
+        packing = '0';
+      }
+      if (insurence == '') {
+        insurence = '0';
+      }
       this.onCalculation(totqty, rate, disc, gst, i);
     }
-    this.calculate();    
+    this.calculate();
   }
 
-  addDataRow(pcode:any,pname:any,sku:any,hsn:any,godown:any,qty:any,rate:any,disc:any,tax:any) {
+  addDataRow(
+    pcode: any,
+    pname: any,
+    sku: any,
+    hsn: any,
+    godown: any,
+    qty: any,
+    rate: any,
+    disc: any,
+    tax: any
+  ) {
     return new Promise((resolve) => {
       const newRow = {
         id: this.getGUID(),
-        vchno:'1',
+        vchno: '1',
         vchdate: this.invdate,
-        salesbillno:'',
-        salesbilldate:'',
-        customercode:'',
+        salesbillno: '',
+        salesbilldate: '',
+        customercode: '',
         product: pname,
-        productcode:pcode,
+        productcode: pcode,
         sku: sku,
         hsn: hsn,
         godown: godown,
         qty: qty,
         uom: '',
-        rate: rate,    
+        rate: rate,
         transport: 0,
         packing: 0,
-        insurence: 0,    
-        subtotal : 0,
+        insurence: 0,
+        subtotal: 0,
         disc: disc,
         discvalue: 0,
-        taxable:0,
+        taxable: 0,
         gst: tax,
         gstvalue: 0,
         amount: 0,
-        vchcreateddate: new Date,
-        vchstatus:'A',
-        company:'',
-        branch:'',
-        fy:'',                
-        vchtype:''
+        vchcreateddate: new Date(),
+        vchstatus: 'A',
+        company: '',
+        branch: '',
+        fy: '',
+        vchtype: '',
       };
       this.ELEMENT_DATA.push(newRow);
       of(this.ELEMENT_DATA).subscribe(
         (data: iprodutcs[]) => {
-          this.listData = new MatTableDataSource(data);          
+          this.listData = new MatTableDataSource(data);
         },
         (error) => {
           console.log(error);
         }
       );
-      resolve({ action: 'success' });      
+      resolve({ action: 'success' });
     });
   }
 
-  loadSavedSdef(sono:any)
-  {
+  loadSavedSdef(sono: any) {
     this.soapi.getSavedDefSOFields(sono).subscribe((res) => {
-      this.sdef = JSON.parse(res); 
+      this.sdef = JSON.parse(res);
     });
   }
-
 
   additionalCharge: any = 0.0;
-  roundmethod:any="AUTO";
-  
+  roundmethod: any = 'AUTO';
+
   calculate() {
-    this.accremoveAll();    
+    this.accremoveAll();
     //#region variables
     this.subtotal = 0.0;
-    this.additionalCharge = 0.0;   
+    this.additionalCharge = 0.0;
     this.disctotal = 0.0;
     this.nettotal = 0.0;
     var gstAmount = 0.0;
@@ -1090,7 +1107,7 @@ export class CreditnoteComponent implements OnInit {
       var listsub = isNaN(parseFloat(this.listData.filteredData[i].subtotal))
         ? 0
         : parseFloat(this.listData.filteredData[i].subtotal);
-      this.subtotal = sub + listsub;                  
+      this.subtotal = sub + listsub;
       var dis = isNaN(parseFloat(this.disctotal))
         ? 0
         : parseFloat(this.disctotal);
@@ -1100,199 +1117,248 @@ export class CreditnoteComponent implements OnInit {
       this.disctotal = dis + dislist;
 
       //GST
-      if (this.vendorstatecode == '33') {    
-
+      if (this.vendorstatecode == '33') {
         var __gst = this.listData.filteredData[i].gst;
-        var __gstvalue = this.listData.filteredData[i].gstvalue;        
-        var _cgst = (parseFloat(__gst)/2);
-        var _sgst = (parseFloat(__gst)/2);
-        var _cgstvalue = (parseFloat(__gstvalue)/2);
-        var _sgstvalue = (parseFloat(__gstvalue)/2);
+        var __gstvalue = this.listData.filteredData[i].gstvalue;
+        var _cgst = parseFloat(__gst) / 2;
+        var _sgst = parseFloat(__gst) / 2;
+        var _cgstvalue = parseFloat(__gstvalue) / 2;
+        var _sgstvalue = parseFloat(__gstvalue) / 2;
 
-        var _gsttype = "OUTPUT";
-        var _state = "STATE";
-        var _central = "CENTRAL";
-        
+        var _gsttype = 'OUTPUT';
+        var _state = 'STATE';
+        var _central = 'CENTRAL';
+
         //For State Tax
         var fasgst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _state && o.gstper == _sgst
-        );        
+          (o: any) =>
+            o.gsttype == _gsttype && o.taxtype == _state && o.gstper == _sgst
+        );
         //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(fasgst?.ledgercode, _gsttype + " SGST @ " + _sgst, 0, _state);        
+        this.addAccDataRow(
+          fasgst?.ledgercode,
+          _gsttype + ' SGST @ ' + _sgst,
+          0,
+          _state
+        );
         //GET Previous Value
         prevSGST = parseFloat(
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === fasgst?.ledgercode 
-          ))
-        ].accvalue);
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === fasgst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
         //SET Previous SGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === fasgst?.ledgercode 
-          ))
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === fasgst?.ledgercode
+            )
+          )
         ].accvalue = prevSGST + _sgstvalue;
-       
+
         //For Central Tax
         var facgst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _central && o.gstper == _cgst
-        );        
+          (o: any) =>
+            o.gsttype == _gsttype && o.taxtype == _central && o.gstper == _cgst
+        );
         //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(facgst?.ledgercode, _gsttype + " CGST @ " + _cgst, 0, _central);
+        this.addAccDataRow(
+          facgst?.ledgercode,
+          _gsttype + ' CGST @ ' + _cgst,
+          0,
+          _central
+        );
 
         //GET Previous CGST Value
         prevCGST = parseFloat(
-          this.acclistData.filteredData
-          [
-            this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-              (o) => o.acccode === facgst?.ledgercode 
-            ))
-        ].accvalue);
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === facgst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
 
         //SET Previous SGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === facgst?.ledgercode 
-          ))
-        ].accvalue = prevCGST + _cgstvalue;     
-      } 
-      else if (this.vendorstatecode != '33') {    
-
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === facgst?.ledgercode
+            )
+          )
+        ].accvalue = prevCGST + _cgstvalue;
+      } else if (this.vendorstatecode != '33') {
         var _igst = this.listData.filteredData[i].gst;
         var _igstvalue = this.listData.filteredData[i].gstvalue;
 
-        var _gsttype = "OUTPUT";
-        var _integrated = "INTEGRATED";        
-        
+        var _gsttype = 'OUTPUT';
+        var _integrated = 'INTEGRATED';
+
         //For State Tax
         var faigst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _integrated && o.gstper == _igst
-        );        
+          (o: any) =>
+            o.gsttype == _gsttype &&
+            o.taxtype == _integrated &&
+            o.gstper == _igst
+        );
         //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(faigst?.ledgercode, _gsttype + " IGST @ " + _igst, 0, _integrated);
-        
+        this.addAccDataRow(
+          faigst?.ledgercode,
+          _gsttype + ' IGST @ ' + _igst,
+          0,
+          _integrated
+        );
+
         //GET Previous IGST Value
         prevIGST = parseFloat(
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === faigst?.ledgercode 
-          ))
-        ].accvalue);           
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === faigst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
 
         //SET Previous IGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === faigst?.ledgercode 
-          ))
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === faigst?.ledgercode
+            )
+          )
         ].accvalue = prevIGST + parseFloat(_igstvalue);
-              
       }
-      gstAmount = gstAmount + parseFloat(this.listData.filteredData[i].gstvalue);
+      gstAmount =
+        gstAmount + parseFloat(this.listData.filteredData[i].gstvalue);
     }
 
-    //Additional 
-    for (let i = 0; i < this.gstlistData.filteredData.length; i++) 
-    {
-      if (this.vendorstatecode == '33') 
-      {                        
-        var __gst = this.gstlistData.filteredData[i].accgst;
-        var __gstvalue = this.gstlistData.filteredData[i].accgstvalue;
-        var __gst = isNaN(parseFloat(__gst)) ? '0' : __gst;            
-
-        var _cgst = (parseFloat(__gst)/2);
-        var _sgst = (parseFloat(__gst)/2);
-        var _cgstvalue = (parseFloat(__gstvalue)/2);
-        var _sgstvalue = (parseFloat(__gstvalue)/2);
-
-        var _gsttype = "OUTPUT";
-        var _state = "STATE";
-        var _central = "CENTRAL";
-        
-        //For State Tax
-        var fasgst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _state && o.gstper == _sgst
-        );        
-        //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(fasgst?.ledgercode, _gsttype + " SGST @ " + _sgst, 0, _state);        
-        //GET Previous Value
-        prevSGST = parseFloat(
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === fasgst?.ledgercode 
-          ))
-        ].accvalue);
-        //SET Previous SGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === fasgst?.ledgercode 
-          ))
-        ].accvalue = prevSGST + _sgstvalue;
-       
-        //For Central Tax
-        var facgst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _central && o.gstper == _cgst
-        );        
-        //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(facgst?.ledgercode, _gsttype + " CGST @ " + _cgst, 0, _central);
-
-        //GET Previous CGST Value
-        prevCGST = parseFloat(
-          this.acclistData.filteredData
-          [
-            this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-              (o) => o.acccode === facgst?.ledgercode 
-            ))
-        ].accvalue);
-
-        //SET Previous SGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === facgst?.ledgercode 
-          ))
-        ].accvalue = prevSGST + _cgstvalue;     
-
-      } 
-      else if (this.vendorstatecode != '33') 
-      {        
+    //Additional
+    for (let i = 0; i < this.gstlistData.filteredData.length; i++) {
+      if (this.vendorstatecode == '33') {
         var __gst = this.gstlistData.filteredData[i].accgst;
         var __gstvalue = this.gstlistData.filteredData[i].accgstvalue;
         var __gst = isNaN(parseFloat(__gst)) ? '0' : __gst;
-       
-        var _gsttype = "OUTPUT";
-        var _integrated = "INTEGRATED";        
-        
+
+        var _cgst = parseFloat(__gst) / 2;
+        var _sgst = parseFloat(__gst) / 2;
+        var _cgstvalue = parseFloat(__gstvalue) / 2;
+        var _sgstvalue = parseFloat(__gstvalue) / 2;
+
+        var _gsttype = 'OUTPUT';
+        var _state = 'STATE';
+        var _central = 'CENTRAL';
+
+        //For State Tax
+        var fasgst = this.array.find(
+          (o: any) =>
+            o.gsttype == _gsttype && o.taxtype == _state && o.gstper == _sgst
+        );
+        //Ledger code, ledger Name, gst Value, KEY
+        this.addAccDataRow(
+          fasgst?.ledgercode,
+          _gsttype + ' SGST @ ' + _sgst,
+          0,
+          _state
+        );
+        //GET Previous Value
+        prevSGST = parseFloat(
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === fasgst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
+        //SET Previous SGST Value
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === fasgst?.ledgercode
+            )
+          )
+        ].accvalue = prevSGST + _sgstvalue;
+
+        //For Central Tax
+        var facgst = this.array.find(
+          (o: any) =>
+            o.gsttype == _gsttype && o.taxtype == _central && o.gstper == _cgst
+        );
+        //Ledger code, ledger Name, gst Value, KEY
+        this.addAccDataRow(
+          facgst?.ledgercode,
+          _gsttype + ' CGST @ ' + _cgst,
+          0,
+          _central
+        );
+
+        //GET Previous CGST Value
+        prevCGST = parseFloat(
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === facgst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
+
+        //SET Previous SGST Value
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === facgst?.ledgercode
+            )
+          )
+        ].accvalue = prevSGST + _cgstvalue;
+      } else if (this.vendorstatecode != '33') {
+        var __gst = this.gstlistData.filteredData[i].accgst;
+        var __gstvalue = this.gstlistData.filteredData[i].accgstvalue;
+        var __gst = isNaN(parseFloat(__gst)) ? '0' : __gst;
+
+        var _gsttype = 'OUTPUT';
+        var _integrated = 'INTEGRATED';
+
         //For State Tax
         var faigst = this.array.find(
-          (o:any) => o.gsttype == _gsttype && o.taxtype == _integrated && o.gstper == _igst
-        );        
+          (o: any) =>
+            o.gsttype == _gsttype &&
+            o.taxtype == _integrated &&
+            o.gstper == _igst
+        );
         //Ledger code, ledger Name, gst Value, KEY
-        this.addAccDataRow(faigst?.ledgercode, _gsttype + " IGST @ " + _igst, 0, _integrated);
-        
+        this.addAccDataRow(
+          faigst?.ledgercode,
+          _gsttype + ' IGST @ ' + _igst,
+          0,
+          _integrated
+        );
+
         //GET Previous IGST Value
         prevSGST = parseFloat(
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === faigst?.ledgercode 
-          ))
-        ].accvalue);
+          this.acclistData.filteredData[
+            this.acclistData.filteredData.indexOf(
+              this.acclistData.filteredData.find(
+                (o) => o.acccode === faigst?.ledgercode
+              )
+            )
+          ].accvalue
+        );
 
         //SET Previous IGST Value
-        this.acclistData.filteredData
-        [
-          this.acclistData.filteredData.indexOf(this.acclistData.filteredData.find(
-            (o) => o.acccode === faigst?.ledgercode 
-          ))
+        this.acclistData.filteredData[
+          this.acclistData.filteredData.indexOf(
+            this.acclistData.filteredData.find(
+              (o) => o.acccode === faigst?.ledgercode
+            )
+          )
         ].accvalue = prevSGST + _igstvalue;
-
       }
       gstAmount =
         gstAmount + parseFloat(this.gstlistData.filteredData[i].accgstvalue);
@@ -1303,9 +1369,9 @@ export class CreditnoteComponent implements OnInit {
       let val = this.gstlistData.filteredData[i].accvalue;
       if (val == '' || val == undefined) {
         val = '0';
-      }      
+      }
       this.additionalCharge = this.additionalCharge + parseFloat(val);
-    }   
+    }
 
     if (this.vendorstatecode == '33') {
       this.cgsttotal = (gstAmount / 2).toFixed(2);
@@ -1330,7 +1396,10 @@ export class CreditnoteComponent implements OnInit {
     }
 
     this.nettotal =
-      (parseFloat(this.subtotal) + parseFloat(this.additionalCharge) - parseFloat(this.disctotal)) + gstAmount;     
+      parseFloat(this.subtotal) +
+      parseFloat(this.additionalCharge) -
+      parseFloat(this.disctotal) +
+      gstAmount;
     if (
       this.nettotal == '' ||
       this.nettotal == undefined ||
@@ -1371,25 +1440,22 @@ export class CreditnoteComponent implements OnInit {
         per = '0';
       }
       this.tcsrate = per;
-    } 
-    //Round off  
-    if(this.roundmethod == "AUTO")      
-    {
+    }
+    //Round off
+    if (this.roundmethod == 'AUTO') {
       var rounded = Math.round(parseFloat(this.closingtotal));
-      var roundedvalue = rounded - parseFloat(this.closingtotal);      
+      var roundedvalue = rounded - parseFloat(this.closingtotal);
       this.roundedoff = roundedvalue.toFixed(2);
       this.closingtotal = rounded.toFixed(2);
-    }
-    else
-    {
-      this.closingtotal = parseFloat(this.closingtotal) + parseFloat(this.roundedoff);
+    } else {
+      this.closingtotal =
+        parseFloat(this.closingtotal) + parseFloat(this.roundedoff);
     }
 
     //Removing Zero Values
     this.acclistData.data.forEach((e, index) => {
-      if(parseFloat(e.accvalue) == 0)
-      {
-        console.log("Zero find", index);
+      if (parseFloat(e.accvalue) == 0) {
+        console.log('Zero find', index);
         this.acclistData.data.splice(index);
         this.acclistData.data = [...this.acclistData.data]; // new ref!
         of(this.ACC_DATA).subscribe(
@@ -1401,9 +1467,9 @@ export class CreditnoteComponent implements OnInit {
           }
         );
       }
-    });       
+    });
     // var find = this.acclistData.data.filter((e:any)=> e.accvalue!=0);
-    // this.acclistData = new MatTableDataSource(find);    
+    // this.acclistData = new MatTableDataSource(find);
     // console.log(this.acclistData.filteredData);
     // console.log(this.listData.filteredData);
     // console.log(this.gstlistData.filteredData);
@@ -1418,7 +1484,7 @@ export class CreditnoteComponent implements OnInit {
       (error) => {
         console.log(error);
       }
-    );        
+    );
   }
   gotoList() {
     this.router.navigateByUrl('credit-note');
@@ -1448,7 +1514,7 @@ export class CreditnoteComponent implements OnInit {
   }
 
   vendorChanged(event: any, data: any) {
-    if (event.isUserInput == true) {     
+    if (event.isUserInput == true) {
       this.selectedvendor = data;
       this.vendorcode = data.LedgerCode.toString();
       this.vendorname = data.CompanyDisplayName;
@@ -1559,7 +1625,6 @@ export class CreditnoteComponent implements OnInit {
     return true;
   }
 
- 
   clear() {
     this.getMaxInvoiceNo();
     // this.callChildFunction();
@@ -1603,7 +1668,7 @@ export class CreditnoteComponent implements OnInit {
     this.tcsvalue = '';
     //this.sdef.efieldvalue = '';
     this.removeAll();
-    this.calculate();    
+    this.calculate();
   }
   removeAll() {
     this.listData.data.splice(0, this.listData.data.length);
@@ -1645,8 +1710,8 @@ export class CreditnoteComponent implements OnInit {
         hsn: '',
         godown: '',
         qty: 0,
-        uom: '',        
-        rate: 0,       
+        uom: '',
+        rate: 0,
         subtotal: 0,
         disc: 0,
         discvalue: 0,
@@ -1658,7 +1723,7 @@ export class CreditnoteComponent implements OnInit {
         vchstatus: 'A',
         company: '',
         branch: '',
-        fy: '',              
+        fy: '',
         vchtype: '',
       };
       this.ELEMENT_DATA.push(newRow);
@@ -1692,94 +1757,93 @@ export class CreditnoteComponent implements OnInit {
     }
   }
 
-  insertCRDetails()
-  {
-    if(this.billno == undefined || this.billno == ""){this.billno="0";}
-    return new Promise((resolve) => { 
-      this.dataSource.forEach(element => {
-        element.vchno = this.invno,
-        element.vchdate = this.invdate,
-        element.id = this.getGUID(),
-        element.customercode = this.vendorcode,
-        element.branch = this._branch,
-        element.company = this._company, 
-        element.fy = this._fy,
-        element.salesbillno = this.billno,
-        element.salesbilldate = this.billdate
-      });   
+  insertCRDetails() {
+    if (this.billno == undefined || this.billno == '') {
+      this.billno = '0';
+    }
+    return new Promise((resolve) => {
+      this.dataSource.forEach((element) => {
+        (element.vchno = this.invno),
+          (element.vchdate = this.invdate),
+          (element.id = this.getGUID()),
+          (element.customercode = this.vendorcode),
+          (element.branch = this._branch),
+          (element.company = this._company),
+          (element.fy = this._fy),
+          (element.salesbillno = this.billno),
+          (element.salesbilldate = this.billdate);
+      });
       this.dataSource.forEach((element, index) => {
         var amount = element.amount;
-        if(amount === 0)
-        {
-          this.dataSource.splice(index,1);
+        if (amount === 0) {
+          this.dataSource.splice(index, 1);
         }
-      });       
-      this.crapi.Insert_Bulk_Sales_Details(this.dataSource).subscribe(res=>{                             
+      });
+      this.crapi.Insert_Bulk_Sales_Details(this.dataSource).subscribe((res) => {
         resolve({ action: 'success' });
-      });   
-    }); 
+      });
+    });
   }
-  
-  insertCRNote()
-  {    
-    return new Promise((resolve) => { 
+
+  insertCRNote() {
+    return new Promise((resolve) => {
       var postData = {
-        id : this.getGUID(),
+        id: this.getGUID(),
         crid: this.crid,
-        vchno : this.invno,
-        vchdate : this.invdate,
-        salesbillno : this.billno,
-        salesbilldate : this.billdate,
-        vchtype : this.vchtype,       
-        customercode : this.vendorcode,
-        customername : this.vendorname,
-        refno : this.refno,
+        vchno: this.invno,
+        vchdate: this.invdate,
+        salesbillno: this.billno,
+        salesbilldate: this.billdate,
+        vchtype: this.vchtype,
+        customercode: this.vendorcode,
+        customername: this.vendorname,
+        refno: this.refno,
         salerefname: this.salerefname,
-        subtotal : this.subtotal,
-        discounttotal :this.disctotal,
-        cgsttotal : this.cgsttotal,
-        sgsttotal : this.sgsttotal,
-        igsttotal : this.igsttotal,       
-        roundedoff : this.roundedoff,
-        tcsRate : this.tcsrate,
-        tcsValue : this.tcsvalue,
-        net : this.nettotal,
-        vchcreateddate : this.invdate,
+        subtotal: this.subtotal,
+        discounttotal: this.disctotal,
+        cgsttotal: this.cgsttotal,
+        sgsttotal: this.sgsttotal,
+        igsttotal: this.igsttotal,
+        roundedoff: this.roundedoff,
+        tcsRate: this.tcsrate,
+        tcsValue: this.tcsvalue,
+        net: this.nettotal,
+        vchcreateddate: this.invdate,
         vchstatus: 'A',
         company: this._company,
         branch: this._branch,
-        fy: this._fy,                
-        remarks : this.remarks,
-        invoicecopy : this.invoicecopy       
-      }
-      this.crapi.Insert_Sales(postData).subscribe(res=>{
+        fy: this._fy,
+        remarks: this.remarks,
+        invoicecopy: this.invoicecopy,
+      };
+      this.crapi.Insert_Sales(postData).subscribe((res) => {
         resolve({ action: 'success' });
-      });        
-    });   
+      });
+    });
   }
 
   submit() {
-    this.calculate();    
+    this.calculate();
     setTimeout(() => {
       var res = this.validate();
       console.log(res);
       if (res == true) {
         if (this.form.valid) {
           this.loading = true;
-            this.getMaxInvoiceNo().then(() => {
-              this.insertCRNote().then(() => {              
-                this.insertCRDetails().then(() => {                    
-                    this.insertOverDue().then(() => {              
-                      this.insertGstData().then(() => {
-                        this.showSuccessMsg();                                          
-                    });
+          this.getMaxInvoiceNo().then(() => {
+            this.insertCRNote().then(() => {
+              this.insertCRDetails().then(() => {
+                this.insertOverDue().then(() => {
+                  this.insertGstData().then(() => {
+                    this.showSuccessMsg();
                   });
-                });              
+                });
               });
             });
+          });
         }
       }
-    },100);
+    }, 100);
   }
   showSuccessMsg() {
     let dialogRef = this.dialog.open(SuccessmsgComponent, {
@@ -1792,7 +1856,6 @@ export class CreditnoteComponent implements OnInit {
       //this.eitemname?.nativeElement.focus();
     });
   }
- 
 
   insertOverDue() {
     return new Promise((resolve) => {
@@ -1803,7 +1866,7 @@ export class CreditnoteComponent implements OnInit {
         vchno: this.invno.toString(),
         vchdate: this.invdate,
         ledgercode: this.vendorcode,
-        amount:0,
+        amount: 0,
         received: 0,
         returned: this.closingtotal,
         dueon: this.invdate,

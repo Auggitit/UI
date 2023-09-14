@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sales-order-list',
@@ -136,29 +137,75 @@ export class SalesOrderListComponent implements OnInit {
   }
 
   onClickEdit(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'EditData',
-        contentText: 'Do You Want To Modify Data ?',
+        contentText: msg,
       },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.router.navigateByUrl('soupdate/' + encodeURIComponent(data.sono));
-      }
-    });
+    if (data.pending == 0) {
+      dialogRef.afterClosed().subscribe(() => {});
+    } else {
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.router.navigateByUrl(
+            'soupdate/' + encodeURIComponent(data.sono)
+          );
+        }
+      });
+    }
   }
 
-  onClickDelete() {
-    console.log('Clicked Delete');
+  onClickDelete(data: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
         iconToDisplay: 'DeleteFile',
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.salesOrderApi
+          .Delete_SO(data.sono, data.sotype, data.branch, data.fy)
+          .subscribe((res) => {
+            this.salesOrderApi
+              .Delete_SODetails(data.sono, data.sotype, data.branch, data.fy)
+              .subscribe((res) => {
+                this.salesOrderApi
+                  .Delete_SOCusFields(
+                    data.sono,
+                    data.sotype,
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.salesOrderApi
+                      .deteleAllOtherLedger(
+                        data.sono,
+                        data.sotype,
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Deleted!',
+                          text: 'SO Deleted Successfully',
+                        });
+                        this.loading = false;
+                        this.loadData(data);
+                      });
+                  });
+              });
+          });
+      }
+    });
   }
 
   onClickCancelOrder() {
@@ -245,8 +292,8 @@ export class SalesOrderListComponent implements OnInit {
     let rowIndex = 0;
     let rowCount = 0;
     let sortedData = serverData.result.sort((a: any, b: any) => {
-      const nameA = Number(a.sono.split('/')[0]); // ignore upper and lowercase
-      const nameB = Number(b.sono.split('/')[0]); // ignore upper and lowercase
+      const nameA = Number(a.sono.split('/')[0]);
+      const nameB = Number(b.sono.split('/')[0]);
       if (nameA < nameB) {
         return 1;
       }

@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-service-sales-order-list',
   templateUrl: './service-sales-order-list.component.html',
@@ -245,7 +246,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
     });
   }
 
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -253,7 +254,43 @@ export class ServiceSalesOrderListComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // console.log(data);
+        this.serviceSOApi
+          .Delete_SO(data.sono, data.ssoid, data.branch, data.fy)
+          .subscribe((res) => {
+            this.serviceSOApi
+              .Delete_SODetails(data.sono, data.ssoid, data.branch, data.fy)
+              .subscribe((res) => {
+                this.serviceSOApi
+                  .Delete_SOCusFields(
+                    data.sono,
+                    data.ssoid,
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.serviceSOApi
+                      .deteleAllOtherLedger(
+                        data.sono,
+                        data.ssoid,
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Deleted!',
+                          text: 'SSO  Deleted Successfully',
+                        });
+                        this.loadData(data);
+                      });
+                  });
+              });
+          });
+      }
+    });
   }
 
   onClickCancelOrder() {

@@ -16,6 +16,8 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { PoserviceService } from 'src/app/services/poservice.service';
 import { ViewportScroller } from '@angular/common';
+import Swal from 'sweetalert2';
+import { PoService } from 'src/app/services/po.service';
 
 @Component({
   selector: 'app-sevice-purchase-order',
@@ -71,7 +73,8 @@ export class SevicePurchaseOrderComponent implements OnInit {
     private servicePoApi: PoserviceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public po: PoService
   ) {
     this.servicePoForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -160,7 +163,7 @@ export class SevicePurchaseOrderComponent implements OnInit {
     });
   }
 
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -168,7 +171,37 @@ export class SevicePurchaseOrderComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.servicePoApi
+          .deleteCusFields(data.pono, data.vtype, data.branch, data.fy)
+          .subscribe((res) => {
+            this.servicePoApi
+              .Delete_PODetails(data.pono, data.vtype, data.branch, data.fy)
+              .subscribe((res) => {
+                this.servicePoApi
+                  .Delete_PO(data.pono, data.vtype, data.branch, data.fy)
+                  .subscribe((res) => {
+                    this.po
+                      .deteleAllOtherLedger(
+                        data.pono,
+                        data.vtype,
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Deleted!',
+                          text: 'SO ' + data.pono + ' Deleted Successfully',
+                        });
+                        this.loadData(data);
+                      });
+                  });
+              });
+          });
+      }
+    });
   }
 
   onClickCancelOrder() {

@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-sales-lists',
   templateUrl: './sales-lists.component.html',
@@ -244,7 +245,7 @@ export class SalesListsComponent implements OnInit {
       }
     });
   }
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -254,8 +255,64 @@ export class SalesListsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      console.log(result);
+      if (result) {
+        // console.log(data);
+        this.salesApi
+          .Delete_Sales(data.invno, data.vchtype, data.branch, data.fy)
+          .subscribe((res) => {
+            this.salesApi
+              .Delete_SalesDetails(
+                data.invno,
+                data.vchtype,
+                data.branch,
+                data.fy
+              )
+              .subscribe((res) => {
+                this.salesApi
+                  .Delete_Accounts(
+                    data.invno,
+                    data.vchtype,
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.salesApi
+                      .Delete_SavedDefSalesFields(
+                        data.invno,
+                        data.vchtype,
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        this.salesApi
+                          .Delete_overdue(
+                            data.invno,
+                            data.vchtype,
+                            data.branch,
+                            data.fy
+                          )
+                          .subscribe((res) => {
+                            this.salesApi
+                              .deteleAllLedger(
+                                data.invno,
+                                data.vchtype,
+                                data.branch,
+                                data.fy
+                              )
+                              .subscribe((res) => {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Deleted!',
+                                  text: 'Service SALES  Deleted Successfully',
+                                });
+                                this.loadData(data);
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+      }
     });
   }
   onClickCancelOrder() {

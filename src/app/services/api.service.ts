@@ -7,9 +7,9 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApiService {
-  // URL = 'http://localhost:7037/';
-  //URL = "https://devauggitapi.brositecom.com/";
-  URL = 'https://auggitapi.brositecom.com/';
+  URL = 'https://localhost:7037/';
+  // URL = 'https://devauggitapi.brositecom.com/';
+  // URL = 'https://auggitapi.brositecom.com/';
 
   httpOptions = {
     headers: new HttpHeaders({

@@ -15,6 +15,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { DrnoteService } from 'src/app/services/debit.service';
+import { GstdataService } from 'src/app/services/gstdata.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-debit-note',
@@ -37,6 +39,11 @@ export class DebitNoteComponent implements OnInit {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   loading: boolean = true;
+  _branch: any = '001';
+  _fy: any = '001';
+  _company: any = '001';
+  _fyname: any = '23-24';
+  vchtype: any = 'Debit Note';
   columns: any[] = [
     { title: 'Dr ID', sortable: 0, name: 'drid', needToShow: true },
     { title: 'Voucher No', sortable: 0, name: 'vchno', needToShow: true },
@@ -64,7 +71,8 @@ export class DebitNoteComponent implements OnInit {
     private debitApi: DrnoteService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public gstdataapi: GstdataService
   ) {
     this.debitForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -143,7 +151,7 @@ export class DebitNoteComponent implements OnInit {
     });
   }
 
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -151,7 +159,32 @@ export class DebitNoteComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(data);
+        this.debitApi.Delete_DRN(data.grnno).subscribe((res) => {
+          this.debitApi.Delete_DRNDetails(data.grnno).subscribe((res) => {
+            this.debitApi.Delete_Accounts(data.grnno).subscribe((res) => {
+              this.gstdataapi
+                .Delete_GstData(
+                  data.vchno,
+                  this.vchtype,
+                  this._branch,
+                  this._fy
+                )
+                .subscribe((res) => {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'DN ' + data.pono + ' Deleted Successfully',
+                  });
+                  this.loadData(data);
+                });
+            });
+          });
+        });
+      }
+    });
   }
 
   onClickCancelOrder() {

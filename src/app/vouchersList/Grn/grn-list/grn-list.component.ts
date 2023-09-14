@@ -16,6 +16,8 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { GrnService } from 'src/app/services/grn.service';
 import { ViewportScroller } from '@angular/common';
+import { GstdataService } from 'src/app/services/gstdata.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-grn-list',
@@ -76,7 +78,8 @@ export class GrnListComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     public router: Router,
-    private viewportScroller: ViewportScroller
+    private viewportScroller: ViewportScroller,
+    public gstdataapi: GstdataService
   ) {
     this.grnForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -183,7 +186,7 @@ export class GrnListComponent implements OnInit {
     });
   }
 
-  onClickDelete() {
+  onClickDelete(data: any) {
     console.log('Clicked Delete');
     const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
       data: {
@@ -191,7 +194,60 @@ export class GrnListComponent implements OnInit {
         contentText: 'Do You Want To Delete Data ?',
       },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.grnApi
+          .Delete_GRNDetails(data.grnno, data.vchtype, data.branch, data.fy)
+          .subscribe((res) => {
+            this.grnApi
+              .Delete_GRN(data.grnno, data.vchtype, data.branch, data.fy)
+              .subscribe((res) => {
+                this.grnApi
+                  .Delete_CusdefFields(
+                    data.grnno,
+                    data.vchtype,
+                    data.branch,
+                    data.fy
+                  )
+                  .subscribe((res) => {
+                    this.grnApi
+                      .deteleAllLedger(
+                        data.grnno,
+                        data.vchtype,
+                        data.branch,
+                        data.fy
+                      )
+                      .subscribe((res) => {
+                        this.gstdataapi
+                          .Delete_GstData(
+                            data.grnno,
+                            data.vchtype,
+                            data.branch,
+                            data.fy
+                          )
+                          .subscribe((res) => {
+                            this.grnApi
+                              .Delete_overdue(
+                                data.grnno,
+                                data.vchtype,
+                                data.branch,
+                                data.fy
+                              )
+                              .subscribe((res) => {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Deleted!',
+                                  text: 'Voucher Deleted Successfully!',
+                                });
+                                this.loadData(data);
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+      }
+    });
   }
 
   onClickCancelOrder() {
