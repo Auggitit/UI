@@ -54,6 +54,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   loading: boolean = true;
+  graphMenuItems: any = [];
 
   columns: any[] = [
     { title: 'Order ID', sortable: 0, name: 'sono', needToShow: true },
@@ -308,6 +309,14 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
     };
   }
 
+  onClickGraphMenu(data: any): void {
+    let menuData = data.split('-');
+    let startDate = `04/01/${menuData[0]}`;
+    let endDate = `03/31/${menuData[1]}`;
+    this.form.get('startDate')?.setValue(startDate);
+    this.form.get('endDate')?.setValue(endDate);
+  }
+
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
@@ -336,8 +345,6 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
         lastDateSplit[0].padStart(2, '0') +
         '/' +
         lastDateSplit[2];
-
-      console.log(firstDate, lastDate, 'firssssssssttttttttt date');
     }
     let params = {
       statusId: formValues.reportStatus,
@@ -362,6 +369,7 @@ export class ServiceSalesOrderReportComponent implements OnInit, OnDestroy {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
+        this.graphMenuItems = res.years;
       }
       this.getFilterData(formValues, res);
     });

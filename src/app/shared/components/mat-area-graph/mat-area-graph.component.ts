@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-mat-area-graph',
@@ -16,7 +16,13 @@ import { Component, Input, OnInit } from '@angular/core';
           [matMenuTriggerFor]="threeDotOptions"
         ></i>
         <mat-menu #threeDotOptions="matMenu">
-          <button mat-menu-item>2022-2023</button>
+          <button
+            *ngFor="let data of menuItems; let i = index"
+            mat-menu-item
+            (click)="onClickMenu(data)"
+          >
+            {{ data }}
+          </button>
         </mat-menu>
       </div>
       <apx-chart
@@ -34,7 +40,15 @@ export class MatAreaGraphComponent implements OnInit {
   @Input('chart-options') public chartOptions: any = {};
   @Input('title') title: string = '';
   @Input('subTitle') subTitle: string = '';
+  @Input() menuItems!: any;
+  @Output() onClickGraphMenu = new EventEmitter();
+
   constructor() {}
 
   ngOnInit(): void {}
+
+  onClickMenu(event: any): void {
+    console.log(event, 'event');
+    this.onClickGraphMenu.emit(event);
+  }
 }

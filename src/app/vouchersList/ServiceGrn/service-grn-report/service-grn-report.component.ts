@@ -55,6 +55,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
   selectAllCheckbox!: FormControlName;
   selectAll = { isSelected: false };
   loading: boolean = true;
+  graphMenuItems: any = [];
 
   columns: any[] = [
     { title: 'Order ID', sortable: 0, name: 'pono', needToShow: true },
@@ -307,6 +308,14 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
     };
   }
 
+  onClickGraphMenu(data: any): void {
+    let menuData = data.split('-');
+    let startDate = `04/01/${menuData[0]}`;
+    let endDate = `03/31/${menuData[1]}`;
+    this.form.get('startDate')?.setValue(startDate);
+    this.form.get('endDate')?.setValue(endDate);
+  }
+
   loadData(formValues?: any, isInitialFetchData: boolean = false) {
     let firstDate;
     let lastDate;
@@ -319,18 +328,22 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
     if (formValues?.startDate && formValues?.endDate) {
       let firstDateformat = new Date(formValues?.startDate);
       let lastDateformat = new Date(formValues?.endDate);
-      let firstDateSplit = firstDateformat
-        ?.toISOString()
-        .split('T')[0]
-        .split('-');
-      let lastDateSplit = lastDateformat
-        ?.toISOString()
-        .split('T')[0]
-        .split('-');
+      let firstDateSplit = firstDateformat?.toLocaleDateString().split('/');
+      let lastDateSplit = lastDateformat?.toLocaleDateString().split('/');
+
       firstDate =
-        firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
+        firstDateSplit[1].padStart(2, '0') +
+        '/' +
+        firstDateSplit[0].padStart(2, '0') +
+        '/' +
+        firstDateSplit[2];
+
       lastDate =
-        lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
+        lastDateSplit[1].padStart(2, '0') +
+        '/' +
+        lastDateSplit[0].padStart(2, '0') +
+        '/' +
+        lastDateSplit[2];
     }
     let params = {
       statusId: formValues.reportStatus,
@@ -358,6 +371,7 @@ export class ServiceGrnReportComponent implements OnInit, OnDestroy {
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
         this.getFilterData(formValues, res);
+        this.graphMenuItems = res.years;
       }
     });
   }

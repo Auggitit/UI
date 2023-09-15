@@ -36,6 +36,8 @@
             [chart-options]="chartOptions"
             title="Credit Note"
             subTitle="Credit Note Summary"
+            [menuItems]="graphMenuItems"
+            (onClickGraphMenu)="onClickGraphMenu($event)"
           ></app-mat-area-graph>
         </div>
       </div>

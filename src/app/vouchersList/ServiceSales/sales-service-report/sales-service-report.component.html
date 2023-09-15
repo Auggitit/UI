@@ -37,6 +37,8 @@
             [chart-options]="chartOptions"
             title="Service Sales"
             subTitle="Service Sales Summary"
+            [menuItems]="graphMenuItems"
+            (onClickGraphMenu)="onClickGraphMenu($event)"
           ></app-mat-area-graph>
         </div>
       </div>
