@@ -222,7 +222,7 @@ export class PoserviceService {
       );
   }
 
-  getServicePoDetail({ id }: { id: string }) {
+  getServicePoDetail(id: string) {
     let params = new HttpParams();
     if (id) {
       params = params.append('id', id);

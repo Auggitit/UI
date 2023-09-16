@@ -93,7 +93,7 @@
               <!-- href="/sales-order-details" -->
               <a
                 (click)="onClickViewMore(data)"
-                style="font-weight: 600; color: #13b2e4"
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
                 >{{ data.drid }}</a
               >
             </td>
@@ -108,7 +108,7 @@
             >
               <a
                 (click)="onClickViewMore(data)"
-                style="font-weight: 600; color: #13b2e4"
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
                 >{{ data.vchno }}</a
               >
             </td>
@@ -125,7 +125,11 @@
               <p class="m-0" style="font-weight: 600; color: #13b2e4">
                 {{ data.vendorname }}
               </p>
-              <a href="" style="color: #667085">{{ data.vchno }}</a>
+              <a
+                (click)="onClickViewMore(data)"
+                style="color: #667085; cursor: pointer"
+                >{{ data.drid }}</a
+              >
             </td>
 
             <td

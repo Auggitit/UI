@@ -88,11 +88,11 @@ export class SalesOrderDetailsComponent implements OnInit {
   downloadAsPDF() {
     console.log('clicked');
     var data = this.contentToSave.nativeElement;
-    html2canvas(data, { scale: 2 }).then((canvas) => {
+    html2canvas(data).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
       pdf.text(' Sales Order Details', 200, 50);
-      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
+      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 600);
       pdf.addPage();
       pdf.save('Sales Details Report.pdf');
     });

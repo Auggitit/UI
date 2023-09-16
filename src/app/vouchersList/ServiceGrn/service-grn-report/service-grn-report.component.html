@@ -115,7 +115,7 @@
             >
               <a
                 (click)="onClickGrnNo(data)"
-                style="color: #13b2e4; font-weight: 600"
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
                 >{{ data.grnno }}</a
               >
             </td>
@@ -128,9 +128,11 @@
                 max-width: 106px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.refno
-              }}</a>
+              <a
+                href=""
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
+                >{{ data.refno }}</a
+              >
             </td>
             <td
               *ngIf="columns[2].needToShow"
@@ -144,9 +146,11 @@
               <p class="m-0" style="color: #13b2e4; font-weight: 600">
                 {{ data.vendorname }}
               </p>
-              <a href="" style="color: #667085; line-height: 2">{{
-                data.pono
-              }}</a>
+              <a
+                (click)="onClickGrnNo(data)"
+                style="color: #667085; line-height: 2; cursor: pointer"
+                >{{ data.grnno }}</a
+              >
             </td>
             <td
               *ngIf="columns[3].needToShow"

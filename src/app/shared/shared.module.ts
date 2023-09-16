@@ -42,6 +42,7 @@ import { TableColumnDisplayFilterComponent } from './components/table-column-dis
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AddressCardComponent } from './components/address-card/address-card.component';
 import { DetailsTableComponent } from './components/details-table/details-table.component';
+import { ReferenceDetailsComponent } from './components/reference-details/reference-details.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { DetailsTableComponent } from './components/details-table/details-table.
     TableColumnDisplayFilterComponent,
     AddressCardComponent,
     DetailsTableComponent,
+    ReferenceDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -102,6 +104,7 @@ import { DetailsTableComponent } from './components/details-table/details-table.
     MatDialogModule,
     AddressCardComponent,
     DetailsTableComponent,
+    ReferenceDetailsComponent,
   ],
 })
 export class SharedModule {}

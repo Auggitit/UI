@@ -93,9 +93,9 @@ export class DebitNoteDetailsComponent implements OnInit {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
       pdf.text(' Debit Note Details', 200, 50);
-      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
+      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 600);
       pdf.addPage();
-      pdf.save('Debit Details Report.pdf');
+      pdf.save('DN Report.pdf');
     });
   }
 }

@@ -102,59 +102,17 @@
         ></app-address-card>
         <app-address-card
           [addressHeader]="'DELIVERY ADDRESSS'"
-          [addressTitle]="'LTI Limited'"
+          [addressTitle]="purchaseOrderData.companydisplayname"
           [addressLine1]="deliveryAddressLine1"
           [addressLine2]="deliveryAddressLine2"
           [gstNumber]="purchaseOrderData.gstno"
           [contactNumber]="purchaseOrderData.contactphone"
         ></app-address-card>
       </div>
-      <div
-        style="
-          background-color: white;
-          border-radius: 8px;
-          padding: 20px;
-          border: 1px solid #e0e2e7;
-          margin-top: 4px;
-        "
-      >
-        <div>
-          <p style="color: #333843; font-size: 0.875rem; font-weight: 700">
-            Reference : SELVA KUMAR S
-          </p>
-          <p style="color: #667085; font-size: 0.875rem; font-weight: 400">
-            April 25, 2023 6:30 PM<span style="color: rgba(102, 112, 133, 0.5)">
-              from </span
-            >Default Sales Channel
-          </p>
-        </div>
-        <div
-          class="d-flex flex-wrap justify-content-between"
-          style="align-items: center; margin-top: 30px"
-        >
-          <div>
-            <p style="font-size: 0.875rem; font-weight: 700; color: #333843">
-              Contact Person : SHIVA R S
-            </p>
-            <p style="font-size: 0.875rem; font-weight: 7 00; color: #333843">
-              Contact Number : +919012345678
-            </p>
-          </div>
-          <div>
-            <p style="font-size: 0.9375rem; font-weight: 700; color: #000000">
-              Transport: Not Applicable
-            </p>
-            <div class="d-flex flex-wrap justify-content-between">
-              <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-                Order Quantity
-              </p>
-              <p style="font-size: 0.875rem; font-weight: 400; color: #667085">
-                - {{ productsData.length }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-reference-details
+        [totalCount]="productsData.length"
+        [refNumber]="purchaseOrderData.refno"
+      ></app-reference-details>
       <div
         style="
           background-color: white;

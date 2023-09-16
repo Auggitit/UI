@@ -71,19 +71,19 @@ export class PurchaseDetailsComponent implements OnInit {
       this.iGst = Number(res.igstTotal);
       this.Total = Number(res.net);
 
-      let companyAddress = this.purchaseOrderData.companyaddress
-        .replace(/[\n]/g, '')
-        .replace(/, +|,+/g, ',')
-        .split(',');
-      let deliveryAddress = this.purchaseOrderData.deliveryaddress
-        .replace(/[\n]/g, '')
-        .replace(/, +|,+/g, ',')
-        .split(',');
+      let companyAddress = this.purchaseOrderData.companyaddress;
+      // .replace(/[\n]/g, '')
+      // .replace(/, +|,+/g, ',')
+      // .split(',');
+      let deliveryAddress = this.purchaseOrderData.companyaddress;
+      // .replace(/[\n]/g, '')
+      // .replace(/, +|,+/g, ',')
+      // .split(',');
 
-      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
-      this.addressLine2 = companyAddress.slice(2).join(', ');
-      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
-      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
+      this.addressLine1 = companyAddress;
+      this.addressLine2 = companyAddress;
+      this.deliveryAddressLine1 = deliveryAddress;
+      this.deliveryAddressLine2 = deliveryAddress;
     });
   }
 
@@ -93,8 +93,8 @@ export class PurchaseDetailsComponent implements OnInit {
     html2canvas(data, { scale: 2 }).then((canvas) => {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
-      pdf.text(' Purchase Details', 200, 50);
-      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
+      pdf.text('Purchase Details', 200, 50);
+      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 600);
       pdf.addPage();
       pdf.save('Purchase Details Report.pdf');
     });

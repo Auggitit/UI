@@ -97,7 +97,7 @@ export class ServiceSalesDetailsComponent implements OnInit {
       const contentDataURL = canvas.toDataURL('image/png');
       let pdf = new jsPDF('p', 'pt', 'a4');
       pdf.text('Service SO Details', 200, 50);
-      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 880);
+      pdf.addImage(contentDataURL, 'PNG', 50, 100, 510, 600);
       pdf.addPage();
       pdf.save('Service SO Details Report.pdf');
     });

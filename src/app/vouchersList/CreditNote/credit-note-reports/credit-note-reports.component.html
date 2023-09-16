@@ -110,8 +110,8 @@
             >
               <a
                 (click)="onClickVchNo(data)"
-                style="color: #13b2e4; font-weight: 600"
-                >{{ data.vchno }}</a
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
+                >{{ data.crid }}</a
               >
             </td>
             <td
@@ -123,9 +123,11 @@
                 max-width: 106px;
               "
             >
-              <a href="" style="color: #13b2e4; font-weight: 600">{{
-                data.crid
-              }}</a>
+              <a
+                href=""
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
+                >{{ data.vchno }}</a
+              >
             </td>
             <td
               *ngIf="columns[2].needToShow"
@@ -136,12 +138,17 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="m-0" style="color: #13b2e4; font-weight: 600">
+              <p
+                class="m-0"
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
+              >
                 {{ data.customername }}
               </p>
-              <a href="" style="color: #667085; line-height: 2">{{
-                data.vchno
-              }}</a>
+              <a
+                (click)="onClickVchNo(data)"
+                style="color: #667085; line-height: 2; cursor: pointer"
+                >{{ data.crid }}</a
+              >
             </td>
             <td
               *ngIf="columns[3].needToShow"

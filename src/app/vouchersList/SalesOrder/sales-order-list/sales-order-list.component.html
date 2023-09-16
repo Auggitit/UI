@@ -92,7 +92,7 @@
             >
               <a
                 (click)="onClickViewMore(data)"
-                style="font-weight: 600; color: #13b2e4"
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
                 >{{ data.sono }}</a
               >
             </td>
@@ -105,10 +105,17 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="m-0" style="font-weight: 600; color: #13b2e4">
+              <p
+                class="m-0"
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
+              >
                 {{ data.customername }}
               </p>
-              <a href="" style="color: #667085">{{ data.sono }}</a>
+              <a
+                (click)="onClickViewMore(data)"
+                style="font-weight: 600; cursor: pointer"
+                >{{ data.sono }}</a
+              >
             </td>
             <td
               *ngIf="columns[2].needToShow"

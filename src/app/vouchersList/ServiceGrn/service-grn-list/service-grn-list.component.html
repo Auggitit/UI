@@ -93,7 +93,7 @@
             >
               <a
                 (click)="onClickViewMore(data)"
-                style="font-weight: 600; color: #13b2e4"
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
                 >{{ data.grnno }}</a
               >
             </td>
@@ -109,7 +109,11 @@
               <p class="m-0" style="font-weight: 600; color: #13b2e4">
                 {{ data.vendorname }}
               </p>
-              <a href="" style="color: #667085">{{ data.grnno }}</a>
+              <a
+                (click)="onClickViewMore(data)"
+                style="color: #667085; cursor: pointer"
+                >{{ data.grnno }}</a
+              >
             </td>
             <td
               *ngIf="columns[2].needToShow"
@@ -173,9 +177,9 @@
                 max-width: 128px;
               "
             >
-              <a href="" style="font-weight: 600; color: #13b2e4">{{
-                data.orderedvalue | currency : "INR"
-              }}</a>
+              <p style="font-weight: 600; color: #13b2e4">
+                {{ data.orderedvalue | currency : "INR" }}
+              </p>
             </td>
             <td
               *ngIf="columns[7].needToShow"
