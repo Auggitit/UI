@@ -1,0 +1,135 @@
+<div class="content-wrapper">
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="pb-3">
+      <app-reports-header
+        title="CREATE STOCK CATEGORY"
+        [searchField]="true"
+        [reportFormGroupName]="categoryForm"
+        [saveTypesOptions]="saveAsOptions"
+        [SelectSaveOptions]="'SelectSaveOptions'"
+        buttonTitle="List of Stock Category"
+        (onClickCreateButton)="onClickButton()"
+      ></app-reports-header>
+    </div>
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-bottom: 4px;
+      "
+    >
+      <form [formGroup]="categoryForm">
+        <div class="row">
+          <div class="col-12">
+            <p style="font-size: 1.125rem; font-weight: 600; color: black">
+              ID #{{ catcode }}
+            </p>
+            <div class="p-0 d-flex justify-content-between col-12">
+              <div class="col-6">
+                <app-mat-input
+                  #ename
+                  (keyup.enter)="catNameEnter($event)"
+                  labelText="Category Name"
+                  [placeholderText]="'Name'"
+                  formControlName="ccatname"
+                  [modelName]="catname"
+                ></app-mat-input>
+              </div>
+
+              <div
+                class="col-6 d-flex mb-0 align-items-center justify-content-between"
+              >
+                <p style="color: #667085; font-weight: 600">Category Name</p>
+                <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                >
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                    style="width: 100%"
+                  >
+                    <mat-select
+                      #eunder
+                      placeholder="Category Name"
+                      formControlName="ccatunder"
+                      [(ngModel)]="catundercode"
+                      [value]="catundercode"
+                      (selectionChange)="changeCategory($event)"
+                    >
+                      <mat-option
+                        *ngFor="let item of savedData"
+                        [value]="item.catcode"
+                        >{{ item.catname }}</mat-option
+                      >
+                    </mat-select>
+                    <!-- <input type="text" (keyup.enter)="catUnderEnter($event)" formControlName="ccatunder"  [(ngModel)] = "catundercode" class="form-control form-control-sm" placeholder="">       -->
+                    <small
+                      *ngIf="
+                        categoryForm.controls['ccatunder'].dirty &&
+                        categoryForm.hasError('required', 'ccatunder')
+                      "
+                      class="text-danger"
+                      >Category Under Required!</small
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="row mt-4"
+              style="
+                align-items: flex-end;
+                justify-content: flex-end;
+                gap: 10px;
+              "
+            >
+              <button
+                #esave
+                [disabled]="loading"
+                style="
+                  margin-right: 5px;
+                  background-color: #419fc7;
+                  border: 1px solid #419fc7;
+                  border-radius: 8px;
+                  color: white;
+                  box-shadow: none;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                <div
+                  class="spinner-grow spinner-grow-sm"
+                  role="status"
+                  *ngIf="loading"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+                Save
+              </button>
+              <button
+                style="
+                  border: 1px solid #419fc7;
+                  background-color: white;
+                  color: #419fc7;
+                  border-radius: 8px;
+                  padding: 10px;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

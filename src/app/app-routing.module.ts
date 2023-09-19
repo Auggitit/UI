@@ -72,6 +72,24 @@ import { SalesupdateComponent } from './vouchers/SalesandDistrubution/salesvch/s
 import { ServicesaleComponent } from './vouchers/SalesandDistrubution/salesservicevch/servicesale/servicesale.component';
 import { ServicesaleupdateComponent } from './vouchers/SalesandDistrubution/salesservicevch/servicesaleupdate/servicesaleupdate.component';
 import { ServicesalelistComponent } from './vouchers/SalesandDistrubution/salesservicevch/servicesalelist/servicesalelist.component';
+import { LedgerListComponent } from './Masters/accountMaster/ledgers/ledger-list/ledger-list.component';
+import { NewLedgerComponent } from './Masters/accountMaster/ledgers/new-ledger/new-ledger.component';
+import { VendorListComponent } from './Masters/accountMaster/Vendor/vendor-list/vendor-list.component';
+import { NewVendorComponent } from './Masters/accountMaster/Vendor/new-vendor/new-vendor.component';
+import { CustomerCreateComponent } from './Masters/accountMaster/Customer/customer-create/customer-create.component';
+import { CustomerListComponent } from './Masters/accountMaster/Customer/customer-list/customer-list.component';
+import { StockItemListComponent } from './Masters/inventoryMaster/stockItem/stock-item-list/stock-item-list.component';
+import { StockGroupItemsComponent } from './Masters/inventoryMaster/stockGroup/stock-group-items/stock-group-items.component';
+import { StockCategoryListComponent } from './Masters/inventoryMaster/stockCategory/stock-category-list/stock-category-list.component';
+import { UomListComponent } from './Masters/inventoryMaster/uom/uom-list/uom-list.component';
+import { StateMasterListComponent } from './Masters/otherMaster/state-master-list/state-master-list.component';
+import { CountryMasterListComponent } from './Masters/otherMaster/country-master-list/country-master-list.component';
+import { StockItemCreateComponent } from './Masters/inventoryMaster/stockItem/stock-item-create/stock-item-create.component';
+import { StockGroupCreateComponent } from './Masters/inventoryMaster/stockGroup/stock-group-create/stock-group-create.component';
+import { StockCategoryCreateComponent } from './Masters/inventoryMaster/stockCategory/stock-category-create/stock-category-create.component';
+import { UomCreateComponent } from './Masters/inventoryMaster/uom/uom-create/uom-create.component';
+import { CountryMasterCreateComponent } from './Masters/otherMaster/country-master-create/country-master-create.component';
+import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-create/state-master-create.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -117,6 +135,7 @@ const routes: Routes = [
   { path: 'servicesales', component: ServicesaleComponent },
   { path: 'servicesaleslist', component: ServicesalelistComponent },
   { path: 'servicesalesupdate/:id', component: ServicesaleupdateComponent },
+
   { path: 'so-report', component: SalesOrderReportComponent },
   { path: 'sales-order-list', component: SalesOrderListComponent },
   { path: 'purchase-order-list', component: PurchaseOrderListComponent },
@@ -156,6 +175,24 @@ const routes: Routes = [
   { path: 'service-grn-details', component: ServiceGrnDetailsComponent },
   { path: 'credit-note-details', component: CreditNoteDetailsComponent },
   { path: 'debit-note-details', component: DebitNoteDetailsComponent },
+  { path: 'ledger-list', component: LedgerListComponent },
+  { path: 'create-ledger', component: NewLedgerComponent },
+  { path: 'vendor-list', component: VendorListComponent },
+  { path: 'create-vendor', component: NewVendorComponent },
+  { path: 'customer-list', component: CustomerListComponent },
+  { path: 'create-customer', component: CustomerCreateComponent },
+  { path: 'stock-item-list', component: StockItemListComponent },
+  { path: 'stock-item-create', component: StockItemCreateComponent },
+  { path: 'stock-group-list', component: StockGroupItemsComponent },
+  { path: 'stock-group-create', component: StockGroupCreateComponent },
+  { path: 'stock-category-list', component: StockCategoryListComponent },
+  { path: 'stock-category-create', component: StockCategoryCreateComponent },
+  { path: 'uom-list', component: UomListComponent },
+  { path: 'uom-create', component: UomCreateComponent },
+  { path: 'country-master-list', component: CountryMasterListComponent },
+  { path: 'country-master-create', component: CountryMasterCreateComponent },
+  { path: 'state-master-list', component: StateMasterListComponent },
+  { path: 'state-master-create', component: StateMasterCreateComponent },
 ];
 
 @NgModule({

@@ -116,7 +116,24 @@ import { ServicesaleupdateComponent } from './vouchers/SalesandDistrubution/sale
 import { InterceptorService } from './services/interceptor.service';
 import { SalescusComponent } from './vouchers/SalesandDistrubution/SalesOrder/SalesOrderHtml/Sales-Customer/salescus/salescus.component';
 import { VendorComponentComponent } from './Component/vendor-component/vendor-component.component';
-// import { PreventSpecialCharactersDirective } from './Component/Providers/preventspecialcharacter.directive';
+import { LedgerListComponent } from './Masters/accountMaster/ledgers/ledger-list/ledger-list.component';
+import { NewLedgerComponent } from './Masters/accountMaster/ledgers/new-ledger/new-ledger.component';
+import { VendorListComponent } from './Masters/accountMaster/Vendor/vendor-list/vendor-list.component';
+import { NewVendorComponent } from './Masters/accountMaster/Vendor/new-vendor/new-vendor.component';
+import { CustomerListComponent } from './Masters/accountMaster/Customer/customer-list/customer-list.component';
+import { CustomerCreateComponent } from './Masters/accountMaster/Customer/customer-create/customer-create.component';
+import { StockItemListComponent } from './Masters/inventoryMaster/stockItem/stock-item-list/stock-item-list.component';
+import { StockItemCreateComponent } from './Masters/inventoryMaster/stockItem/stock-item-create/stock-item-create.component';
+import { StockGroupItemsComponent } from './Masters/inventoryMaster/stockGroup/stock-group-items/stock-group-items.component';
+import { StockGroupCreateComponent } from './Masters/inventoryMaster/stockGroup/stock-group-create/stock-group-create.component';
+import { StockCategoryCreateComponent } from './Masters/inventoryMaster/stockCategory/stock-category-create/stock-category-create.component';
+import { StockCategoryListComponent } from './Masters/inventoryMaster/stockCategory/stock-category-list/stock-category-list.component';
+import { UomListComponent } from './Masters/inventoryMaster/uom/uom-list/uom-list.component';
+import { UomCreateComponent } from './Masters/inventoryMaster/uom/uom-create/uom-create.component';
+import { CountryMasterListComponent } from './Masters/otherMaster/country-master-list/country-master-list.component';
+import { CountryMasterCreateComponent } from './Masters/otherMaster/country-master-create/country-master-create.component';
+import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-create/state-master-create.component';
+import { StateMasterListComponent } from './Masters/otherMaster/state-master-list/state-master-list.component';
 
 @NgModule({
   declarations: [
@@ -208,6 +225,24 @@ import { VendorComponentComponent } from './Component/vendor-component/vendor-co
     DateAndTimePipe,
     SalescusComponent,
     VendorComponentComponent,
+    LedgerListComponent,
+    NewLedgerComponent,
+    VendorListComponent,
+    NewVendorComponent,
+    CustomerListComponent,
+    CustomerCreateComponent,
+    StockItemListComponent,
+    StockItemCreateComponent,
+    StockGroupItemsComponent,
+    StockGroupCreateComponent,
+    StockCategoryCreateComponent,
+    StockCategoryListComponent,
+    UomListComponent,
+    UomCreateComponent,
+    CountryMasterListComponent,
+    CountryMasterCreateComponent,
+    StateMasterCreateComponent,
+    StateMasterListComponent,
   ],
   imports: [
     BrowserModule,

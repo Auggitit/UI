@@ -11,6 +11,7 @@ export class InputAutoCompleteComponent implements OnInit {
   @Input() groupName!: any;
   @Input() controlName!: FormControlName | any;
   @Input() inputWidth: string = '150px';
+  @Input() svgIconNeeded: boolean = true;
   filteredSearchValues!: any[];
   vendorAutoCompleteValue: FormControl = new FormControl(''); //for testing
 

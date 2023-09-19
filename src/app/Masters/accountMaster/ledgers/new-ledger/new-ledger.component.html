@@ -1,0 +1,265 @@
+<div class="content-wrapper">
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="pb-3">
+      <app-reports-header
+        title="CREATE LEDGERS"
+        [searchField]="true"
+        [reportFormGroupName]="ledgerForm"
+        [saveTypesOptions]="saveAsOptions"
+        [SelectSaveOptions]="'SelectSaveOptions'"
+        buttonTitle="Ledger List"
+        (onClickCreateButton)="onClickButton()"
+      ></app-reports-header>
+    </div>
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-bottom: 4px;
+      "
+    >
+      <form [formGroup]="ledgerForm">
+        <div class="row">
+          <div class="col-12">
+            <p
+              style="
+                padding-bottom: 12px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+              "
+            >
+              LEDGER DETAIL
+            </p>
+            <div class="p-0 d-flex justify-content-between col-12">
+              <div class="col-6">
+                <app-mat-input
+                  labelText="Ledger Name"
+                  [placeholderText]="'Ledger Name'"
+                  [formControlName]="'cledgerName'"
+                  [modelName]="ledgerName"
+                ></app-mat-input>
+              </div>
+
+              <div
+                class="col-6 d-flex mb-0 align-items-center justify-content-between"
+              >
+                <p style="color: #667085; font-weight: 600">Ledger Under</p>
+                <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                >
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                    style="width: 100%; margin-top: 6px !important"
+                  >
+                    <!-- <mat-label>Ledger Under</mat-label> -->
+                    <input
+                      type="text"
+                      #eprod
+                      placeholder="Pick one"
+                      aria-label="Number"
+                      [(ngModel)]="ledgerUnderName"
+                      formControlName="cledgerUnder"
+                      matInput
+                      [formControl]="parentTextBox"
+                      [matAutocomplete]="auto"
+                    />
+                    <!-- (keyup.enter)="onProdKeydown($event,i)"> -->
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option
+                        *ngFor="let r of filteredParent | async"
+                        [value]="r.groupname"
+                        (onSelectionChange)="parentChanged($event, r)"
+                      >
+                        <!-- <img alt="" class="example-option-img" [src]="r.itemname" height="25"> -->
+                        <span>{{ r.groupname }}</span> |
+                        <small>#{{ r.groupcode }}</small>
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <!-- <app-input-auto-complete
+                    [svgIconNeeded]="false"
+                    [optionsList]="saveAsOptions"
+                    [groupName]="ledgerForm"
+                    [controlName]="'cledgerUnder'"
+                    inputWidth="200px"
+                  ></app-input-auto-complete> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <app-mat-input
+                labelText="GSTIN No"
+                [placeholderText]="'GSTIN No'"
+                [formControlName]="'cgstin'"
+                [modelName]="gstin"
+              ></app-mat-input>
+            </div>
+
+            <p
+              style="
+                padding-bottom: 20px;
+                padding-top: 20px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+              "
+            >
+              LEDGER DETAIL
+            </p>
+            <div class="p-0 d-flex justify-content-between col-12">
+              <div
+                class="col-6 d-flex mb-0 align-items-center justify-content-between"
+              >
+                <p style="color: #667085; font-weight: 600">Country</p>
+                <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                >
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                    style="width: 100%; margin-top: 6px !important"
+                  >
+                    <!-- <mat-label>Country</mat-label> -->
+                    <mat-select
+                      [(ngModel)]="country"
+                      placeholder="Country"
+                      formControlName="ccountry"
+                    >
+                      <mat-option
+                        *ngFor="let val of countryData"
+                        [value]="val.countryname"
+                        [title]="val.countryname"
+                        (onSelectionChange)="countrychange($event, val)"
+                      >
+                        {{ val.countryname }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div
+                class="col-6 d-flex mb-0 align-items-center justify-content-between"
+              >
+                <p style="color: #667085; font-weight: 600">State</p>
+                <div
+                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                >
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                    style="width: 100%; margin-top: 6px !important"
+                  >
+                    <!-- <mat-label>State</mat-label> -->
+                    <mat-select
+                      [(ngModel)]="state"
+                      formControlName="cstate"
+                      placeholder="State"
+                    >
+                      <mat-option
+                        *ngFor="let val of stateData"
+                        [value]="val.statename"
+                        [title]="val.statename"
+                        (onSelectionChange)="statechange($event, val)"
+                      >
+                        {{ val.statename }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 d-flex mb-0 align-items-center" style="gap: 20%">
+              <p style="color: #667085; font-weight: 600">Address</p>
+              <!-- <div
+                class="p-0 "
+              > -->
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                style="width: 100%; margin-top: 6px !important"
+              >
+                <!-- <mat-label>Address</mat-label> -->
+                <textarea
+                  style="height: 68px"
+                  placeholder="Address"
+                  type="text"
+                  matInput
+                  formControlName="caddress"
+                  [(ngModel)]="address"
+                  autocomplete="off"
+                ></textarea>
+              </mat-form-field>
+              <!-- </div> -->
+            </div>
+
+            <div class="p-0 col-6">
+              <app-mat-input
+                labelText="Pincode"
+                [placeholderText]="'Pincode'"
+                [formControlName]="'cpincode'"
+                [modelName]="pincode"
+              ></app-mat-input>
+            </div>
+
+            <div
+              class="row mt-4"
+              style="
+                align-items: flex-end;
+                justify-content: flex-end;
+                gap: 10px;
+              "
+            >
+              <button
+                #esave
+                (click)="submit()"
+                [disabled]="loading"
+                style="
+                  margin-right: 5px;
+                  background-color: #419fc7;
+                  border: 1px solid #419fc7;
+                  border-radius: 8px;
+                  color: white;
+                  box-shadow: none;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                <div
+                  class="spinner-grow spinner-grow-sm"
+                  role="status"
+                  *ngIf="loading"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+                Save
+              </button>
+              <button
+                (click)="clearAll()"
+                style="
+                  border: 1px solid #419fc7;
+                  background-color: white;
+                  color: #419fc7;
+                  border-radius: 8px;
+                  padding: 10px;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

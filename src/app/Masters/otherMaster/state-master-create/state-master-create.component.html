@@ -1,0 +1,143 @@
+<div class="content-wrapper">
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="pb-3">
+      <app-reports-header
+        title="CREATE COUNTRY"
+        [searchField]="true"
+        [reportFormGroupName]="stateForm"
+        [saveTypesOptions]="saveAsOptions"
+        buttonTitle="List of Country"
+        (onClickCreateButton)="onClickButton()"
+      ></app-reports-header>
+      <!--         [SelectSaveOptions]="'SelectSaveOptions'"
+ -->
+    </div>
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-bottom: 4px;
+      "
+    >
+      <form [formGroup]="stateForm">
+        <div class="row">
+          <div class="col-12">
+            <p style="font-size: 1.125rem; font-weight: 600; color: black">
+              ID #
+            </p>
+            <div
+              class="col-6 d-flex mb-0 align-items-center justify-content-between"
+            >
+              <p style="padding-left: 10px; color: #667085; font-weight: 600">
+                Address
+              </p>
+              <div
+                class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+              >
+                <mat-form-field
+                  class="example-full-width"
+                  appearance="outline"
+                  style="width: 100%"
+                >
+                  <mat-select
+                    placeholder="Select Country"
+                    formControlName="cCountry"
+                    [(ngModel)]="selectedCountry"
+                    (selectionChange)="changeCountry($event)"
+                  >
+                    <mat-option
+                      *ngFor="let val of countryData"
+                      [value]="val.countryname"
+                      [title]="val.countryname"
+                    >
+                      {{ val.countryname }}
+                    </mat-option>
+                  </mat-select>
+                  <small
+                    *ngIf="
+                      stateForm.controls['cCountry'].dirty &&
+                      stateForm.hasError('required', 'cCountry')
+                    "
+                    class="text-danger"
+                    >State Code Required!</small
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="p-0 d-flex justify-content-between col-12">
+              <div class="col-6">
+                <app-mat-input
+                  labelText="State Code"
+                  [placeholderText]="'State Code'"
+                  formControlName="ccode"
+                  [modelName]="code"
+                ></app-mat-input>
+              </div>
+
+              <div class="col-6">
+                <app-mat-input
+                  labelText="State Name"
+                  [placeholderText]="'State Name'"
+                  formControlName="cname"
+                  [modelName]="name"
+                ></app-mat-input>
+              </div>
+            </div>
+            <div
+              class="row mt-4"
+              style="
+                align-items: flex-end;
+                justify-content: flex-end;
+                gap: 10px;
+              "
+            >
+              <button
+                #esave
+                [disabled]="loading"
+                style="
+                  margin-right: 5px;
+                  background-color: #419fc7;
+                  border: 1px solid #419fc7;
+                  border-radius: 8px;
+                  color: white;
+                  box-shadow: none;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                <div
+                  class="spinner-grow spinner-grow-sm"
+                  role="status"
+                  *ngIf="loading"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+                Save
+              </button>
+              <button
+                style="
+                  border: 1px solid #419fc7;
+                  background-color: white;
+                  color: #419fc7;
+                  border-radius: 8px;
+                  padding: 10px;
+                  padding-right: 20px;
+                  padding-left: 20px;
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

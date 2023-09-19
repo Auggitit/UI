@@ -7,7 +7,7 @@
       [matAutocomplete]="searchAutoComplete"
       [formControl]="vendorAutoCompleteValue"
     />
-    <span matPrefix>
+    <span matPrefix *ngIf="svgIconNeeded">
       <mat-icon
         style="height: 21px; width: 21px; margin-right: 10px"
         svgIcon="vendorIcon"

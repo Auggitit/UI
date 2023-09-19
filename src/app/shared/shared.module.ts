@@ -43,6 +43,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AddressCardComponent } from './components/address-card/address-card.component';
 import { DetailsTableComponent } from './components/details-table/details-table.component';
 import { ReferenceDetailsComponent } from './components/reference-details/reference-details.component';
+import { MatInputComponent } from './components/mat-input/mat-input.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ReferenceDetailsComponent } from './components/reference-details/refere
     AddressCardComponent,
     DetailsTableComponent,
     ReferenceDetailsComponent,
+    MatInputComponent,
   ],
   imports: [
     CommonModule,
@@ -105,6 +107,7 @@ import { ReferenceDetailsComponent } from './components/reference-details/refere
     AddressCardComponent,
     DetailsTableComponent,
     ReferenceDetailsComponent,
+    MatInputComponent,
   ],
 })
 export class SharedModule {}
