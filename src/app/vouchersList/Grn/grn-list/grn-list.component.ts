@@ -370,22 +370,24 @@ export class GrnListComponent implements OnInit {
     }
 
     if (formValues?.startDate && formValues?.endDate) {
-      const firstDateformat = new Date(formValues?.startDate);
+      let firstDateformat = new Date(formValues?.startDate);
       let lastDateformat = new Date(formValues?.endDate);
-      console.log(firstDateformat, '.toISOString()');
+      let firstDateSplit = firstDateformat?.toLocaleDateString().split('/');
+      let lastDateSplit = lastDateformat?.toLocaleDateString().split('/');
 
-      let firstDateSplit = firstDateformat
-        ?.toISOString()
-        .split('T')[0]
-        .split('-');
-      let lastDateSplit = lastDateformat
-        ?.toISOString()
-        .split('T')[0]
-        .split('-');
       firstDate =
-        firstDateSplit[2] + '/' + firstDateSplit[1] + '/' + firstDateSplit[0];
+        firstDateSplit[1].padStart(2, '0') +
+        '/' +
+        firstDateSplit[0].padStart(2, '0') +
+        '/' +
+        firstDateSplit[2];
+
       lastDate =
-        lastDateSplit[2] + '/' + lastDateSplit[1] + '/' + lastDateSplit[0];
+        lastDateSplit[1].padStart(2, '0') +
+        '/' +
+        lastDateSplit[0].padStart(2, '0') +
+        '/' +
+        lastDateSplit[2];
     }
     let params = {
       statusId: formValues.reportStatus,
