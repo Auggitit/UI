@@ -304,6 +304,7 @@ export class SsalesService {
   getAllServiceSalesList({
     statusId,
     ledgerId,
+    salesRef,
     globalFilterId,
     search,
     fromDate,
@@ -311,6 +312,7 @@ export class SsalesService {
   }: {
     statusId?: number;
     ledgerId?: number;
+    salesRef?: string;
     globalFilterId?: number;
     search?: string;
     fromDate?: string;
@@ -322,6 +324,9 @@ export class SsalesService {
     }
     if (ledgerId) {
       params = params.append('ledgerId', ledgerId);
+    }
+    if (salesRef) {
+      params = params.append('salesRef', salesRef);
     }
     if (globalFilterId) {
       params = params.append('globalFilterId', globalFilterId);

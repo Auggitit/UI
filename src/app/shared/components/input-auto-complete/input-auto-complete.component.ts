@@ -9,8 +9,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 export class InputAutoCompleteComponent implements OnInit {
   @Input() optionsList!: any;
   @Input() groupName!: any;
-  @Input() controlName!: FormControlName| any;
-  @Input() inputWidth:string="150px";
+  @Input() controlName!: FormControlName | any;
+  @Input() inputWidth: string = '150px';
   filteredSearchValues!: any[];
   vendorAutoCompleteValue: FormControl = new FormControl(''); //for testing
 

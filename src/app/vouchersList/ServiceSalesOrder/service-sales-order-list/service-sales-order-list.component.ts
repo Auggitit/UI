@@ -25,6 +25,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   form!: FormGroup;
   vendorDropDownData: any[] = [];
+  salesRefData: any[] = [];
   serviceSalesOrderForm!: FormGroup;
   cardsDetails: any[] = [];
   saveAsOptions: dropDownData[] = exportOptions;
@@ -46,6 +47,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       needToShow: true,
     },
     { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+    { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
     {
       title: 'Order Qty',
       sortable: 0,
@@ -76,6 +78,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       filterData: [dateFilterOptions[3].id],
       startDate: [''],
       endDate: [''],
+      salesRefPerson: [''],
       vendorcode: [''],
       reportStatus: [''],
       selectAllCheckbox: [{ isSelected: false }],
@@ -87,6 +90,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
           needToShow: true,
         },
         { title: 'Vendor', sortable: 0, name: 'sono', needToShow: true },
+        { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
         {
           title: 'Order Qty',
           sortable: 0,
@@ -342,6 +346,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
       statusId: formValues.reportStatus,
       ledgerId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
+      salesRef: formValues.salesRefPerson,
       search: formValues.searchValues,
       fromDate: firstDate,
       toDate: lastDate,
@@ -360,6 +365,17 @@ export class ServiceSalesOrderListComponent implements OnInit {
           })
           .forEach((item: VendorDropDown) => newMap.set(item.id, item));
         this.vendorDropDownData = [...newMap.values()];
+        const salesMap = new Map();
+        res.result
+          .map((item: any) => {
+            return {
+              name: item.salesRef,
+              id: item.salesRef,
+            };
+          })
+          .forEach((item: VendorDropDown) => salesMap.set(item.id, item));
+        this.salesRefData = [...salesMap.values()];
+        console.log(this.salesRefData, 'salesRef');
       }
       this.getFilterData(res);
     });
@@ -427,7 +443,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
           );
         if (this.serviceSalesOrderForm.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.customername,
+            'Sales Person : ' + tableData[0]?.salesRef,
             50,
             (topValue += 20)
           );
@@ -441,6 +457,10 @@ export class ServiceSalesOrderListComponent implements OnInit {
             {
               header: 'Vendor',
               dataKey: 'customername',
+            },
+            {
+              header: 'salesRef',
+              dataKey: 'salesRef',
             },
             {
               header: 'Order Quantity',
@@ -489,6 +509,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
         { wch: 7 },
         { wch: 15 },
         { wch: 45 },
+        { wch: 45 },
         { wch: 20 },
         { wch: 20 },
         { wch: 25 },
@@ -507,6 +528,7 @@ export class ServiceSalesOrderListComponent implements OnInit {
             'So.no',
             'Order Id',
             'Vendor',
+            'salesRef',
             'Order Quantity',
             'Received Quantity',
             'Date & Time',

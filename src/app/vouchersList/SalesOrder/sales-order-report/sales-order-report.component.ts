@@ -32,6 +32,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
   formSubscription!: Subscription;
   statusId: any = 0;
   filteredSalesOrderData: any[] = [];
+  salesRefData: VendorDropDown[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -63,6 +64,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
       name: 'customername',
       needToShow: true,
     },
+    { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
@@ -87,6 +89,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       vendorcode: [''],
       endDate: [''],
+      salesRefPerson: [''],
       startDate: [''],
       filterData: [dateFilterOptions[3].id],
       reportStatus: [''],
@@ -102,6 +105,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           name: 'customername',
           needToShow: true,
         },
+        { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
         {
           title: 'Product Detail',
           sortable: 0,
@@ -346,6 +350,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
     let params = {
       statusId: formValues.reportStatus,
       ledgerId: formValues.vendorcode,
+      salesRef: formValues.salesRefPerson,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
       fromDate: firstDate,
@@ -368,6 +373,17 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         this.vendorDropDownData = [...newMap.values()];
         this.graphMenuItems = res.years;
         console.log(this.graphMenuItems, 'years');
+        const salesMap = new Map();
+        res.result
+          .map((item: any) => {
+            return {
+              name: item.salesRef,
+              id: item.salesRef,
+            };
+          })
+          .forEach((item: VendorDropDown) => salesMap.set(item.id, item));
+        this.salesRefData = [...salesMap.values()];
+        console.log(this.salesRefData, 'salesRef');
       }
       this.getFilterData(formValues, res);
     });
@@ -436,7 +452,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.customername,
+            'Sales Person : ' + tableData[0]?.salesRef,
             50,
             (topValue += 20)
           );
@@ -454,6 +470,10 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             {
               header: 'Vendor Detail',
               dataKey: 'customername',
+            },
+            {
+              header: 'salesRef',
+              dataKey: 'salesRef',
             },
             {
               header: 'Product Detail',
@@ -499,6 +519,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
         { wch: 15 },
         { wch: 15 },
         { wch: 40 },
+        { wch: 45 },
         { wch: 50 },
         { wch: 40 },
         { wch: 40 },
@@ -513,6 +534,7 @@ export class SalesOrderReportComponent implements OnInit, OnDestroy {
             'Sr No',
             'Order ID',
             'Ref ID',
+            'salesRef',
             'Vendor Detail',
             'Product Detail',
             'Date & Time',

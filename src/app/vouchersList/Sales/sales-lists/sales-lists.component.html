@@ -38,6 +38,7 @@
           [tableFiltersGroupName]="salesForm"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
+          [salesRefData]="salesRefData"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
@@ -121,10 +122,21 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              {{ data.ordered }}
+              {{ data.salesRef }}
             </td>
             <td
               *ngIf="columns[3].needToShow"
+              scope="col"
+              style="
+                min-width: 111px;
+                max-width: 111px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              {{ data.ordered }}
+            </td>
+            <td
+              *ngIf="columns[4].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -137,7 +149,7 @@
               {{ data.received }}
             </td>
             <td
-              *ngIf="columns[4].needToShow"
+              *ngIf="columns[5].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -149,7 +161,7 @@
               {{ data.date }}
             </td>
             <td
-              *ngIf="columns[5].needToShow"
+              *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -161,7 +173,7 @@
               <p class="mb-0">{{ data.ordered - data.received }}</p>
             </td>
             <td
-              *ngIf="columns[6].needToShow"
+              *ngIf="columns[7].needToShow"
               scope="row"
               style="
                 border-top: 1px solid #f0f1f3;
@@ -172,7 +184,7 @@
               {{ data.orderedvalue | currency : "INR" }}
             </td>
             <td
-              *ngIf="columns[7].needToShow"
+              *ngIf="columns[8].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -208,7 +220,7 @@
               </div>
             </td>
             <td
-              *ngIf="columns[8].needToShow"
+              *ngIf="columns[9].needToShow"
               scope="col"
               style="
                 color: #667085;

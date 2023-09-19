@@ -9,11 +9,13 @@ import { FormControlName, FormGroup } from '@angular/forms';
 export class TableFiltersComponent implements OnInit {
   @Input() statusOptions!: { name: string; id: string | number }[];
   @Input() vendorDropDownData!: { name: string; id: string | number }[];
+  @Input() salesRefData!: { name: string; id: string | number }[];
   @Input() tableFiltersGroupName!: FormGroup;
   isIconNeeded: boolean = true;
   @Input() searchSuggestionsList: string[] = [];
   @Input() reportStatus!: FormControlName | any;
   @Input() vendorcode!: FormControlName | any;
+  @Input() salesRefPerson!: FormControlName | any;
   @Input() filterColumnName!: FormControlName | any;
   @Input() searchControlName!: FormControlName | any;
   @Input() columnList!: any;

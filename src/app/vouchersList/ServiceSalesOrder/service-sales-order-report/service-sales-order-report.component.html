@@ -56,6 +56,7 @@
           [searchSuggestionsList]="searchSuggestionsList"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
+          [salesRefData]="salesRefData"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
@@ -152,6 +153,17 @@
               *ngIf="columns[3].needToShow"
               scope="col"
               style="
+                min-width: 111px;
+                max-width: 111px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              {{ data.salesRef }}
+            </td>
+            <td
+              *ngIf="columns[4].needToShow"
+              scope="col"
+              style="
                 min-width: 155px;
                 max-width: 155px;
                 border-top: 1px solid #f0f1f3;
@@ -165,7 +177,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[4].needToShow"
+              *ngIf="columns[5].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -177,7 +189,7 @@
               {{ data.date }}
             </td>
             <td
-              *ngIf="columns[5].needToShow"
+              *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -201,7 +213,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[6].needToShow"
+              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -222,7 +234,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[7].needToShow"
+              *ngIf="columns[8].needToShow"
               scope="col"
               style="
                 color: #667085;

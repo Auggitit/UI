@@ -53,6 +53,7 @@
           [searchSuggestionsList]="searchSuggestionsList"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
+          [salesRefData]="salesRefData"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
@@ -120,9 +121,11 @@
                 max-width: 106px;
               "
             >
-              <a href="" style="font-weight: 600; cursor: pointer">{{
-                data.refno
-              }}</a>
+              <a
+                href=""
+                style="font-weight: 600; color: #13b2e4; cursor: pointer"
+                >{{ data.refno }}</a
+              >
             </td>
             <td
               *ngIf="columns[2].needToShow"
@@ -146,6 +149,17 @@
               *ngIf="columns[3].needToShow"
               scope="col"
               style="
+                min-width: 111px;
+                max-width: 111px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              {{ data.salesRef }}
+            </td>
+            <td
+              *ngIf="columns[4].needToShow"
+              scope="col"
+              style="
                 min-width: 155px;
                 max-width: 155px;
                 border-top: 1px solid #f0f1f3;
@@ -159,7 +173,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[4].needToShow"
+              *ngIf="columns[5].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -171,7 +185,7 @@
               {{ data.date }}
             </td>
             <td
-              *ngIf="columns[5].needToShow"
+              *ngIf="columns[6].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -195,7 +209,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[6].needToShow"
+              *ngIf="columns[7].needToShow"
               scope="col"
               style="
                 color: #667085;
@@ -216,7 +230,7 @@
               </p>
             </td>
             <td
-              *ngIf="columns[7].needToShow"
+              *ngIf="columns[8].needToShow"
               scope="col"
               style="
                 color: #667085;

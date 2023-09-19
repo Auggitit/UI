@@ -47,7 +47,10 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
         }"
       >
         <ng-container>
-          <mat-option *ngFor="let item of formOptions" [value]="item.id">
+          <mat-option
+            *ngFor="let item of formOptions"
+            [value]="item.id || item.name"
+          >
             {{ item.name }}</mat-option
           >
         </ng-container>

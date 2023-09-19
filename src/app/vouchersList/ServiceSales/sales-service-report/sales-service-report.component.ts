@@ -35,6 +35,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
   formSubscription!: Subscription;
   filteredServiceSalesData: any[] = [];
+  salesRefData: any[] = [];
   vendorDropDownData: VendorDropDown[] = [];
   paginationIndex: number = 0;
   pageCount: number = 10;
@@ -66,6 +67,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       name: 'customername',
       needToShow: true,
     },
+    { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
     { title: 'Product Detail', sortable: 0, name: 'pname', needToShow: true },
     { title: 'Date & Time', sortable: 0, name: 'date', needToShow: true },
     { title: 'Quantity', sortable: 0, name: 'ordered', needToShow: true },
@@ -93,6 +95,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       startDate: [''],
       filterData: [dateFilterOptions[3].id],
       reportStatus: [''],
+      salesRefPerson: [''],
       SelectSaveOptions: [exportOptions[0].id],
       searchValues: [''],
       selectAllCheckbox: [{ isSelected: false }],
@@ -105,6 +108,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           name: 'customername',
           needToShow: true,
         },
+        { title: 'salesRef', sortable: 0, name: 'salesRef', needToShow: true },
         {
           title: 'Product Detail',
           sortable: 0,
@@ -352,6 +356,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
       ledgerId: formValues.vendorcode,
       globalFilterId: formValues.filterData,
       search: formValues.searchValues,
+      salesRef: formValues.salesRefPerson,
       fromDate: firstDate,
       toDate: lastDate,
     };
@@ -374,9 +379,20 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             })
             .forEach((item: VendorDropDown) => newMap.set(item.id, item));
           this.vendorDropDownData = [...newMap.values()];
-          this.getFilterData(formValues, res);
           this.graphMenuItems = res.years;
+          const salesMap = new Map();
+          res.result
+            .map((item: any) => {
+              return {
+                name: item.salesRef,
+                id: item.salesRef,
+              };
+            })
+            .forEach((item: VendorDropDown) => salesMap.set(item.id, item));
+          this.salesRefData = [...salesMap.values()];
+          console.log(this.salesRefData, 'salesRef');
         }
+        this.getFilterData(formValues, res);
       });
   }
   ngOnDestroy(): void {
@@ -442,7 +458,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
           );
         if (this.form.value.vendorcode != '')
           pdf.text(
-            'Sales Person : ' + tableData[0]?.customername,
+            'Sales Person : ' + tableData[0]?.salesRef,
             50,
             (topValue += 20)
           );
@@ -460,6 +476,10 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             {
               header: 'Vendor Detail',
               dataKey: 'customername',
+            },
+            {
+              header: 'salesRef',
+              dataKey: 'salesRef',
             },
             {
               header: 'Product Detail',
@@ -505,6 +525,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
         { wch: 15 },
         { wch: 15 },
         { wch: 40 },
+        { wch: 45 },
         { wch: 50 },
         { wch: 25 },
         { wch: 50 },
@@ -522,6 +543,7 @@ export class SalesServiceReportComponent implements OnInit, OnDestroy {
             'Order ID',
             'Ref ID',
             'Vendor Detail',
+            'salesRef',
             'Product Detail',
             'Date & Time',
             'Quantity',

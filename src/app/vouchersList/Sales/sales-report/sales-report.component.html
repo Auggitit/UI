@@ -57,6 +57,7 @@
           [searchSuggestionsList]="searchSuggestionsList"
           [reportStatus]="'reportStatus'"
           [vendorcode]="'vendorcode'"
+          [salesRefData]="salesRefData"
           [filterColumnName]="'columnFilter'"
           [columnList]="columns"
         ></app-table-filters>
@@ -146,6 +147,17 @@
                 style="color: #667085; line-height: 2; cursor: pointer"
                 >{{ data.invno }}</a
               >
+            </td>
+            <td
+              *ngIf="columns[2].needToShow"
+              scope="col"
+              style="
+                min-width: 111px;
+                max-width: 111px;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              {{ data.salesRef }}
             </td>
             <td
               *ngIf="columns[3].needToShow"

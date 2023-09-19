@@ -28,20 +28,22 @@
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <p style="padding: 12px; font-weight: 600; font-size: 1.125rem">
-        Recent GRN
-      </p>
-      <div class="pl-2 pb-2">
-        <app-table-filters
-          [vendorDropDownData]="vendorDropDownData"
-          [statusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="grnForm"
-          [searchControlName]="'searchValues'"
-          [reportStatus]="'reportStatus'"
-          [vendorcode]="'vendorcode'"
-          [filterColumnName]="'columnFilter'"
-          [columnList]="columns"
-        ></app-table-filters>
+      <div class="d-flex flex-wrap align-items-center pt-3">
+        <p style="padding: 12px; font-size: 1.125rem; font-weight: 600">
+          Recent GRN
+        </p>
+        <div class="pl-2 pb-2">
+          <app-table-filters
+            [vendorDropDownData]="vendorDropDownData"
+            [statusOptions]="reportStatusOptions"
+            [tableFiltersGroupName]="grnForm"
+            [searchControlName]="'searchValues'"
+            [reportStatus]="'reportStatus'"
+            [vendorcode]="'vendorcode'"
+            [filterColumnName]="'columnFilter'"
+            [columnList]="columns"
+          ></app-table-filters>
+        </div>
       </div>
       <app-mat-table
         id="grnTable"

@@ -44,21 +44,23 @@
       </div>
     </div>
     <div class="col-12 p-0 card">
-      <div class="pl-3 pt-3 pb-3">
-        <p style="font-size: 1.125rem; font-weight: 600">
-          Recent Service Purchase Orders
+      <div class="d-flex flex-wrap align-items-center pt-3">
+        <p style="padding: 12px; font-size: 1.125rem; font-weight: 600">
+          Recent Service PO
         </p>
-        <app-table-filters
-          [searchControlName]="'searchValues'"
-          [vendorDropDownData]="vendorDropDownData"
-          [statusOptions]="reportStatusOptions"
-          [tableFiltersGroupName]="form"
-          [searchSuggestionsList]="searchSuggestionsList"
-          [reportStatus]="'reportStatus'"
-          [vendorcode]="'vendorcode'"
-          [filterColumnName]="'columnFilter'"
-          [columnList]="columns"
-        ></app-table-filters>
+        <div class="pl-2 pb-2">
+          <app-table-filters
+            [searchControlName]="'searchValues'"
+            [vendorDropDownData]="vendorDropDownData"
+            [statusOptions]="reportStatusOptions"
+            [tableFiltersGroupName]="form"
+            [searchSuggestionsList]="searchSuggestionsList"
+            [reportStatus]="'reportStatus'"
+            [vendorcode]="'vendorcode'"
+            [filterColumnName]="'columnFilter'"
+            [columnList]="columns"
+          ></app-table-filters>
+        </div>
       </div>
 
       <script src="libs/jspdf.umd.js"></script>

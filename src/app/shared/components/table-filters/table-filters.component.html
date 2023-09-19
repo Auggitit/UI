@@ -59,15 +59,15 @@
   ></app-input-auto-complete>
   <app-mat-select-box
     selectWidth="200px"
-    [formOptions]="vendorDropDownData"
-    [controlName]="'vendorcode'"
+    [formOptions]="salesRefData"
+    [controlName]="'salesRefPerson'"
     [label]="'Sales Person'"
     [groupName]="tableFiltersGroupName"
     [formAppearance]="'outline'"
     [iconNeeded]="isIconNeeded"
     Icon="bankCardLine"
   ></app-mat-select-box>
-  <form [formGroup]="tableFiltersGroupName">
+  <form [formGroup]="tableFiltersGroupName" style="padding-left: 4px">
     <mat-form-field appearance="outline" [ngStyle]="{ width: '160px' }">
       <input
         type="text"
