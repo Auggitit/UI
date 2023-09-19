@@ -1,12 +1,32 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center">
   <app-mat-header title="{{ title }}"></app-mat-header>
   <div class="d-flex flex-wrap align-items-center">
-    <app-mat-select-box
-      [formOptions]="filterByOptions"
-      [controlName]="filterData"
-      [groupName]="reportFormGroupName"
-      selectWidth="145px"
-    ></app-mat-select-box>
+    <div *ngIf="searchField; else elseBlock">
+      <form [formGroup]="reportFormGroupName">
+        <mat-form-field appearance="outline" [ngStyle]="{ width: '160px' }">
+          <input
+            type="text"
+            [formControlName]="searchControlName"
+            matInput
+            placeholder="Search"
+          />
+          <span matPrefix>
+            <mat-icon
+              style="height: 25px; width: 25px; margin-right: 10px"
+              svgIcon="Search"
+            ></mat-icon
+          ></span>
+        </mat-form-field>
+      </form>
+    </div>
+    <ng-template #elseBlock>
+      <app-mat-select-box
+        [formOptions]="filterByOptions"
+        [controlName]="filterData"
+        [groupName]="reportFormGroupName"
+        selectWidth="145px"
+      ></app-mat-select-box>
+    </ng-template>
 
     <app-mat-select-box
       [formOptions]="saveTypesOptions"

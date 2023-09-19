@@ -317,7 +317,7 @@ export class SalesService {
       params = params.append('statusId', statusId);
     }
     if (ledgerId) {
-      params = params.append('vendorId', ledgerId);
+      params = params.append('ledgerId', ledgerId);
     }
     if (globalFilterId) {
       params = params.append('globalFilterId', globalFilterId);

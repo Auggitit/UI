@@ -21,8 +21,10 @@ export class ReportsHeaderComponent implements OnInit, OnChanges {
   @Input() saveTypesOptions!: { name: string; id: string | number }[];
   @Input() reportFormGroupName!: FormGroup;
   @Input() SelectSaveOptions!: FormControlName | any;
+  @Input() searchControlName!: FormControlName | any;
   @Input() filterData!: FormControlName | any;
   @Input() svgIconToDisplay!: string;
+  @Input() searchField: boolean = false;
   @Input() isReports: boolean = true;
   @Input() buttonTitle: string = 'Create New Order';
   @Output() onClickDownload = new EventEmitter();
