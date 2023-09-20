@@ -44,6 +44,7 @@ import { AddressCardComponent } from './components/address-card/address-card.com
 import { DetailsTableComponent } from './components/details-table/details-table.component';
 import { ReferenceDetailsComponent } from './components/reference-details/reference-details.component';
 import { MatInputComponent } from './components/mat-input/mat-input.component';
+import { ActionButtonComponent } from './components/action-button/action-button.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { MatInputComponent } from './components/mat-input/mat-input.component';
     DetailsTableComponent,
     ReferenceDetailsComponent,
     MatInputComponent,
+    ActionButtonComponent,
   ],
   imports: [
     CommonModule,
@@ -108,6 +110,7 @@ import { MatInputComponent } from './components/mat-input/mat-input.component';
     DetailsTableComponent,
     ReferenceDetailsComponent,
     MatInputComponent,
+    ActionButtonComponent,
   ],
 })
 export class SharedModule {}

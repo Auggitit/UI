@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControlName } from '@angular/forms';
+import { FormControlName, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-mat-input',
@@ -9,6 +9,7 @@ import { FormControlName } from '@angular/forms';
 export class MatInputComponent implements OnInit {
   @Input() labelText: string = 'Label Name';
   @Input() placeholderText: string = 'Label Text';
+  @Input() groupName!: FormGroup;
   @Input() formControlName!: FormControlName | any;
   @Input() modelName: any;
   @Input() isRequired: boolean = true;

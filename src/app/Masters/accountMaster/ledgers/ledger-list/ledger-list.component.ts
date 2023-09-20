@@ -10,6 +10,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-ledger-list',
@@ -52,7 +54,8 @@ export class LedgerListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.ledgerForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -84,6 +87,27 @@ export class LedgerListComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigateByUrl('create-ledger');
+  }
+
+  onClickEdit(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you Modify data?',
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // this.router.navigateByUrl('create-ledger/' + data.id);
+        this.router.navigate(['create-ledger/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
   }
 
   getFilterData(formValues: any, serverData: any) {

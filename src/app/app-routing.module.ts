@@ -177,6 +177,7 @@ const routes: Routes = [
   { path: 'debit-note-details', component: DebitNoteDetailsComponent },
   { path: 'ledger-list', component: LedgerListComponent },
   { path: 'create-ledger', component: NewLedgerComponent },
+  { path: 'create-ledger/:id', component: NewLedgerComponent },
   { path: 'vendor-list', component: VendorListComponent },
   { path: 'create-vendor', component: NewVendorComponent },
   { path: 'customer-list', component: CustomerListComponent },

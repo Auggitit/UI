@@ -1,15 +1,28 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <app-reports-header
-        title="CREATE LEDGERS"
-        [searchField]="true"
-        [reportFormGroupName]="ledgerForm"
-        [saveTypesOptions]="saveAsOptions"
-        [SelectSaveOptions]="'SelectSaveOptions'"
-        buttonTitle="Ledger List"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
+      <div *ngIf="isCreateLedger; else elseBlock">
+        <app-reports-header
+          title="CREATE LEDGERS"
+          [searchField]="true"
+          [reportFormGroupName]="ledgerForm"
+          [saveTypesOptions]="saveAsOptions"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          buttonTitle="Ledger List"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE LEDGER DETAILS"
+          [searchField]="true"
+          [reportFormGroupName]="ledgerForm"
+          [saveTypesOptions]="saveAsOptions"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          buttonTitle="Add Ledger"
+          (onClickCreateButton)="onClickAddButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
     <div
       style="
@@ -36,6 +49,7 @@
             <div class="p-0 d-flex justify-content-between col-12">
               <div class="col-6">
                 <app-mat-input
+                  [groupName]="ledgerForm"
                   labelText="Ledger Name"
                   [placeholderText]="'Ledger Name'"
                   [formControlName]="'cledgerName'"
@@ -67,6 +81,10 @@
                       [formControl]="parentTextBox"
                       [matAutocomplete]="auto"
                     />
+                    <span matSuffix>
+                      <mat-icon svgIcon="arrowDown"></mat-icon
+                    ></span>
+
                     <!-- (keyup.enter)="onProdKeydown($event,i)"> -->
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option
@@ -93,6 +111,7 @@
 
             <div class="col-6">
               <app-mat-input
+                [groupName]="ledgerForm"
                 labelText="GSTIN No"
                 [placeholderText]="'GSTIN No'"
                 [formControlName]="'cgstin'"
@@ -119,12 +138,18 @@
                 <div
                   class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                 >
-                  <mat-form-field
+                  <app-mat-select-box
+                    [formOptions]="countryDropDownData"
+                    [controlName]="'ccountry'"
+                    [label]="'Country'"
+                    [groupName]="ledgerForm"
+                    [formAppearance]="'outline'"
+                  ></app-mat-select-box>
+                  <!-- <mat-form-field
                     class="example-full-width"
                     appearance="outline"
                     style="width: 100%; margin-top: 6px !important"
                   >
-                    <!-- <mat-label>Country</mat-label> -->
                     <mat-select
                       [(ngModel)]="country"
                       placeholder="Country"
@@ -139,7 +164,7 @@
                         {{ val.countryname }}
                       </mat-option>
                     </mat-select>
-                  </mat-form-field>
+                  </mat-form-field> -->
                 </div>
               </div>
               <div
@@ -149,12 +174,18 @@
                 <div
                   class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                 >
-                  <mat-form-field
+                  <app-mat-select-box
+                    [formOptions]="stateDropDownData"
+                    [controlName]="'cstate'"
+                    [label]="'State'"
+                    [groupName]="ledgerForm"
+                    [formAppearance]="'outline'"
+                  ></app-mat-select-box>
+                  <!-- <mat-form-field
                     class="example-full-width"
                     appearance="outline"
                     style="width: 100%; margin-top: 6px !important"
                   >
-                    <!-- <mat-label>State</mat-label> -->
                     <mat-select
                       [(ngModel)]="state"
                       formControlName="cstate"
@@ -169,7 +200,7 @@
                         {{ val.statename }}
                       </mat-option>
                     </mat-select>
-                  </mat-form-field>
+                  </mat-form-field> -->
                 </div>
               </div>
             </div>
@@ -199,64 +230,20 @@
 
             <div class="p-0 col-6">
               <app-mat-input
+                [groupName]="ledgerForm"
                 labelText="Pincode"
                 [placeholderText]="'Pincode'"
                 [formControlName]="'cpincode'"
                 [modelName]="pincode"
               ></app-mat-input>
             </div>
-
-            <div
-              class="row mt-4"
-              style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
-              "
-            >
-              <button
-                #esave
-                (click)="submit()"
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                (click)="clearAll()"
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                Clear
-              </button>
-            </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateLedger"
+              (clickSave)="submit()"
+              (clickClearAll)="clearAll()"
+              (clickUpdate)="update()"
+            ></app-action-button>
           </div>
         </div>
       </form>
