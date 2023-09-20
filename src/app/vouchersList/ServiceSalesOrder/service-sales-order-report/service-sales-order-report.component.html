@@ -232,7 +232,7 @@
               <p class="mb-0">
                 Price - {{ data.orderedvalue | currency : "INR" }}
               </p>
-              <p class="mb-0">GST- 3,000</p>
+              <p class="mb-0">GST- {{ data.cgstTotal | currency : "INR" }}</p>
               <p class="mb-0">
                 Total-
                 <span style="font-weight: 600">{{

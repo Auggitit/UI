@@ -74,11 +74,14 @@
             </p>
           </div>
           <div
+            *ngIf="salesData.expdeliverydate"
             class="d-flex flex-wrap justify-content-between"
             style="gap: 20px"
           >
             <p style="color: #333843">Due Date</p>
-            <p style="color: #419fc7">45 Days</p>
+            <p style="color: #419fc7">
+              {{ salesData.expdeliverydate }}
+            </p>
           </div>
           <div
             class="d-flex flex-wrap justify-content-between"
@@ -116,6 +119,7 @@
         ></app-address-card>
       </div>
       <app-reference-details
+        [transport]="salesData.transport"
         [totalCount]="productsData.length"
         [refNumber]="salesData.refno"
       ></app-reference-details>

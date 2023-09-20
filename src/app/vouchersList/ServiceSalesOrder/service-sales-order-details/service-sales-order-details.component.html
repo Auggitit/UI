@@ -69,11 +69,14 @@
             </p>
           </div>
           <div
+            *ngIf="ServiceSOData.expdeliverydate"
             class="d-flex flex-wrap justify-content-between"
             style="gap: 20px"
           >
             <p style="color: #333843">Due Date</p>
-            <p style="color: #419fc7">45 Days</p>
+            <p style="color: #419fc7">
+              {{ ServiceSOData.expdeliverydate }}
+            </p>
           </div>
           <div
             class="d-flex flex-wrap justify-content-between"
@@ -111,6 +114,7 @@
         ></app-address-card>
       </div>
       <app-reference-details
+        [transport]="ServiceSOData.transport"
         [totalCount]="productsData.length"
         [refNumber]="ServiceSOData.refno"
       ></app-reference-details>
