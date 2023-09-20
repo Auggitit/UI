@@ -128,7 +128,7 @@
               "
             >
               <a
-                href=""
+                (click)="onClickSono(data)"
                 style="color: #13b2e4; font-weight: 600; cursor: pointer"
                 >{{ data.sono }}</a
               >
@@ -142,14 +142,17 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="m-0" style="color: #13b2e4; font-weight: 600">
+              <p
+                class="m-0"
+                style="color: #13b2e4; font-weight: 600; cursor: pointer"
+              >
                 {{ data.customername }}
               </p>
-              <a
+              <!-- <a
                 (click)="onClickSono(data)"
                 style="color: #667085; line-height: 2; cursor: pointer"
                 >{{ data.sono }}</a
-              >
+              > -->
             </td>
             <td
               *ngIf="columns[3].needToShow"

@@ -124,7 +124,7 @@
               "
             >
               <a
-                href=""
+                (click)="onClickVchNo(data)"
                 style="color: #13b2e4; font-weight: 600; cursor: pointer"
                 >{{ data.vchno }}</a
               >
@@ -144,11 +144,11 @@
               >
                 {{ data.customername }}
               </p>
-              <a
+              <!-- <a
                 (click)="onClickVchNo(data)"
                 style="color: #667085; line-height: 2; cursor: pointer"
                 >{{ data.crid }}</a
-              >
+              > -->
             </td>
             <td
               *ngIf="columns[3].needToShow"
