@@ -176,8 +176,11 @@
               <p class="m-0" style="color: #333843; font-weight: 600">
                 {{ data.products[0].pname }}
               </p>
-              <p style="font-weight: 400; color: #667085">
-                + {{ data.products.length }} other products
+              <p
+                *ngIf="data.products.length - 1 !== 0"
+                style="font-weight: 400; color: #667085"
+              >
+                + {{ data.products.length - 1 }} other products
               </p>
             </td>
             <td
