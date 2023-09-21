@@ -70,25 +70,25 @@ export class CreditNoteDetailsComponent implements OnInit {
       this.sGst = Number(res.sgstTotal);
       this.iGst = Number(res.igstTotal);
       this.Total = Number(res.net);
-      let companyAddress =
-        this.creditNoteData.companyaddress !== ''
-          ? this.creditNoteData.companyaddress
-              .replace(/[\n]/g, '')
-              .replace(/, +|,+/g, ',')
-              .split(',')
-          : '';
-      let deliveryAddress =
-        this.creditNoteData.deliveryaddress !== ''
-          ? this.creditNoteData.deliveryaddress
-              .replace(/[\n]/g, '')
-              .replace(/, +|,+/g, ',')
-              .split(',')
-          : ' ';
+      let companyAddress = this.creditNoteData.companyaddress;
+      // this.creditNoteData.companyaddress !== ''
+      // ? this.creditNoteData.companyaddress
+      //     .replace(/[\n]/g, '')
+      //     .replace(/, +|,+/g, ',')
+      //     .split(',')
+      // : '';
+      let deliveryAddress = this.creditNoteData.companyaddress;
+      // this.creditNoteData.deliveryaddress !== ''
+      //   ? this.creditNoteData.deliveryaddress
+      //       .replace(/[\n]/g, '')
+      //       .replace(/, +|,+/g, ',')
+      //       .split(',')
+      //   : ' ';
 
-      this.addressLine1 = companyAddress.slice(0, 2).join(', ');
-      this.addressLine2 = companyAddress.slice(2).join(', ');
-      this.deliveryAddressLine1 = deliveryAddress.slice(0, 2).join(', ');
-      this.deliveryAddressLine2 = deliveryAddress.slice(2).join(', ');
+      this.addressLine1 = companyAddress;
+      this.addressLine2 = companyAddress;
+      this.deliveryAddressLine1 = deliveryAddress;
+      this.deliveryAddressLine2 = deliveryAddress;
       console.log(deliveryAddress, companyAddress, 'addredddddddddddddd');
     });
   }
