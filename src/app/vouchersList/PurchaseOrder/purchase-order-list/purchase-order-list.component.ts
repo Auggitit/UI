@@ -16,6 +16,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { PoService } from 'src/app/services/po.service';
 import Swal from 'sweetalert2';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-purchase-order-list',
@@ -69,7 +70,8 @@ export class PurchaseOrderListComponent implements OnInit {
     private poApi: PoService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    private viewportScroller: ViewportScroller
   ) {
     this.purchaseOrderForm = this.fb.group({
       SelectSaveOptions: [exportOptions[0].id],
@@ -120,6 +122,7 @@ export class PurchaseOrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
     this.loadData(this.purchaseOrderForm.value, true);
     this.purchaseOrderForm.valueChanges.subscribe((values) => {
       this.loadData(values);
@@ -144,7 +147,11 @@ export class PurchaseOrderListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.router.navigateByUrl('poupdate/' + data.ponoid + '/' + '23-24');
+        // this.router.navigateByUrl('poupdate/' + data.ponoid + '/' + '23-24');
+        this.router.navigate(['/poupdate'], {
+          queryParams: { id: data.pono },
+        });
+        this.viewportScroller.scrollToPosition([0, 0]);
       }
     });
   }

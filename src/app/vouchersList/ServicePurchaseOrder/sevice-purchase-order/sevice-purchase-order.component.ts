@@ -155,9 +155,12 @@ export class SevicePurchaseOrderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.router.navigateByUrl(
-          'poserviceupdate/' + data.spoid + '/' + '23-24'
-        );
+        // this.router.navigateByUrl(
+        //   'poserviceupdate/' + data.spoid + '/' + '23-24'
+        // );
+        this.router.navigate(['/poserviceupdate'], {
+          queryParams: { id: data.pono },
+        });
         this.viewportScroller.scrollToPosition([0, 0]);
       }
     });

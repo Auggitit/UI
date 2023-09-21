@@ -241,9 +241,12 @@ export class ServiceGrnListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.router.navigateByUrl(
-          'servicegrnupdate/' + data.sgrnid + '/' + '23-24'
-        );
+        // this.router.navigateByUrl(
+        //   'servicegrnupdate/' + data.sgrnid + '/' + '23-24'
+        // );
+        this.router.navigate(['/servicegrnupdate'], {
+          queryParams: { id: data.grnno },
+        });
       }
     });
   }
