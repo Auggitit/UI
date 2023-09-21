@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ReferenceDetailsComponent implements OnInit {
   @Input() refNumber: string = '';
   @Input() totalCount: number = 0;
+  @Input() transport: any = 0;
   constructor() {}
 
   ngOnInit(): void {}

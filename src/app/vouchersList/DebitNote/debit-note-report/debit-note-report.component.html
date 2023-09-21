@@ -113,7 +113,7 @@
               <a
                 (click)="onClickVchNo(data)"
                 style="color: #13b2e4; font-weight: 600; cursor: pointer"
-                >{{ data.vchno }}</a
+                >{{ data.drid }}</a
               >
             </td>
             <td
@@ -125,11 +125,12 @@
                 max-width: 106px;
               "
             >
-              <a
+              {{ data.refno }}
+              <!-- <a
                 href=""
                 style="color: #13b2e4; font-weight: 600; cursor: pointer"
                 >{{ data.refno }}</a
-              >
+              > -->
             </td>
             <td
               *ngIf="columns[2].needToShow"
@@ -140,14 +141,17 @@
                 border-top: 1px solid #f0f1f3;
               "
             >
-              <p class="m-0" style="color: #13b2e4; font-weight: 600">
+              <p
+                class="m-0"
+                style="color: #13b2e4; cursor: pointer; font-weight: 600"
+              >
                 {{ data.vendorname }}
               </p>
-              <a
+              <!-- <a
                 (click)="onClickVchNo(data)"
                 style="color: #667085; line-height: 2; cursor: pointer"
                 >{{ data.vchno }}</a
-              >
+              > -->
             </td>
             <td
               *ngIf="columns[3].needToShow"
@@ -161,8 +165,11 @@
               <p class="m-0" style="color: #333843; font-weight: 600">
                 {{ data.products[0].pname }}
               </p>
-              <p style="font-weight: 400; color: #667085">
-                + {{ data.products.length }} other products
+              <p
+                *ngIf="data.products.length - 1 !== 0"
+                style="font-weight: 400; color: #667085"
+              >
+                + {{ data.products.length - 1 }} other products
               </p>
             </td>
             <td
@@ -214,7 +221,7 @@
               <p class="mb-0">
                 Price - {{ data.orderedvalue | currency : "INR" }}
               </p>
-              <p class="mb-0">GST- 3,000</p>
+              <p class="mb-0">GST- {{ data.cgstTotal | currency : "INR" }}</p>
               <p class="mb-0">
                 Total-
                 <span style="font-weight: 600">{{

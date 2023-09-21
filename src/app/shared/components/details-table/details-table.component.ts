@@ -12,6 +12,7 @@ export class DetailsTableComponent implements OnInit {
     { title: 'SKU' },
     { title: 'HSN' },
     { title: 'Price' },
+    { title: 'GST' },
     { title: 'Order Qty' },
     { title: 'Total' },
   ];

@@ -19,7 +19,7 @@ export class ServiceGrnDetailsComponent implements OnInit {
   serviceGrnDetailsForm!: FormGroup;
   filterByOptions: dropDownData[] = dateFilterOptions;
   saveAsOptions: dropDownData[] = exportOptions;
-  serviceGnData: any;
+  serviceGrnData: any;
   productsData: any[] = [];
   addressLine1: string = '';
   addressLine2: string = '';
@@ -68,15 +68,15 @@ export class ServiceGrnDetailsComponent implements OnInit {
       .subscribe((res: any) => {
         console.log(res, '...........reponae');
         this.loading = false;
-        this.serviceGnData = res;
+        this.serviceGrnData = res;
         this.productsData = res.products;
         this.cGst = Number(res.cgstTotal);
         this.sGst = Number(res.sgstTotal);
         this.iGst = Number(res.igstTotal);
         this.Total = Number(res.net);
 
-        let companyAddress = this.serviceGnData.companyaddress;
-        let deliveryAddress = this.serviceGnData.companyaddress;
+        let companyAddress = this.serviceGrnData.companyaddress;
+        let deliveryAddress = this.serviceGrnData.companyaddress;
 
         this.addressLine1 = companyAddress;
         this.addressLine2 = companyAddress;

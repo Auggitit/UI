@@ -123,7 +123,7 @@
                 "
               >
                 <a
-                  href=""
+                  (click)="onClickGrnNo(data)"
                   style="color: #13b2e4; font-weight: 600; cursor: pointer"
                   >{{ data.pono }}</a
                 >
@@ -137,14 +137,17 @@
                   border-top: 1px solid #f0f1f3;
                 "
               >
-                <p class="m-0" style="color: #13b2e4; font-weight: 600">
+                <p
+                  class="m-0"
+                  style="color: #13b2e4; font-weight: 600; cursor: pointer"
+                >
                   {{ data.vendorname }}
                 </p>
-                <a
+                <!-- <a
                   (click)="onClickGrnNo(data)"
                   style="color: #667085; line-height: 2; cursor: pointer"
                   >{{ data.grnno }}</a
-                >
+                > -->
               </td>
               <td
                 *ngIf="columns[3].needToShow"
@@ -158,8 +161,11 @@
                 <p class="m-0" style="color: #333843; font-weight: 600">
                   {{ data.products[0].pname }}
                 </p>
-                <p style="font-weight: 400; color: #667085">
-                  + {{ data.products.length }} other products
+                <p
+                  *ngIf="data.products.length - 1 !== 0"
+                  style="font-weight: 400; color: #667085"
+                >
+                  + {{ data.products.length - 1 }} other products
                 </p>
               </td>
               <td
@@ -213,7 +219,7 @@
                 <p class="mb-0">
                   Price - {{ data.orderedvalue | currency : "INR" }}
                 </p>
-                <p class="mb-0">GST- 3,000</p>
+                <p class="mb-0">GST- {{ data.cgstTotal | currency : "INR" }}</p>
                 <p class="mb-0">
                   Total-
                   <span style="font-weight: 600">{{
