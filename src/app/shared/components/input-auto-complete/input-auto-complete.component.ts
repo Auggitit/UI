@@ -12,6 +12,7 @@ export class InputAutoCompleteComponent implements OnInit {
   @Input() controlName!: FormControlName | any;
   @Input() inputWidth: string = '150px';
   @Input() svgIconNeeded: boolean = true;
+  @Input() placeholderText: string = 'Vendor';
   filteredSearchValues!: any[];
   vendorAutoCompleteValue: FormControl = new FormControl(''); //for testing
 
@@ -34,6 +35,8 @@ export class InputAutoCompleteComponent implements OnInit {
   }
 
   onOptionSelected(event: MatAutocompleteSelectedEvent) {
+    console.log(event, 'eeeeeeeeeeeeeeeee');
+
     const selectedValue = this.filteredSearchValues.find(
       (item) => item.name === event.option.value
     );

@@ -8,6 +8,7 @@ import { FormControlName, FormGroup } from '@angular/forms';
 })
 export class MatInputComponent implements OnInit {
   @Input() labelText: string = 'Label Name';
+  @Input() inputType: string = 'text';
   @Input() placeholderText: string = 'Label Text';
   @Input() groupName!: FormGroup;
   @Input() formControlName!: FormControlName | any;

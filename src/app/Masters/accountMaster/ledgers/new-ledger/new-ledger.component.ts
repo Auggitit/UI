@@ -10,7 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { map, Observable, startWith } from 'rxjs';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
-// import { ApiService } from '../../../services/api.service';
 import Swal from 'sweetalert2';
 import {
   dropDownData,
@@ -41,7 +40,6 @@ export class NewLedgerComponent implements OnInit {
   showbank = false;
   uniqueID: any;
   ledgerForm!: FormGroup;
-  ledgerName: any;
   ledgerUnder: any;
   ledgerUnderName: any;
   accholdername: any;
@@ -53,7 +51,6 @@ export class NewLedgerComponent implements OnInit {
   address: any;
   country: any;
   state: any;
-  countrycode: any;
   statecode: any;
   pincode: any;
   gstin: any;
@@ -76,16 +73,74 @@ export class NewLedgerComponent implements OnInit {
     public activatedRoute: ActivatedRoute
   ) {}
 
-  countrychange(event: any, val: any) {
-    console.log(val, 'vallllllllllllllllllll');
-    this.country = val.countryname;
-    this.countrycode = val.countryname;
+  ngOnInit(): void {
+    this.setValidations();
+    this.loadParentGroup();
+    this.loadStatedata();
+    this.loadCountrydata();
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+
+    this.ledgerForm.get('cstate')?.valueChanges.subscribe((value) => {
+      let stateCode = this.stateDropDownData.filter(
+        (item) => item.id === value
+      );
+      this.ledgerForm.get('cStateName')?.setValue(stateCode[0].name);
+    });
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateLedger = false;
+
+      this.api.get_LedgerDataWithID(this.oldid).subscribe((res) => {
+        this.ledgerForm.patchValue({
+          cledgerName: res.companyDisplayName,
+          cledgerUnder: res.groupCode,
+          cgstin: res.gstNo,
+          ccountry: res.bilingCountry,
+          cstate: res.stateCode,
+          cStateName: res.stateName,
+          caddress: res.bilingAddress,
+          cpincode: res.bilingPincode,
+        });
+        this.ledgercode = res.ledgerCode;
+        this.accholdername = res.accholdername;
+        this.accno = res.accNo;
+        this.ifsccode = res.ifscCode;
+        this.swiftcode = res.swiftCode;
+        this.bankname = res.bankName;
+        this.branchname = res.branch;
+
+        var val = res.groupName.substring(0, 4).toLowerCase();
+        if (val == 'bank') this.showbank = true;
+        else this.showbank = false;
+      });
+    }
   }
 
-  statechange(event: any, val: any) {
-    console.log(val);
-    this.state = val.statename;
-    this.statecode = val.stetecode;
+  onClickButton(): void {
+    this.router.navigateByUrl('ledger-list');
+  }
+
+  onClickAddButton(): void {
+    this.router.navigateByUrl('create-ledger');
+  }
+
+  setValidations(): void {
+    this.ledgerForm = this.fb.group({
+      cledgerName: ['', Validators.required],
+      cledgerUnder: ['', Validators.required],
+      caccholdername: ['', Validators.nullValidator],
+      caccno: ['', Validators.nullValidator],
+      cifsccode: ['', Validators.nullValidator],
+      cswiftcode: ['', Validators.nullValidator],
+      cbankname: ['', Validators.nullValidator],
+      cbranchname: ['', Validators.nullValidator],
+      caddress: ['', Validators.nullValidator],
+      cstate: ['', Validators.nullValidator],
+      cStateName: ['', Validators.nullValidator],
+      ccountry: ['', Validators.nullValidator],
+      cpincode: ['', Validators.nullValidator],
+      cgstin: ['', Validators.nullValidator],
+    });
   }
 
   loadParentGroup() {
@@ -102,7 +157,6 @@ export class NewLedgerComponent implements OnInit {
   loadCountrydata() {
     this.api.get_CountryData().subscribe((res) => {
       this.countryData = res;
-      console.log(res, 'resssssssssssssssssss');
       const newMap = new Map();
       res
         .map((item: any) => {
@@ -113,13 +167,12 @@ export class NewLedgerComponent implements OnInit {
         })
         .forEach((item: any) => newMap.set(item.id, item));
       this.countryDropDownData = [...newMap.values()];
-      console.log(this.countryDropDownData, 'country data');
     });
   }
+
   loadStatedata() {
     this.api.get_StateData().subscribe((res) => {
       this.stateData = res;
-      console.log(res, 'resssssssssssssssssss');
       const newMap = new Map();
       res
         .map((item: any) => {
@@ -130,7 +183,6 @@ export class NewLedgerComponent implements OnInit {
         })
         .forEach((item: any) => newMap.set(item.id, item));
       this.stateDropDownData = [...newMap.values()];
-      console.log(this.stateDropDownData, 'country data');
     });
   }
 
@@ -142,68 +194,6 @@ export class NewLedgerComponent implements OnInit {
       if (val == 'bank') this.showbank = true;
       else this.showbank = false;
     }
-  }
-
-  setValidations(): void {
-    this.ledgerForm = this.fb.group({
-      cledgerName: ['', Validators.required],
-      cledgerUnder: ['', Validators.required],
-      caccholdername: ['', Validators.nullValidator],
-      caccno: ['', Validators.nullValidator],
-      cifsccode: ['', Validators.nullValidator],
-      cswiftcode: ['', Validators.nullValidator],
-      cbankname: ['', Validators.nullValidator],
-      cbranchname: ['', Validators.nullValidator],
-      caddress: ['', Validators.nullValidator],
-      cstate: ['', Validators.nullValidator],
-      ccountry: ['', Validators.nullValidator],
-      cpincode: ['', Validators.nullValidator],
-      cgstin: ['', Validators.nullValidator],
-    });
-  }
-
-  ngOnInit(): void {
-    this.setValidations();
-    this.loadParentGroup();
-    this.loadStatedata();
-    this.loadCountrydata();
-
-    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
-      this.isCreateLedger = false;
-    }
-    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
-
-    this.api.get_LedgerDataWithID(this.oldid).subscribe((res) => {
-      console.log('Previous', res);
-      this.ledgerName = res.companyDisplayName;
-      this.ledgerUnderName = res.groupName;
-      this.ledgerUnder = res.groupCode;
-      this.ledgercode = res.ledgerCode;
-      this.country = res.bilingCountry;
-      this.state = res.stateName;
-      this.statecode = res.stateCode;
-      this.address = res.bilingAddress;
-      this.pincode = res.bilingPincode;
-      this.gstin = res.gstNo;
-      this.accholdername = res.accholdername;
-      this.accno = res.accNo;
-      this.ifsccode = res.ifscCode;
-      this.swiftcode = res.swiftCode;
-      this.bankname = res.bankName;
-      this.branchname = res.branch;
-
-      var val = res.groupName.substring(0, 4).toLowerCase();
-      if (val == 'bank') this.showbank = true;
-      else this.showbank = false;
-    });
-  }
-
-  onClickButton(): void {
-    this.router.navigateByUrl('ledger-list');
-  }
-
-  onClickAddButton(): void {
-    this.router.navigateByUrl('create-ledger');
   }
 
   async getMaxCode() {
@@ -244,7 +234,11 @@ export class NewLedgerComponent implements OnInit {
         this.loading = true;
         setTimeout(() => {
           this.getMaxCode().then((res) => {
-            this.save();
+            if (this.isCreateLedger) {
+              this.save();
+            } else if (!this.isCreateLedger) {
+              this.update();
+            }
           });
         }, 400);
       } else {
@@ -306,7 +300,7 @@ export class NewLedgerComponent implements OnInit {
       firstName: '',
       lastName: '',
       ledgerCode: this.ledgercode,
-      companyDisplayName: this.ledgerName,
+      companyDisplayName: this.ledgerForm.value.cledgerName,
       companyMobileNo: '',
       companyEmailID: '',
       companyWebSite: '',
@@ -324,17 +318,17 @@ export class NewLedgerComponent implements OnInit {
       paaymentTerm: '',
       creditLimit: '',
       bankDetails: '',
-      stateName: this.state,
-      stateCode: this.statecode,
+      stateName: this.ledgerForm.value.cStateName,
+      stateCode: this.ledgerForm.value.cstate,
       gstTreatment: '',
-      gstNo: this.gstin,
+      gstNo: this.ledgerForm.value.cgstin,
       panNo: '',
       cinNo: '',
-      bilingAddress: this.address,
-      bilingCountry: this.country,
+      bilingAddress: this.ledgerForm.value.caddress,
+      bilingCountry: this.ledgerForm.value.ccountry,
       bilingCity: '',
-      bilingState: this.statecode,
-      bilingPincode: this.pincode,
+      bilingState: this.ledgerForm.value.cstate,
+      bilingPincode: this.ledgerForm.value.cpincode,
       bilingPhone: '',
       deliveryAddress: '',
       deliveryCountry: '',
@@ -352,9 +346,8 @@ export class NewLedgerComponent implements OnInit {
       bankName: this.bankname,
       branch: this.branchname,
     };
-    console.log(postdata);
-    this.api.Inser_LedgerData(postdata).subscribe(
-      (data) => {
+    this.api.Inser_LedgerData(postdata).subscribe({
+      next: (data) => {
         let dialogRef = this.dialog.open(SuccessmsgComponent, {
           data: 'Successfully Saved!',
         });
@@ -363,12 +356,11 @@ export class NewLedgerComponent implements OnInit {
           this.loading = false;
         });
       },
-      (err) => {
-        console.log(err);
+      error: (err) => {
         alert('Some Error Occured');
         this.loading = false;
-      }
-    );
+      },
+    });
   }
 
   update() {
@@ -420,12 +412,12 @@ export class NewLedgerComponent implements OnInit {
       firstName: '',
       lastName: '',
       ledgerCode: this.ledgercode,
-      companyDisplayName: this.ledgerName,
+      companyDisplayName: this.ledgerForm.value.cledgerName,
       companyMobileNo: '',
       companyEmailID: '',
       companyWebSite: '',
-      groupName: this.ledgerUnderName,
-      groupCode: this.ledgerUnder.toString(),
+      groupName: this.ledgerForm.value.cledgerUnder,
+      groupCode: this.ledgerForm.value.cledgerUnder.toString(),
       contactPersonName: '',
       contactPhone: '',
       designation: '',
@@ -438,17 +430,17 @@ export class NewLedgerComponent implements OnInit {
       paaymentTerm: '',
       creditLimit: '',
       bankDetails: '',
-      stateName: this.state,
-      stateCode: this.statecode,
+      stateName: this.ledgerForm.value.cStateName,
+      stateCode: this.ledgerForm.value.cstate,
       gstTreatment: '',
-      gstNo: this.gstin,
+      gstNo: this.ledgerForm.value.cgstin,
       panNo: '',
       cinNo: '',
-      bilingAddress: this.address,
-      bilingCountry: this.country,
+      bilingAddress: this.ledgerForm.value.caddress,
+      bilingCountry: this.ledgerForm.value.ccountry,
       bilingCity: '',
-      bilingState: this.statecode,
-      bilingPincode: this.pincode,
+      bilingState: this.ledgerForm.value.cstate,
+      bilingPincode: this.ledgerForm.value.cpincode,
       bilingPhone: '',
       deliveryAddress: '',
       deliveryCountry: '',
@@ -466,10 +458,9 @@ export class NewLedgerComponent implements OnInit {
       bankName: this.bankname,
       branch: this.branchname,
     };
-    console.log(postdata);
 
-    this.api.Update_LedgerData(this.oldid, postdata).subscribe(
-      (data) => {
+    this.api.Update_LedgerData(this.oldid, postdata).subscribe({
+      next: (data) => {
         this.loading = false;
         let dialogRef = this.dialog.open(SuccessmsgComponent, {
           data: 'Ledger Successfully Updated',
@@ -480,26 +471,17 @@ export class NewLedgerComponent implements OnInit {
           this.router.navigateByUrl('ledger-list');
         });
       },
-      (err) => {
-        console.log(err);
+      error: (err) => {
         alert('Some Error Occured');
         this.loading = false;
-      }
-    );
+      },
+    });
   }
 
   clearAll() {
     this.ledgercode = '';
-    this.ledgerName = '';
     this.ledgerUnderName = '';
     this.ledgerUnder = '';
-    this.state = '';
-    this.statecode = '';
-    this.gstin = '';
-    this.address = '';
-    this.country = '';
-    this.statecode = '';
-    this.pincode = '';
     this.accholdername = '';
     this.accno = '';
     this.ifsccode = '';

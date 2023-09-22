@@ -53,7 +53,6 @@
                   labelText="Ledger Name"
                   [placeholderText]="'Ledger Name'"
                   [formControlName]="'cledgerName'"
-                  [modelName]="ledgerName"
                 ></app-mat-input>
               </div>
 
@@ -69,7 +68,6 @@
                     appearance="outline"
                     style="width: 100%; margin-top: 6px !important"
                   >
-                    <!-- <mat-label>Ledger Under</mat-label> -->
                     <input
                       type="text"
                       #eprod
@@ -85,22 +83,22 @@
                       <mat-icon svgIcon="arrowDown"></mat-icon
                     ></span>
 
-                    <!-- (keyup.enter)="onProdKeydown($event,i)"> -->
                     <mat-autocomplete #auto="matAutocomplete">
                       <mat-option
                         *ngFor="let r of filteredParent | async"
                         [value]="r.groupname"
                         (onSelectionChange)="parentChanged($event, r)"
                       >
-                        <!-- <img alt="" class="example-option-img" [src]="r.itemname" height="25"> -->
                         <span>{{ r.groupname }}</span> |
                         <small>#{{ r.groupcode }}</small>
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
                   <!-- <app-input-auto-complete
+                    #eprod
+                    [placeholderText]="'Pick one'"
                     [svgIconNeeded]="false"
-                    [optionsList]="saveAsOptions"
+                    [optionsList]="ledgerDropDownData"
                     [groupName]="ledgerForm"
                     [controlName]="'cledgerUnder'"
                     inputWidth="200px"
@@ -111,11 +109,11 @@
 
             <div class="col-6">
               <app-mat-input
+                inputType="text"
                 [groupName]="ledgerForm"
                 labelText="GSTIN No"
                 [placeholderText]="'GSTIN No'"
                 [formControlName]="'cgstin'"
-                [modelName]="gstin"
               ></app-mat-input>
             </div>
 
@@ -145,26 +143,6 @@
                     [groupName]="ledgerForm"
                     [formAppearance]="'outline'"
                   ></app-mat-select-box>
-                  <!-- <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%; margin-top: 6px !important"
-                  >
-                    <mat-select
-                      [(ngModel)]="country"
-                      placeholder="Country"
-                      formControlName="ccountry"
-                    >
-                      <mat-option
-                        *ngFor="let val of countryData"
-                        [value]="val.countryname"
-                        [title]="val.countryname"
-                        (onSelectionChange)="countrychange($event, val)"
-                      >
-                        {{ val.countryname }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field> -->
                 </div>
               </div>
               <div
@@ -181,40 +159,16 @@
                     [groupName]="ledgerForm"
                     [formAppearance]="'outline'"
                   ></app-mat-select-box>
-                  <!-- <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%; margin-top: 6px !important"
-                  >
-                    <mat-select
-                      [(ngModel)]="state"
-                      formControlName="cstate"
-                      placeholder="State"
-                    >
-                      <mat-option
-                        *ngFor="let val of stateData"
-                        [value]="val.statename"
-                        [title]="val.statename"
-                        (onSelectionChange)="statechange($event, val)"
-                      >
-                        {{ val.statename }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field> -->
                 </div>
               </div>
             </div>
             <div class="col-12 d-flex mb-0 align-items-center" style="gap: 20%">
               <p style="color: #667085; font-weight: 600">Address</p>
-              <!-- <div
-                class="p-0 "
-              > -->
               <mat-form-field
                 class="example-full-width"
                 appearance="outline"
                 style="width: 100%; margin-top: 6px !important"
               >
-                <!-- <mat-label>Address</mat-label> -->
                 <textarea
                   style="height: 68px"
                   placeholder="Address"
@@ -225,7 +179,6 @@
                   autocomplete="off"
                 ></textarea>
               </mat-form-field>
-              <!-- </div> -->
             </div>
 
             <div class="p-0 col-6">
@@ -234,7 +187,6 @@
                 labelText="Pincode"
                 [placeholderText]="'Pincode'"
                 [formControlName]="'cpincode'"
-                [modelName]="pincode"
               ></app-mat-input>
             </div>
             <app-action-button

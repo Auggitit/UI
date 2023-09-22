@@ -3,7 +3,7 @@
     <input
       matInput
       type="text"
-      placeholder="Vendor"
+      [placeholder]="placeholderText"
       [matAutocomplete]="searchAutoComplete"
       [formControl]="vendorAutoCompleteValue"
     />
@@ -20,7 +20,8 @@
     #searchAutoComplete="matAutocomplete"
   >
     <mat-option *ngFor="let item of filteredSearchValues" [value]="item.name">
-      {{ item.name }}
+      {{ item.name }} |
+      <small *ngIf="item.groupcode">#{{ item.groupcode }}</small>
     </mat-option>
   </mat-autocomplete>
 </form>
