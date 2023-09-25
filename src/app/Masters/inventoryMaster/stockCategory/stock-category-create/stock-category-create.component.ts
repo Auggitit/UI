@@ -37,7 +37,8 @@ export class StockCategoryCreateComponent implements OnInit {
   displayedColumns: string[] = ['CATEGORY_NAME', 'ACTIONS'];
   dataSource!: MatTableDataSource<any>;
   savedData: any;
-
+  categetoryDropDownData: dropDownData[] = [];
+  isCreateLedger: boolean = false;
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
@@ -49,6 +50,7 @@ export class StockCategoryCreateComponent implements OnInit {
     this.categoryForm = this.fb.group({
       ccatname: ['', Validators.required],
       ccatunder: ['', Validators.required],
+      cCatUnderName: ['', Validators.nullValidator],
     });
   }
 
@@ -59,6 +61,12 @@ export class StockCategoryCreateComponent implements OnInit {
     this.setValidations();
     this.getMaxCode();
     this.loaddata();
+    this.categoryForm.get('ccatunder')?.valueChanges.subscribe((value) => {
+      let stateCode = this.categetoryDropDownData.filter(
+        (item) => item.id === value
+      );
+      this.categoryForm.get('cCatUnderName')?.setValue(stateCode[0].name);
+    });
   }
 
   onClickButton(): void {
@@ -69,7 +77,18 @@ export class StockCategoryCreateComponent implements OnInit {
     this.api.get_CategoryData().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res);
       this.savedData = res;
-      console.log(res);
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.catname,
+            id: item.catcode,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.categetoryDropDownData = [...newMap.values()];
+
+      console.log(res, 'essssssssssssssssssssssssssss');
     });
   }
 
@@ -90,9 +109,9 @@ export class StockCategoryCreateComponent implements OnInit {
         this.uniqueID = Guid.create();
         var postData = {
           id: this.uniqueID.value,
-          catcode: this.catcode,
-          catname: this.catname,
-          catunder: this.catundercode,
+          catcode: this.categoryForm.value.ccatunder,
+          catname: this.categoryForm.value.ccatname,
+          catunder: this.categoryForm.value.ccatunder,
           rCreatedDateTime: new Date(),
           rStatus: 'A',
         };
@@ -160,51 +179,51 @@ export class StockCategoryCreateComponent implements OnInit {
     this.setValidations();
     this.categoryForm.reset();
   }
-  edit(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(rowdata);
-        this.selectedID = rowdata.id;
-        this.catname = rowdata.catname;
-        this.catundercode = rowdata.catunder;
-        this.catcode = rowdata.catcode;
-        const catname = this.categoryForm.get('ccatname');
-        catname?.clearValidators();
-        catname?.clearAsyncValidators();
-        catname?.updateValueAndValidity();
-      }
-    });
-  }
-  restore(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the Restoration of this Category data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.delete_LedgerGroup(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Restored!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
-    });
-  }
+  // edit(rowdata: any) {
+  //   const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+  //     width: '350px',
+  //     data: 'Do you Modify data?',
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       console.log(rowdata);
+  //       this.selectedID = rowdata.id;
+  //       this.catname = rowdata.catname;
+  //       this.catundercode = rowdata.catunder;
+  //       this.catcode = rowdata.catcode;
+  //       const catname = this.categoryForm.get('ccatname');
+  //       catname?.clearValidators();
+  //       catname?.clearAsyncValidators();
+  //       catname?.updateValueAndValidity();
+  //     }
+  //   });
+  // }
+  // restore(rowdata: any) {
+  //   const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+  //     width: '350px',
+  //     data: 'Do you confirm the Restoration of this Category data?',
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       this.api.delete_LedgerGroup(rowdata.id).subscribe(
+  //         (data) => {
+  //           let dialogRef = this.dialog.open(SuccessmsgComponent, {
+  //             //width: '350px',
+  //             data: 'Successfully Restored!',
+  //           });
+  //           dialogRef.afterClosed().subscribe((result) => {
+  //             this.clear();
+  //             this.loaddata();
+  //           });
+  //         },
+  //         (err) => {
+  //           console.log(err);
+  //           alert('Some Error Occured');
+  //         }
+  //       );
+  //     }
+  //   });
+  // }
   delete(rowdata: any) {
     const dialogRef = this.dialog.open(ConfirmmsgComponent, {
       width: '350px',

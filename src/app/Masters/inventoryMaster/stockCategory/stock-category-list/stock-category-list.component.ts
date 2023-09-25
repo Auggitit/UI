@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import {
   dropDownData,
   exportOptions,
@@ -36,7 +38,8 @@ export class StockCategoryListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.stockCategoryForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -64,6 +67,27 @@ export class StockCategoryListComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigateByUrl('stock-category-create');
+  }
+
+  onClickEdit(data: any): void {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you Modify data?',
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // this.router.navigateByUrl('create-ledger/' + data.id);
+        this.router.navigate(['stock-category-create/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
   }
 
   getFilterData(formValues: any, serverData: any) {

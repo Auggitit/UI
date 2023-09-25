@@ -26,6 +26,7 @@ export class ReportsHeaderComponent implements OnInit, OnChanges {
   @Input() svgIconToDisplay!: string;
   @Input() searchField: boolean = false;
   @Input() isReports: boolean = true;
+  @Input() isDownloadNeeded: boolean = true;
   @Input() buttonTitle: string = 'Create New Order';
   @Output() onClickDownload = new EventEmitter();
   @Output() onClickGoto = new EventEmitter();

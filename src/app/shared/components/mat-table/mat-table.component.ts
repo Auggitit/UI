@@ -23,6 +23,7 @@ export class MatTableComponent implements OnInit {
   @Input() tableGroupName!: FormGroup;
   @Input() isSelectAll!: any;
   @ContentChild(TemplateRef) tableRowRef!: TemplateRef<any>;
+  @Input() tableHeaderAlign: string = 'center';
   constructor() {}
 
   onClickPrev(): void {

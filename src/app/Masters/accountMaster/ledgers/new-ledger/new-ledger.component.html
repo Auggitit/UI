@@ -4,21 +4,17 @@
       <div *ngIf="isCreateLedger; else elseBlock">
         <app-reports-header
           title="CREATE LEDGERS"
-          [searchField]="true"
           [reportFormGroupName]="ledgerForm"
-          [saveTypesOptions]="saveAsOptions"
-          [SelectSaveOptions]="'SelectSaveOptions'"
           buttonTitle="Ledger List"
+          [isDownloadNeeded]="false"
           (onClickCreateButton)="onClickButton()"
         ></app-reports-header>
       </div>
       <ng-template #elseBlock>
         <app-reports-header
           title="UPDATE LEDGER DETAILS"
-          [searchField]="true"
           [reportFormGroupName]="ledgerForm"
-          [saveTypesOptions]="saveAsOptions"
-          [SelectSaveOptions]="'SelectSaveOptions'"
+          [isDownloadNeeded]="false"
           buttonTitle="Add Ledger"
           (onClickCreateButton)="onClickAddButton()"
         ></app-reports-header>

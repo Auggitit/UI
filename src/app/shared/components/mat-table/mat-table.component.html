@@ -1,7 +1,12 @@
 <div class="table-responsive">
   <table class="table col-12 p-0">
+    <!-- style="" -->
     <thead
-      style="color: #333843; background-color: #f9f9fc; text-align: center"
+      [ngStyle]="{
+        color: '#333843',
+        'background-color': '#f9f9fc',
+        'text-align': tableHeaderAlign
+      }"
     >
       <th
         [formGroup]="tableGroupName"
@@ -9,12 +14,9 @@
         style="
           padding-left: 35px;
           font-size: 12px;
-          min-width: 90px;
-          /* max-width: 90px; */
           min-height: 56px;
           border-top: 1px solid #f0f1f3;
           border-bottom: 1px solid #f0f1f3;
-          justify-content: left;
         "
       >
         <mat-checkbox

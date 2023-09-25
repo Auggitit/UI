@@ -32,8 +32,8 @@
     <div>
       <p style="font-size: 0.9375rem; font-weight: 700; color: #000000">
         Transport:
-        <span *ngIf="transport != 0; else elseBlock">Not Applicable</span>
-        <ng-template #elseBlock>Applicable</ng-template>
+        <span *ngIf="transport == 0; else elseBlock">Not Applicable</span>
+        <ng-template #elseBlock>{{ transport }}</ng-template>
       </p>
       <div class="d-flex flex-wrap justify-content-between">
         <p style="font-size: 0.875rem; font-weight: 400; color: #667085">

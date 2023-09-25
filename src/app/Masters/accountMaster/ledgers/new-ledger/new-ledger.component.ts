@@ -73,6 +73,25 @@ export class NewLedgerComponent implements OnInit {
     public activatedRoute: ActivatedRoute
   ) {}
 
+  setValidations(): void {
+    this.ledgerForm = this.fb.group({
+      cledgerName: ['', Validators.required],
+      cledgerUnder: ['', Validators.required],
+      caccholdername: ['', Validators.nullValidator],
+      caccno: ['', Validators.nullValidator],
+      cifsccode: ['', Validators.nullValidator],
+      cswiftcode: ['', Validators.nullValidator],
+      cbankname: ['', Validators.nullValidator],
+      cbranchname: ['', Validators.nullValidator],
+      caddress: ['', Validators.nullValidator],
+      cstate: ['', Validators.nullValidator],
+      cStateName: ['', Validators.nullValidator],
+      ccountry: ['', Validators.nullValidator],
+      cpincode: ['', Validators.nullValidator],
+      cgstin: ['', Validators.nullValidator],
+    });
+  }
+
   ngOnInit(): void {
     this.setValidations();
     this.loadParentGroup();
@@ -122,25 +141,6 @@ export class NewLedgerComponent implements OnInit {
 
   onClickAddButton(): void {
     this.router.navigateByUrl('create-ledger');
-  }
-
-  setValidations(): void {
-    this.ledgerForm = this.fb.group({
-      cledgerName: ['', Validators.required],
-      cledgerUnder: ['', Validators.required],
-      caccholdername: ['', Validators.nullValidator],
-      caccno: ['', Validators.nullValidator],
-      cifsccode: ['', Validators.nullValidator],
-      cswiftcode: ['', Validators.nullValidator],
-      cbankname: ['', Validators.nullValidator],
-      cbranchname: ['', Validators.nullValidator],
-      caddress: ['', Validators.nullValidator],
-      cstate: ['', Validators.nullValidator],
-      cStateName: ['', Validators.nullValidator],
-      ccountry: ['', Validators.nullValidator],
-      cpincode: ['', Validators.nullValidator],
-      cgstin: ['', Validators.nullValidator],
-    });
   }
 
   loadParentGroup() {
@@ -252,46 +252,6 @@ export class NewLedgerComponent implements OnInit {
   }
 
   save() {
-    if (this.address == null || this.address == undefined) {
-      this.address = '';
-    }
-    if (this.country == null || this.country == undefined) {
-      this.country = '';
-    }
-    if (this.statecode == null || this.statecode == undefined) {
-      this.statecode = '';
-    }
-    if (this.pincode == null || this.pincode == undefined) {
-      this.pincode = '';
-    }
-    if (this.gstin == null || this.gstin == undefined) {
-      this.gstin = '';
-    }
-    if (this.state == null || this.state == undefined) {
-      this.state = '';
-    }
-    if (this.statecode == null || this.statecode == undefined) {
-      this.statecode = '';
-    }
-    if (this.accholdername == null || this.accholdername == undefined) {
-      this.accholdername = '';
-    }
-    if (this.accno == null || this.accno == undefined) {
-      this.accno = '';
-    }
-    if (this.ifsccode == null || this.ifsccode == undefined) {
-      this.ifsccode = '';
-    }
-    if (this.swiftcode == null || this.swiftcode == undefined) {
-      this.swiftcode = '';
-    }
-    if (this.bankname == null || this.bankname == undefined) {
-      this.bankname = '';
-    }
-    if (this.branchname == null || this.branchname == undefined) {
-      this.branchname = '';
-    }
-
     this.uniqueID = Guid.create();
     var postdata = {
       id: this.uniqueID.value,
@@ -364,47 +324,6 @@ export class NewLedgerComponent implements OnInit {
   }
 
   update() {
-    if (this.address == null || this.address == undefined) {
-      this.address = '';
-    }
-    if (this.country == null || this.country == undefined) {
-      this.country = '';
-    }
-    if (this.statecode == null || this.statecode == undefined) {
-      this.statecode = '';
-    }
-    if (this.pincode == null || this.pincode == undefined) {
-      this.pincode = '';
-    }
-    if (this.gstin == null || this.gstin == undefined) {
-      this.gstin = '';
-    }
-    if (this.state == null || this.state == undefined) {
-      this.state = '';
-    }
-    if (this.statecode == null || this.statecode == undefined) {
-      this.statecode = '';
-    }
-    if (this.accholdername == null || this.accholdername == undefined) {
-      this.accholdername = '';
-    }
-    if (this.accno == null || this.accno == undefined) {
-      this.accno = '';
-    }
-    if (this.ifsccode == null || this.ifsccode == undefined) {
-      this.ifsccode = '';
-    }
-    if (this.swiftcode == null || this.swiftcode == undefined) {
-      this.swiftcode = '';
-    }
-    if (this.bankname == null || this.bankname == undefined) {
-      this.bankname = '';
-    }
-    if (this.branchname == null || this.branchname == undefined) {
-      this.branchname = '';
-    }
-
-    //this.uniqueID = Guid.create();
     var postdata = {
       id: this.oldid,
       type: '',
