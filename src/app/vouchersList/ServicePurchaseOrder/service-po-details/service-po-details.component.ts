@@ -28,6 +28,7 @@ export class ServicePoDetailsComponent implements OnInit {
   cGst: number = 0;
   sGst: number = 0;
   iGst: number = 0;
+  discount: number = 0;
   Total: number = 0;
 
   constructor(
@@ -69,6 +70,11 @@ export class ServicePoDetailsComponent implements OnInit {
       this.cGst = Number(res.cgstTotal);
       this.sGst = Number(res.sgstTotal);
       this.iGst = Number(res.igstTotal);
+      let discount = 0;
+      res.products.forEach((element: { discount: string; }) => {
+        discount = Number(element.discount) + discount
+      });
+      this.discount = Number(discount);
       this.Total = Number(res.net);
 
       let companyAddress = this.purchaseOrderData.companyaddress;
