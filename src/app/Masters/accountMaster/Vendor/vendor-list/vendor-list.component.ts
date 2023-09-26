@@ -25,6 +25,7 @@ export class VendorListComponent implements OnInit {
   vendorForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchVendor: any;
+  tableHeaderAlignValue: string='left';
 
   columns: any[] = [
     {
