@@ -64,24 +64,24 @@
   </table>
 </div>
 <div
-  class="d-flex justify-content-between col-12 p-3 pt-20"
+  class="d-flex flex-wrap justify-content-between col-12 p-3 pt-20"
   style="border-top: 1px solid #f0f1f3"
 >
-  <div class="p-2 fw-md" style="color: #667085">
+  <div class="p-2 fw-md"  style="color: #667085">
     Showing {{ paginationIndex * pageCount + 1 }} -
     {{ paginationIndex * pageCount + pageCount }} from {{ totalRows }}
   </div>
   <ul
-    class="pagination justify-content-end align-items-center"
+    class="pagination justify-content-end align-items-center flex-wrap"
     className="pageIndexStyles"
   >
     <li
-      class="page-item cursor-pointer"
+      class="page-item cursor-pointer pb-2"
       [class]="{ disabled: paginationIndex === 0 }"
     >
       <a class="page-link cursor-pointer" (click)="onClickPrev()">&lt;</a>
     </li>
-    <li class="page-item cursor-pointer">
+    <li class="page-item cursor-pointer pb-2">
       <a
         *ngIf="paginationIndex >= numberOfPageButtonsVisible"
         class="page-link cursor-pointer"
@@ -90,7 +90,7 @@
     </li>
 
     <li
-      class="page-item cursor-pointer"
+      class="page-item cursor-pointer pb-2"
       *ngFor="let item of filteredData; let i = index"
     >
       <a
@@ -103,7 +103,7 @@
         >{{ getPageNumber(i, paginationIndex) }}</a
       >
     </li>
-    <li class="page-item cursor-pointer">
+    <li class="page-item cursor-pointer pb-2">
       <a
         *ngIf="
           paginationIndex + 1 !== filteredData.length &&
@@ -115,7 +115,7 @@
     </li>
 
     <li
-      class="page-item cursor-pointer"
+      class="page-item cursor-pointer pb-2"
       [class]="{
         disabled: paginationIndex === filteredData.length - 1
       }"
