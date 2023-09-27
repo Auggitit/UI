@@ -20,6 +20,7 @@ export class StockGroupItemsComponent implements OnInit {
   stockGroupForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchGroup: any;
+  tableHeaderAlignValue: string='left';
 
   columns: any[] = [
     {

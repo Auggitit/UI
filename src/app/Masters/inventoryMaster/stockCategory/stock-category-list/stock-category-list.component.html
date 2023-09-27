@@ -22,6 +22,7 @@
       [selectAllCheckbox]="selectAllCheckbox"
       [tableGroupName]="stockCategoryForm"
       [isSelectAll]="selectAll"
+      [tableHeaderAlign]="tableHeaderAlignValue"
     >
       <ng-template let-item>
         <tr
@@ -56,6 +57,9 @@
               border-top: 1px solid #f0f1f3;
               min-width: 128px;
               max-width: 128px;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
             "
           >
             {{ data.catname }}
@@ -68,7 +72,7 @@
               min-width: 75px;
               max-width: 75px;
               border-top: 1px solid #f0f1f3;
-              padding-left: 2%;
+              padding-left: 15px;
             "
           >
             <i
