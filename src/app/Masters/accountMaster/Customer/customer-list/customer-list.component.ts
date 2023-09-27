@@ -25,6 +25,7 @@ export class CustomerListComponent implements OnInit {
   customerForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchCustomer: any;
+  tableHeaderAlignValue: string='left';
 
   columns: any[] = [
     {
