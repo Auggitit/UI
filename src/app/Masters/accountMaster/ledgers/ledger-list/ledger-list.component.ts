@@ -27,6 +27,7 @@ export class LedgerListComponent implements OnInit {
   ledgerForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchledger: any;
+  tableHeaderAlignValue: string='left';
 
   columns: any[] = [
     {

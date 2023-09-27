@@ -24,6 +24,7 @@
       [selectAllCheckbox]="selectAllCheckbox"
       [tableGroupName]="ledgerForm"
       [isSelectAll]="selectAll"
+      [tableHeaderAlign]="tableHeaderAlignValue"
     >
       <ng-template let-item>
         <tr
@@ -31,7 +32,6 @@
           style="
             background-color: white;
             height: 50px !important;
-            text-align: center;
           "
         >
           <td
@@ -62,6 +62,9 @@
               border-top: 1px solid #f0f1f3;
               min-width: 128px;
               max-width: 128px;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
             "
           >
             <a style="font-weight: 600; color: #13b2e4">{{
@@ -75,6 +78,9 @@
               min-width: 151px;
               max-width: 151px;
               border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              /* align-items: center; */
+              justify-content: left;
             "
           >
             <p class="m-0" style="font-weight: 600; color: #13b2e4">
@@ -85,9 +91,12 @@
             *ngIf="columns[2].needToShow"
             scope="col"
             style="
-              min-width: 111px;
-              max-width: 111px;
+              min-width: 150px;
+              max-width: 150px;
               border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
             "
           >
             {{ data.groupName }}
@@ -101,6 +110,7 @@
               min-width: 75px;
               max-width: 75px;
               border-top: 1px solid #f0f1f3;
+              padding-left: 15px;
             "
           >
             <i
