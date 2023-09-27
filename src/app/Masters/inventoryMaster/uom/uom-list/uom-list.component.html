@@ -21,6 +21,7 @@
       [selectAllCheckbox]="selectAllCheckbox"
       [tableGroupName]="uomForm"
       [isSelectAll]="selectAll"
+      [tableHeaderAlign]="tableHeaderAlignValue"
     >
       <ng-template let-item>
         <tr
@@ -57,6 +58,9 @@
               border-top: 1px solid #f0f1f3;
               min-width: 128px;
               max-width: 128px;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
             "
           >
             {{ data.uomname }}
@@ -68,6 +72,9 @@
               border-top: 1px solid #f0f1f3;
               min-width: 128px;
               max-width: 128px;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
             "
           >
             {{ data.digits }}
@@ -80,7 +87,7 @@
               min-width: 75px;
               max-width: 75px;
               border-top: 1px solid #f0f1f3;
-              text-align: center;
+              padding-left: 15px;
             "
           >
             <i

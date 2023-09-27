@@ -24,6 +24,7 @@ export class StateMasterListComponent implements OnInit {
   selectAllCheckbox!: FormControlName;
   stateForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
+  tableHeaderAlignValue: string = 'left';
 
   columns: any[] = [
     {

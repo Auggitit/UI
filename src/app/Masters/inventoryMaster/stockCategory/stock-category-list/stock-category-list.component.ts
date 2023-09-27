@@ -22,7 +22,7 @@ export class StockCategoryListComponent implements OnInit {
   stockCategoryForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchCategory: any;
-  tableHeaderAlignValue: string='left';
+  tableHeaderAlignValue: string = 'left';
 
   columns: any[] = [
     {

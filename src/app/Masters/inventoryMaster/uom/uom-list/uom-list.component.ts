@@ -20,6 +20,7 @@ export class UomListComponent implements OnInit {
   uomForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchstockgroup: any;
+  tableHeaderAlignValue: string = 'left';
 
   columns: any[] = [
     {

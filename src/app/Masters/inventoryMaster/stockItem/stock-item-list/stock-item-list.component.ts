@@ -21,7 +21,7 @@ export class StockItemListComponent implements OnInit {
   stockItemForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
   searchCustomer: any;
-  tableHeaderAlignValue: string='left';
+  tableHeaderAlignValue: string = 'left';
 
   columns: any[] = [
     {
