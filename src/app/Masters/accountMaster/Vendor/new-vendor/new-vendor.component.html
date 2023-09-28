@@ -55,10 +55,10 @@
               PRIMARY CONTACT PERSON
             </p>
             <div
-              class="pl-3 d-flex flex-wrap align-items-center pb-2"
-              style="gap: 8%"
+              class="col-12 d-flex flex-wrap align-items-center pb-2"
+             
             >
-              <div class="d-flex flex-wrap mb-0 align-items-center">
+              <div class="d-flex flex-wrap mb-0 align-items-center col-lg-2 col-md-12 ">
                 <p
                   class=""
                   style="color: #667085; font-weight: 600; padding-right: 10px"
@@ -80,6 +80,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <div class="col-lg-5 col-md-12 pb-2">
               <app-mat-input
                 [groupName]="vendorForm"
                 labelText="First Name"
@@ -87,6 +88,8 @@
                 [formControlName]="'cfirstName'"
                 [modelName]="firstName"
               ></app-mat-input>
+            </div>
+            <div class="col-lg-5 col-md-12 pb-2">
               <app-mat-input
                 [groupName]="vendorForm"
                 labelText="Last Name"
@@ -94,6 +97,7 @@
                 [formControlName]="'clastName'"
                 [modelName]="lastName"
               ></app-mat-input>
+            </div>
             </div>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
