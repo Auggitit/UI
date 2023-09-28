@@ -1,10 +1,10 @@
 <form *ngIf="groupName" [formGroup]="groupName" class="p-0 m-0">
-  <div class="col-12 d-flex mb-0 align-items-center justify-content-between">
+  <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
     <p style="color: #667085; font-weight: 600">
       {{ labelText }} <span *ngIf="isRequired" style="color: red">*</span>
     </p>
     <div
-      class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-md-2 col-lg-2 col-xl-2 col-xxl-2"
+      class=" col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-md-2 col-lg-2 col-xl-2 col-xxl-2"
     >
       <mat-form-field appearance="outline">
         <mat-label style="color: #b9b9b9; font-weight: 400">{{
