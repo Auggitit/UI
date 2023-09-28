@@ -34,7 +34,7 @@
               VENDOR DETAIL
             </p>
 
-            <div class="col-8">
+            <div class="col-6">
               <app-mat-input
                 [groupName]="vendorForm"
                 labelText="Vendor Name"
@@ -69,7 +69,7 @@
                   placeholder="Salutation"
                   class="example-full-width"
                   appearance="outline"
-                  style="width: 70px"
+                  style="width: 60px"
                 >
                   <mat-select>
                     <mat-option>Mr.</mat-option>
@@ -219,7 +219,7 @@
                               >
                                 <mat-option
                                   *ngFor="let val of stateData"
-                                  [value]="val.stetecode"
+                                  [value]="val.statecode"
                                   [title]="val.statename"
                                 >
                                   {{ val.statename }}
