@@ -42,8 +42,8 @@
             >
               LEDGER DETAIL
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
                   [groupName]="ledgerForm"
                   labelText="Ledger Name"
@@ -52,66 +52,59 @@
                 ></app-mat-input>
               </div>
 
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Ledger Under</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%; margin-top: 6px !important"
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600;">Ledger Under</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
-                    <input
-                      type="text"
-                      #eprod
-                      placeholder="Pick one"
-                      aria-label="Number"
-                      [(ngModel)]="ledgerUnderName"
-                      formControlName="cledgerUnder"
-                      matInput
-                      [formControl]="parentTextBox"
-                      [matAutocomplete]="auto"
-                    />
-                    <span matSuffix>
-                      <mat-icon svgIcon="arrowDown"></mat-icon
-                    ></span>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      style="width: 100%; margin-top: 6px !important"
+                    >
+                      <input
+                        type="text"
+                        #eprod
+                        placeholder="Pick one"
+                        aria-label="Number"
+                        [(ngModel)]="ledgerUnderName"
+                        formControlName="cledgerUnder"
+                        matInput
+                        [formControl]="parentTextBox"
+                        [matAutocomplete]="auto"
+                      />
+                      <span matSuffix>
+                        <mat-icon svgIcon="arrowDown"></mat-icon
+                      ></span>
 
-                    <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option
-                        *ngFor="let r of filteredParent | async"
-                        [value]="r.groupname"
-                        (onSelectionChange)="parentChanged($event, r)"
-                      >
-                        <span>{{ r.groupname }}</span> |
-                        <small>#{{ r.groupcode }}</small>
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                  <!-- <app-input-auto-complete
-                    #eprod
-                    [placeholderText]="'Pick one'"
-                    [svgIconNeeded]="false"
-                    [optionsList]="ledgerDropDownData"
-                    [groupName]="ledgerForm"
-                    [controlName]="'cledgerUnder'"
-                    inputWidth="200px"
-                  ></app-input-auto-complete> -->
+                      <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option
+                          *ngFor="let r of filteredParent | async"
+                          [value]="r.groupname"
+                          (onSelectionChange)="parentChanged($event, r)"
+                        >
+                          <span>{{ r.groupname }}</span> |
+                          <small>#{{ r.groupcode }}</small>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-6">
-              <app-mat-input
-                inputType="text"
-                [groupName]="ledgerForm"
-                labelText="GSTIN No"
-                [placeholderText]="'GSTIN No'"
-                [formControlName]="'cgstin'"
-              ></app-mat-input>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  inputType="text"
+                  [groupName]="ledgerForm"
+                  labelText="GSTIN No"
+                  [placeholderText]="'GSTIN No'"
+                  [formControlName]="'cgstin'"
+                ></app-mat-input>
             </div>
+          </div>
 
             <p
               style="
@@ -124,49 +117,56 @@
             >
               LEDGER DETAIL
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Country</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <app-mat-select-box
-                    [formOptions]="countryDropDownData"
-                    [controlName]="'ccountry'"
-                    [label]="'Country'"
-                    [groupName]="ledgerForm"
-                    [formAppearance]="'outline'"
-                  ></app-mat-select-box>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Country</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <app-mat-select-box
+                      [formOptions]="countryDropDownData"
+                      [controlName]="'ccountry'"
+                      [label]="'Country'"
+                      [groupName]="ledgerForm"
+                      [formAppearance]="'outline'"
+                    ></app-mat-select-box>
+                  </div>
                 </div>
               </div>
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">State</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <app-mat-select-box
-                    [formOptions]="stateDropDownData"
-                    [controlName]="'cstate'"
-                    [label]="'State'"
-                    [groupName]="ledgerForm"
-                    [formAppearance]="'outline'"
-                  ></app-mat-select-box>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">State</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <app-mat-select-box
+                      [formOptions]="stateDropDownData"
+                      [controlName]="'cstate'"
+                      [label]="'State'"
+                      [groupName]="ledgerForm"
+                      [formAppearance]="'outline'"
+                    ></app-mat-select-box>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-12 d-flex mb-0 align-items-center" style="gap: 20%">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <!-- <div class="col-8 col-md-12 pb-2"> -->
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+
+            <!-- <div class="col-12 d-flex mb-0 align-items-center" style="gap: 20%"> -->
               <p style="color: #667085; font-weight: 600">Address</p>
+              <div
+              class="col-9"
+            >
               <mat-form-field
                 class="example-full-width"
                 appearance="outline"
                 style="width: 100%; margin-top: 6px !important"
               >
                 <textarea
-                  style="height: 68px"
+                  style="height: 68px; vertical-align: super;"
                   placeholder="Address"
                   type="text"
                   matInput
@@ -175,16 +175,25 @@
                   autocomplete="off"
                 ></textarea>
               </mat-form-field>
+              </div>
+            <!-- </div> -->
+
             </div>
 
-            <div class="p-0 col-6">
-              <app-mat-input
-                [groupName]="ledgerForm"
-                labelText="Pincode"
-                [placeholderText]="'Pincode'"
-                [formControlName]="'cpincode'"
-              ></app-mat-input>
             </div>
+
+
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="ledgerForm"
+                  labelText="Pincode"
+                  [placeholderText]="'Pincode'"
+                  [formControlName]="'cpincode'"
+                ></app-mat-input>
+              </div>
+            </div>
+
             <app-action-button
               [loading]="loading"
               [isSave]="isCreateLedger"
