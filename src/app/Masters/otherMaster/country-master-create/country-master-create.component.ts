@@ -1,17 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-// import { ApiService } from '../../../services/api.service';
+import { ApiService } from '../../../services/api.service';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import Swal from 'sweetalert2';
-import {
-  dropDownData,
-  exportOptions,
-} from 'src/app/reports/stub/salesOrderStub';
-import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-country-master-create',
@@ -19,14 +14,15 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./country-master-create.component.scss'],
 })
 export class CountryMasterCreateComponent implements OnInit {
-  saveAsOptions: dropDownData[] = exportOptions;
   loading: boolean = false;
-  countryForm!: FormGroup;
+  countryFormNew!: FormGroup;
+  oldid: any;
   constructor(
     public api: ApiService,
     public fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public activatedRoute: ActivatedRoute
   ) {}
   uniqueID: any;
   selectedID: any;
@@ -34,22 +30,35 @@ export class CountryMasterCreateComponent implements OnInit {
   curname: any;
   curshortname: any;
   cursymbol: any;
-  displayedColumns: string[] = [
-    'COUNTRY_NAME',
-    'CURRENCY_NAME',
-    'CURRENCY_SHORT_NAME',
-    'CURRENCY_SYMBOL',
-    'ACTIONS',
-  ];
   dataSource: any[] = [];
+  isCreateCountry: boolean = true;
 
   ngOnInit(): void {
     this.setValidations();
     this.loaddata();
+
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateCountry = false;
+
+      this.api.get_CountryDataWithID(this.oldid).subscribe((res) => {
+        console.log('------', res);
+        this.countryFormNew.patchValue({
+          ccname: res.countryname,
+          ccurname: res.currencyname,
+          ccursname: res.currencyshortname,
+          ccursymbol: res.currencysymbol,
+        });
+        this.cname = res.countryname;
+        this.curname = res.currencyname;
+        this.curshortname = res.currencyshortname;
+        this.cursymbol = res.currencysymbol;
+      });
+    }
   }
 
   setValidations() {
-    this.countryForm = this.fb.group({
+    this.countryFormNew = this.fb.group({
       ccname: ['', Validators.required],
       ccurname: ['', Validators.required],
       ccursname: ['', Validators.required],
@@ -63,22 +72,18 @@ export class CountryMasterCreateComponent implements OnInit {
       console.log(res);
     });
   }
-
-  onClickButton(): void {
-    this.router.navigateByUrl('country-master-list');
-  }
-
+  //Working
   submit() {
     setTimeout(() => {
-      if (this.countryForm.valid) {
+      if (this.countryFormNew.valid) {
         this.loading = true;
         this.uniqueID = Guid.create();
         var postdata = {
           id: this.uniqueID.value,
-          countryname: this.cname,
-          currencyname: this.curname,
-          currencyshortname: this.curshortname,
-          currencysymbol: this.cursymbol,
+          countryname: this.countryFormNew.value.ccname,
+          currencyname: this.countryFormNew.value.ccurname,
+          currencyshortname: this.countryFormNew.value.ccursname,
+          currencysymbol: this.countryFormNew.value.ccursymbol,
           rCreatedDateTime: new Date(),
           rStatus: 'A',
         };
@@ -112,19 +117,19 @@ export class CountryMasterCreateComponent implements OnInit {
 
   update() {
     setTimeout(() => {
-      if (this.countryForm.valid) {
+      if (this.countryFormNew.valid) {
         this.loading = true;
         var postdata = {
-          id: this.selectedID,
-          countryname: this.cname,
-          currencyname: this.curname,
-          currencyshortname: this.curshortname,
-          currencysymbol: this.cursymbol,
+          id: this.oldid,
+          countryname: this.countryFormNew.value.ccname,
+          currencyname: this.countryFormNew.value.ccurname,
+          currencyshortname: this.countryFormNew.value.ccursname,
+          currencysymbol: this.countryFormNew.value.ccursymbol,
           rCreatedDateTime: new Date(),
           rStatus: 'A',
         };
-        console.log(postdata);
-        this.api.Update_CountryData(this.selectedID, postdata).subscribe(
+        console.log('update postdata', postdata);
+        this.api.Update_CountryData(this.oldid, postdata).subscribe(
           (data) => {
             let dialogRef = this.dialog.open(SuccessmsgComponent, {
               //width: '350px',
@@ -132,8 +137,9 @@ export class CountryMasterCreateComponent implements OnInit {
             });
             dialogRef.afterClosed().subscribe((result) => {
               this.clear();
-              this.loaddata();
+              //this.loaddata();
               this.loading = false;
+              this.router.navigateByUrl('country-master-list');
             });
           },
           (err) => {
@@ -151,31 +157,8 @@ export class CountryMasterCreateComponent implements OnInit {
     }, 200);
   }
 
-  restore(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the Restoration of this Country data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_CountryData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Restored!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
-    });
+  onClickCountyListButton() {
+    this.router.navigateByUrl('country-master-list');
   }
 
   delete(rowdata: any) {
@@ -205,27 +188,11 @@ export class CountryMasterCreateComponent implements OnInit {
     });
   }
 
-  edit(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(rowdata);
-        this.selectedID = rowdata.id;
-        this.cname = rowdata.countryname;
-        this.curname = rowdata.currencyname;
-        this.cursymbol = rowdata.currencysymbol;
-      }
-    });
-  }
-
   clear() {
     this.selectedID = undefined;
     this.cname = '';
     this.curname = '';
     this.cursymbol = '';
-    this.countryForm.reset();
+    this.countryFormNew.reset();
   }
 }

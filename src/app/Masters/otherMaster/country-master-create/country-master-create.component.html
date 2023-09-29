@@ -1,15 +1,26 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <app-reports-header
-        title="CREATE COUNTRY"
-        [searchField]="true"
-        [reportFormGroupName]="countryForm"
-        [saveTypesOptions]="saveAsOptions"
-        buttonTitle="List of Country"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
-      <!-- [SelectSaveOptions]="'SelectSaveOptions'" -->
+      <div *ngIf="isCreateCountry; else elseBlock">
+        <app-reports-header
+          title="CREATE COUNTRY MASTER"
+          [searchField]="true"
+          [reportFormGroupName]="countryFormNew"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          buttonTitle="List of Country Master"
+          (onClickCreateButton)="onClickCountyListButton()"
+        ></app-reports-header>
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE LEDGER DETAILS"
+          [reportFormGroupName]="countryFormNew"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          [isDownloadNeeded]="false"
+          buttonTitle="List of Country Master"
+          (onClickCreateButton)="onClickCountyListButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
     <div
       style="
@@ -20,98 +31,66 @@
         margin-bottom: 4px;
       "
     >
-      <form [formGroup]="countryForm">
+      <form [formGroup]="countryFormNew">
         <div class="row">
           <div class="col-12">
-            <p style="font-size: 1.125rem; font-weight: 600; color: black">
-              ID #
+            <p
+              style="
+                padding-bottom: 12px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+              "
+            >
+              ID#
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="countryFormNew"
                   labelText="Country Name"
-                  [placeholderText]="'Name'"
-                  formControlName="ccname"
-                  [modelName]="cname"
-                ></app-mat-input>
-              </div>
-              <div class="col-6">
-                <app-mat-input
-                  labelText="Currency Name"
-                  [placeholderText]="'Currency Name'"
-                  formControlName="ccurname"
-                  [modelName]="curname"
-                ></app-mat-input>
-              </div>
-            </div>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
-                <app-mat-input
-                  labelText="Currency Short Name"
-                  [placeholderText]="'Currency Short Name'"
-                  formControlName="ccursname"
-                  [modelName]="curshortname"
+                  [placeholderText]="'Country Name'"
+                  [formControlName]="'ccname'"
                 ></app-mat-input>
               </div>
 
-              <div class="col-6">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
-                  labelText="Currency Symbol"
-                  [placeholderText]="'Currency Symbol'"
-                  formControlName="ccursymbol"
-                  [modelName]="cursymbol"
+                  [groupName]="countryFormNew"
+                  labelText="Currency Name"
+                  [placeholderText]="'Currency Name'"
+                  [formControlName]="'ccurname'"
                 ></app-mat-input>
               </div>
             </div>
-            <div
-              class="row mt-4"
-              style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
-              "
-            >
-              <button
-                #esave
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                Clear
-              </button>
+
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="countryFormNew"
+                  labelText="Country Short Name"
+                  [placeholderText]="'Country Short Name'"
+                  [formControlName]="'ccursname'"
+                ></app-mat-input>
+              </div>
+
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="countryFormNew"
+                  labelText="Currency Symbol"
+                  [placeholderText]="'Currency Symbol'"
+                  [formControlName]="'ccursymbol'"
+                ></app-mat-input>
+              </div>
             </div>
+
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateCountry"
+              (clickSave)="submit()"
+              (clickUpdate)="update()"
+              (clickClearAll)="clear()"
+            ></app-action-button>
           </div>
         </div>
       </form>

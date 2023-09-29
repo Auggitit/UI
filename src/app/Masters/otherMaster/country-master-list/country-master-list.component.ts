@@ -10,7 +10,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 @Component({
   selector: 'app-country-master-list',
   templateUrl: './country-master-list.component.html',
@@ -58,6 +60,7 @@ export class CountryMasterListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
+    public dialog: MatDialog,
     private router: Router
   ) {
     this.CountryForm = this.fb.group({
@@ -140,6 +143,53 @@ export class CountryMasterListComponent implements OnInit {
     this.api.get_CountryData().subscribe((res) => {
       console.log(res, '...........response');
       this.getFilterData(formValues, res);
+    });
+  }
+
+  onClickEdit(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you Modify data?',
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // this.router.navigateByUrl('create-ledger/' + data.id);
+        this.router.navigate(['country-master-create/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
+  }
+
+  onClickDelete(rowdata: any) {
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you confirm the deletion of this Country data?',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.Delete_CountryData(rowdata.id).subscribe(
+          (data) => {
+            let dialogRef = this.dialog.open(SuccessmsgComponent, {
+              //width: '350px',
+              data: 'Successfully Deleted!',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+              this.loadData();
+            });
+          },
+          (err) => {
+            console.log(err);
+            alert('Some Error Occured');
+          }
+        );
+      }
     });
   }
 

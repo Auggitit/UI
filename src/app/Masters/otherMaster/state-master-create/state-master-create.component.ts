@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ApiService } from '../../../services/api.service';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
@@ -20,13 +20,16 @@ import {
 })
 export class StateMasterCreateComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
+  oldid: any;
   loading: boolean = false;
   stateForm!: FormGroup;
+  isCreateState: boolean = true;
   constructor(
     public api: ApiService,
     public fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public activatedRoute: ActivatedRoute
   ) {}
   uniqueID: any;
   code: any;
@@ -41,6 +44,7 @@ export class StateMasterCreateComponent implements OnInit {
   countryData: any;
   selectedID: any;
   selectedCountry: any;
+  countryDropDownData: dropDownData[] = [];
 
   changeCountry(event: MatSelectChange) {
     this.selectedCountry = event.value;
@@ -52,6 +56,32 @@ export class StateMasterCreateComponent implements OnInit {
     this.setValidations();
     this.loaddata();
     this.loadCountrydata();
+
+    this.stateForm.get('cCountry')?.valueChanges.subscribe((value) => {
+      let countryCode = this.countryDropDownData.filter(
+        (item) => item.id === value
+      );
+      console.log("----inside init",countryCode)
+      this.stateForm.get('cCountry')?.setValue(countryCode[0].name);
+    });
+
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateState = false;
+
+      this.api.get_StateDataWithID(this.oldid).subscribe((res) => {
+        console.log('------', res);
+        this.stateForm.patchValue({
+          cCountry: res.country,
+          sname: res.statename,
+          scode: res.stetecode,
+        });
+        this.selectedCountry=res.country
+/*         this.cCountry = res.countryname;
+        this.sname = res.currencyname;
+        this.scode = res.currencyshortname; */
+      });
+    }
   }
 
   onClickButton(): void {
@@ -61,15 +91,25 @@ export class StateMasterCreateComponent implements OnInit {
   setValidations() {
     this.stateForm = this.fb.group({
       cCountry: ['', Validators.required],
-      cname: ['', Validators.required],
-      ccode: ['', Validators.required],
+      sname: ['', Validators.required],
+      scode: ['', Validators.required],
     });
   }
 
   loadCountrydata() {
     this.api.get_CountryData().subscribe((res) => {
       this.countryData = res;
-      console.log(res);
+      console.log("country data res",res)
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.countryname,
+            id: item.countryname,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.countryDropDownData = [...newMap.values()];
     });
   }
 
@@ -87,9 +127,9 @@ export class StateMasterCreateComponent implements OnInit {
         this.uniqueID = Guid.create();
         var postdata = {
           id: this.uniqueID.value,
-          country: this.selectedCountry,
-          stetecode: this.code,
-          statename: this.name,
+          country: this.stateForm.value.cCountry,
+          stetecode: this.stateForm.value.scode,
+          statename: this.stateForm.value.sname,
           rCreatedDateTime: new Date(),
           rStatus: 'A',
         };
@@ -121,45 +161,7 @@ export class StateMasterCreateComponent implements OnInit {
     }, 200);
   }
 
-  update() {
-    setTimeout(() => {
-      if (this.stateForm.valid) {
-        this.loading = true;
-        var postdata = {
-          id: this.selectedID,
-          country: this.selectedCountry,
-          stetecode: this.code,
-          statename: this.name,
-          rCreatedDateTime: new Date(),
-          rStatus: 'A',
-        };
-        console.log(postdata);
-        this.api.Update_StateData(this.selectedID, postdata).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Country Successfully Updated!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-              this.loading = false;
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Fill Mandatory Fields',
-          text: 'Plese fill all mandatory fields',
-        });
-      }
-    }, 200);
-  }
+
 
   restore(rowdata: any) {
     const dialogRef = this.dialog.open(ConfirmmsgComponent, {
@@ -214,7 +216,46 @@ export class StateMasterCreateComponent implements OnInit {
       }
     });
   }
-
+  update(){
+    setTimeout(() => {
+      if (this.stateForm.valid) {
+        this.loading = true;
+        var postdata = {
+          id: this.oldid,
+          country: this.stateForm.value.cCountry,
+          statename: this.stateForm.value.sname,
+          stetecode: this.stateForm.value.scode,
+          rCreatedDateTime: new Date(),
+          rStatus: 'A',
+        };
+        console.log('update postdata', postdata);
+        this.api.Update_StateData(this.oldid, postdata).subscribe(
+          (data) => {
+            let dialogRef = this.dialog.open(SuccessmsgComponent, {
+              //width: '350px',
+              data: 'Country Successfully Updated!',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+              this.clear();
+              //this.loaddata();
+              this.loading = false;
+              this.router.navigateByUrl('state-master-list');
+            });
+          },
+          (err) => {
+            console.log(err);
+            alert('Some Error Occured');
+          }
+        );
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Fill Mandatory Fields',
+          text: 'Plese fill all mandatory fields',
+        });
+      }
+    }, 200);
+  }
   edit(rowdata: any) {
     const dialogRef = this.dialog.open(ConfirmmsgComponent, {
       width: '350px',

@@ -18,5 +18,7 @@ export class MatInputComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("iside input",this.groupName)
+  }
 }

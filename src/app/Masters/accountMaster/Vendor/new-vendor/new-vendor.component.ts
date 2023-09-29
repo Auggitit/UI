@@ -23,7 +23,7 @@ export class NewVendorComponent implements OnInit {
   loading: boolean = false;
   countryData: any;
   stateData: any;
-
+  isCreateVendor: boolean = true;
   ledgercode: any;
   uniqueID: any;
   vendorForm!: FormGroup;
@@ -66,6 +66,15 @@ export class NewVendorComponent implements OnInit {
   cpMobile: any;
   cpEmail: any;
   remarks: any;
+  salutationData = [
+    { name: 'Mr.', id: 1 },
+    { name: 'V', id: 2 },
+    { name: 'Ms.', id: 3 },
+    { name: 'Miss.', id: 4 },
+    { name: 'Dr.', id: 5 },
+  ];
+  countryDropDownData: dropDownData[] = [];
+  stateDropDownData: dropDownData[] = [];
 
   regTypeData = [
     {
@@ -98,17 +107,36 @@ export class NewVendorComponent implements OnInit {
     this.router.navigateByUrl('vendor-list');
   }
 
-  //loadFunctions
   loadCountrydata() {
+    console.log("data",this.api.get_CountryData())
     this.api.get_CountryData().subscribe((res) => {
       this.countryData = res;
-      console.log(res);
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.countryname,
+            id: item.countryname,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.countryDropDownData = [...newMap.values()];
     });
   }
+
   loadStatedata() {
     this.api.get_StateData().subscribe((res) => {
       this.stateData = res;
-      console.log(res);
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.statename,
+            id: item.stetecode,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.stateDropDownData = [...newMap.values()];
     });
   }
 

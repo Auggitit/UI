@@ -1,16 +1,25 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
+      <div *ngIf="isCreateState; else elseBlock">
       <app-reports-header
-        title="CREATE COUNTRY"
+        title="CREATE STATE MASTER"
         [searchField]="true"
         [reportFormGroupName]="stateForm"
         [saveTypesOptions]="saveAsOptions"
-        buttonTitle="List of Country"
+        buttonTitle="List of State Master"
         (onClickCreateButton)="onClickButton()"
       ></app-reports-header>
-      <!--         [SelectSaveOptions]="'SelectSaveOptions'"
- -->
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE STATE MASTER"
+          [reportFormGroupName]="stateForm"
+          [isDownloadNeeded]="false"
+          buttonTitle="List of State Master"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
     <div
       style="
@@ -24,117 +33,62 @@
       <form [formGroup]="stateForm">
         <div class="row">
           <div class="col-12">
-            <p style="font-size: 1.125rem; font-weight: 600; color: black">
-              ID #
-            </p>
-            <div
-              class="col-6 d-flex mb-0 align-items-center justify-content-between"
-            >
-              <p style="padding-left: 10px; color: #667085; font-weight: 600">
-                Address
-              </p>
-              <div
-                class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-              >
-                <mat-form-field
-                  class="example-full-width"
-                  appearance="outline"
-                  style="width: 100%"
-                >
-                  <mat-select
-                    placeholder="Select Country"
-                    formControlName="cCountry"
-                    [(ngModel)]="selectedCountry"
-                    (selectionChange)="changeCountry($event)"
-                  >
-                    <mat-option
-                      *ngFor="let val of countryData"
-                      [value]="val.countryname"
-                      [title]="val.countryname"
-                    >
-                      {{ val.countryname }}
-                    </mat-option>
-                  </mat-select>
-                  <small
-                    *ngIf="
-                      stateForm.controls['cCountry'].dirty &&
-                      stateForm.hasError('required', 'cCountry')
-                    "
-                    class="text-danger"
-                    >State Code Required!</small
-                  >
-                </mat-form-field>
-              </div>
-            </div>
-
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
-                <app-mat-input
-                  labelText="State Code"
-                  [placeholderText]="'State Code'"
-                  formControlName="ccode"
-                  [modelName]="code"
-                ></app-mat-input>
-              </div>
-
-              <div class="col-6">
-                <app-mat-input
-                  labelText="State Name"
-                  [placeholderText]="'State Name'"
-                  formControlName="cname"
-                  [modelName]="name"
-                ></app-mat-input>
-              </div>
-            </div>
-            <div
-              class="row mt-4"
+            <p
               style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
+                padding-bottom: 12px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
               "
             >
-              <button
-                #esave
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
+              ID#
+            </p>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
+                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
               >
-                Clear
-              </button>
+                <p style="color: #667085; font-weight: 600">Country Name</p>
+
+                <app-mat-select-box
+                [formOptions]="countryDropDownData"
+                [controlName]="'cCountry'"
+                [label]="'Country Name'"
+                [groupName]="stateForm"
+                [formAppearance]="'outline'"
+                selectWidth="201px"
+              ></app-mat-select-box>
+              </div>
+              </div>
             </div>
+
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="stateForm"
+                  labelText="State Name"
+                  [placeholderText]="'State Name'"
+                  [formControlName]="'sname'"
+                ></app-mat-input>
+              </div>
+
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="stateForm"
+                  labelText="State Code"
+                  [placeholderText]="'State Code'"
+                  [formControlName]="'scode'"
+                ></app-mat-input>
+              </div>
+            </div>
+
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateState"
+              (clickSave)="submit()"
+              (clickUpdate)="update()"
+              (clickClearAll)="clear()"
+            ></app-action-button>
           </div>
         </div>
       </form>

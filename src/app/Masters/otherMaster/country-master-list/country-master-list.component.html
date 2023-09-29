@@ -2,6 +2,7 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div id="contentToSave" #contentToSave></div>
     <div class="pb-3">
+     
       <app-reports-header
         title="LIST OF COUNTRY MASTER"
         [searchField]="true"
@@ -13,6 +14,7 @@
         (onClickCreateButton)="onClickButton()"
         (onClickDownload)="downloadAsPDF()"
       ></app-reports-header>
+
     </div>
 
     <app-mat-table
@@ -141,6 +143,7 @@
                   margin: 0px 10%;
                   width: 80%;
                 "
+                (click)="onClickEdit(data)"
               >
                 Edit
               </button>
@@ -152,6 +155,7 @@
                   width: 80%;
                   color: #ec3900;
                 "
+                (click)="onClickDelete(data)"
               >
                 Delete
               </button>

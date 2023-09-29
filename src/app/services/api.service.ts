@@ -221,11 +221,8 @@ export class ApiService {
   //      return res;
   //    }))
   //  }
-  Update_CountryData(postdata: any, postdatas?: any): Observable<any> {
-    return this.POST(
-      this.URL + 'api/mCountries/Update_CountryData',
-      postdata
-    ).pipe(
+  Update_CountryData(id: any, postdata: any): Observable<any> {
+    return this.http.put(this.URL + 'api/mCountries/' + id, postdata).pipe(
       map((res: any) => {
         return res;
       })
@@ -237,13 +234,11 @@ export class ApiService {
   //    }))
   //  }
   Delete_CountryData(id: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mCountries/Delete_CountryData?id=' + id)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    return this.http.delete<any>(this.URL + 'api/mCountries/' + id).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
   get_CountryData() {
     return this.http.get<any>(this.URL + 'api/mCountries').pipe(
@@ -269,8 +264,8 @@ export class ApiService {
   //      return res;
   //    }))
   //  }
-  Update_StateData(postdata: any, postDate?: any): Observable<any> {
-    return this.POST(this.URL + 'api/mStates/Update_StateData', postdata).pipe(
+  Update_StateData(id: any, postdata: any): Observable<any> {
+    return this.http.put(this.URL + 'api/mStates/' + id, postdata).pipe(
       map((res: any) => {
         return res;
       })
@@ -282,13 +277,11 @@ export class ApiService {
   //    }))
   //  }
   Delete_StateData(id: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mStates/Delete_StateData?id=' + id)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    return this.http.delete<any>(this.URL + 'api/mStates/' + id).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
   }
   get_StateData() {
     return this.http.get<any>(this.URL + 'api/mStates').pipe(

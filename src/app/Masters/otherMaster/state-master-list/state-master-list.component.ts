@@ -10,7 +10,9 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 @Component({
   selector: 'app-state-master-list',
   templateUrl: './state-master-list.component.html',
@@ -52,6 +54,7 @@ export class StateMasterListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
+    public dialog: MatDialog,
     private router: Router
   ) {
     this.stateForm = this.fb.group({
@@ -128,6 +131,48 @@ export class StateMasterListComponent implements OnInit {
     this.api.get_StateData().subscribe((res) => {
       console.log(res, '...........response');
       this.getFilterData(formValues, res);
+    });
+  }
+
+  onClickEdit(data: any) {
+
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you need to Modify data?',
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // this.router.navigateByUrl('create-ledger/' + data.id);
+        this.router.navigate(['state-master-create/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
+  }
+
+  onClickDelete(rowdata: any) {
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you confirm the deletion of this Country data?',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.Delete_StateData(rowdata.id).subscribe(
+          (data) => {
+            let dialogRef = this.dialog.open(SuccessmsgComponent, {
+              //width: '350px',
+              data: 'Successfully Deleted!',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+              this.loadData();
+            });
+          },
+          (err) => {
+            console.log(err);
+            alert('Some Error Occured');
+          }
+        );
+      }
     });
   }
 

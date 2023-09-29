@@ -41,7 +41,6 @@
                 [placeholderText]="'Name'"
                 [formControlName]="'cdisplayName'"
               ></app-mat-input>
-              <!-- [modelName]="displayName" -->
             </div>
             <p
               style="
@@ -54,17 +53,24 @@
             >
               PRIMARY CONTACT PERSON
             </p>
-            <div
-              class="col-12 d-flex flex-wrap align-items-center pb-2"
-             
-            >
-              <div class="d-flex flex-wrap mb-0 align-items-center col-lg-2 col-md-12 ">
+            <div class="col-12 d-flex flex-wrap align-items-center pb-2">
+              <div
+                class="d-flex flex-wrap mb-0 align-items-center col-lg-2 col-md-12"
+              >
                 <p
                   class=""
                   style="color: #667085; font-weight: 600; padding-right: 10px"
                 >
                   Salutation
                 </p>
+                <app-mat-select-box
+                  [formOptions]="salutationData"
+                  [controlName]="'salutation'"
+                  [label]="'Salutation'"
+                  [groupName]="vendorForm"
+                  [formAppearance]="'outline'"
+                  selectWidth="57px"
+                ></app-mat-select-box>
                 <mat-form-field
                   placeholder="Salutation"
                   class="example-full-width"
@@ -81,23 +87,21 @@
                 </mat-form-field>
               </div>
               <div class="col-lg-5 col-md-12 pb-2">
-              <app-mat-input
-                [groupName]="vendorForm"
-                labelText="First Name"
-                [placeholderText]="'First Name'"
-                [formControlName]="'cfirstName'"
-                [modelName]="firstName"
-              ></app-mat-input>
-            </div>
-            <div class="col-lg-5 col-md-12 pb-2">
-              <app-mat-input
-                [groupName]="vendorForm"
-                labelText="Last Name"
-                [placeholderText]="'Last Name'"
-                [formControlName]="'clastName'"
-                [modelName]="lastName"
-              ></app-mat-input>
-            </div>
+                <app-mat-input
+                  [groupName]="vendorForm"
+                  labelText="First Name"
+                  [placeholderText]="'First Name'"
+                  [formControlName]="'cfirstName'"
+                ></app-mat-input>
+              </div>
+              <div class="col-lg-5 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="vendorForm"
+                  labelText="Last Name"
+                  [placeholderText]="'Last Name'"
+                  [formControlName]="'clastName'"
+                ></app-mat-input>
+              </div>
             </div>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
@@ -106,7 +110,6 @@
                   labelText="Mobile No"
                   [placeholderText]="'Mobile No'"
                   [formControlName]="'cmobile'"
-                  [modelName]="mobile"
                 ></app-mat-input>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
@@ -115,7 +118,6 @@
                   labelText="Email ID"
                   [placeholderText]="'Email ID'"
                   [formControlName]="'cemail'"
-                  [modelName]="email"
                 ></app-mat-input>
               </div>
             </div>
@@ -126,44 +128,22 @@
                   labelText="Website"
                   [placeholderText]="'Website'"
                   [formControlName]="'cwebsite'"
-                  [modelName]="website"
                 ></app-mat-input>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p
-                    style="
-                      color: #667085;
-                      font-weight: 600;
-                    "
-                  >
-                    Currency
-                  </p>
-                  <div
-                    
-                  >
-                    <mat-form-field
-                      appearance="outline"
-                    
-                    >
-                      <mat-select
-                        placeholder="Currency"
-                        [(ngModel)]="currency"
-                        formControlName="ccurrency"
-                        (selectionChange)="changeCurrency($event)"
-                      >
-                        <mat-option
-                          *ngFor="let val of countryData"
-                          [value]="val.currencyname"
-                          [title]="val.currencyname"
-                        >
-                          {{ val.currencyname }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+                  <p style="color: #667085; font-weight: 600">Currency</p>
+
+                  <app-mat-select-box
+                    [formOptions]="countryData"
+                    [controlName]="'ccurrency'"
+                    [label]="'Currency'"
+                    [groupName]="vendorForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
                 </div>
               </div>
             </div>
@@ -193,173 +173,74 @@
                     >
                       <div>
                         <div
-                          class="p-0 d-flex flex-wrap justify-content-between col-12"
+                          class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
                         >
-                          <div
-                            class="col-6 d-flex mb-0 align-items-center pb-2"
-                            style="gap: 37.5%"
-                          >
-                            <p
-                              style="
-                                color: #667085;
-                                font-weight: 600;
-                                padding-left: 6.5px;
-                              "
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                             >
-                              Place of Supply
-                            </p>
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%; margin-right: 19.5%"
-                            >
-                              <mat-select
-                                [(ngModel)]="statecode"
-                                formControlName="cstate"
-                                (selectionChange)="changeState($event)"
-                              >
-                                <mat-option
-                                  *ngFor="let val of stateData"
-                                  [value]="val.statecode"
-                                  [title]="val.statename"
-                                >
-                                  {{ val.statename }}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
+                              <p style="color: #667085; font-weight: 600">
+                                Place of Supply
+                              </p>
+                              <div>
+                                <app-mat-select-box
+                                  [formOptions]="stateData"
+                                  [controlName]="'cstate'"
+                                  [label]="'Place of Supply'"
+                                  [groupName]="vendorForm"
+                                  [formAppearance]="'outline'"
+                                  selectWidth="201px"
+                                ></app-mat-select-box>
+                              </div>
+                            </div>
                           </div>
-                          <div
-                            class="col-6 d-flex mb-0 align-items-center pb-2"
-                            style="gap: 37.5%"
-                          >
-                            <p
-                              style="
-                                color: #667085;
-                                font-weight: 600;
-                                padding-left: 6.5px;
-                              "
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                             >
-                              Currency
-                            </p>
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%; margin-right: 19.5%"
-                            >
-                              <mat-select
-                                placeholder="Currency"
-                                [(ngModel)]="currency"
-                                formControlName="ccurrency"
-                                (selectionChange)="changeCurrency($event)"
-                              >
-                                <mat-option
-                                  *ngFor="let val of countryData"
-                                  [value]="val.currencyname"
-                                  [title]="val.currencyname"
-                                >
-                                  {{ val.currencyname }}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
+                              <p style="color: #667085; font-weight: 600">
+                                Currency
+                              </p>
+                              <div>
+                                <app-mat-select-box
+                                  [formOptions]="countryDropDownData"
+                                  [controlName]="'ccurrency'"
+                                  [label]="'Currency'"
+                                  [groupName]="vendorForm"
+                                  [formAppearance]="'outline'"
+                                  selectWidth="201px"
+                                ></app-mat-select-box>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <!--                         <div class="row">
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Place of Supply</mat-label>
-                              <mat-select
-                                [(ngModel)]="statecode"
-                                formControlName="cstate"
-                                (selectionChange)="changeState($event)"
-                              >
-                                <mat-option
-                                  *ngFor="let val of stateData"
-                                  [value]="val.stetecode"
-                                  [title]="val.statename"
-                                >
-                                  {{ val.statename }}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
+
+                        <div
+                          class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                        >
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="vendorForm"
+                              labelText="TYPE GSTIN"
+                              [placeholderText]="'GSTIN No'"
+                              [formControlName]="'cgstNo'"
+                            ></app-mat-input>
                           </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Currency</mat-label>
-                              <mat-select
-                                [(ngModel)]="gstTreatment"
-                                formControlName="cgstTreatment"
-                                (selectionChange)="changeGstTreatment($event)"
-                              >
-                                <mat-option
-                                  *ngFor="let val of regTypeData"
-                                  [value]="val.value"
-                                  [title]="val.text"
-                                >
-                                  {{ val.text }}
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="vendorForm"
+                              labelText="TYPE PAN"
+                              [placeholderText]="'PAN NO'"
+                              [formControlName]="'cpanNo'"
+                            ></app-mat-input>
                           </div>
-                        </div> -->
-                        <div class="row">
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>GSTIN No</mat-label>
-                              <input
-                                type="text"
-                                formControlName="cgstNo"
-                                [(ngModel)]="gstNo"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>PAN No</mat-label>
-                              <input
-                                type="text"
-                                formControlName="cpanNo"
-                                [(ngModel)]="panNo"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-3 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>CIN No</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccinNo"
-                                [(ngModel)]="cinNo"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="vendorForm"
+                              labelText="CIN NO"
+                              [placeholderText]="'TYPE CIN'"
+                              [formControlName]="'ccinNo'"
+                            ></app-mat-input>
                           </div>
                         </div>
                       </div>
@@ -368,93 +249,48 @@
                       label="PAYMENT DETAILS"
                       style="overflow: hidden !important"
                     >
-                      <div class="p-4">
-                        <div class="row">
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Balance to Pay</mat-label>
-                              <input
-                                type="number"
-                                formControlName="cbalanceToPay"
-                                [(ngModel)]="balanceToPay"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Balance To Collect</mat-label>
-                              <input
-                                type="number"
-                                formControlName="cbalanceToColl"
-                                [(ngModel)]="balanceToColl"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Payment Term in Days</mat-label>
-                              <input
-                                type="number"
-                                formControlName="cpaymentTerm"
-                                [(ngModel)]="paymentTerm"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Credit Limit</mat-label>
-                              <input
-                                type="number"
-                                formControlName="ccreditLimit"
-                                [(ngModel)]="creditLimit"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Bank Details</mat-label>
-                              <textarea
-                                type="text"
-                                formControlName="cbankDetails"
-                                [(ngModel)]="bankDetails"
-                                matInput
-                                placeholder=""
-                              ></textarea>
-                            </mat-form-field>
-                          </div>
+                      <div
+                        class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Balance To Pay"
+                            [placeholderText]="'RS.500'"
+                            [formControlName]="'cbalanceToPay'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Balance To Collect"
+                            [placeholderText]="'RS.250'"
+                            [formControlName]="'cbalanceToColl'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Term in Days"
+                            [placeholderText]="'5'"
+                            [formControlName]="'cpaymentTerm'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Credit Limit"
+                            [placeholderText]="'1000'"
+                            [formControlName]="'ccreditLimit'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Bank Details"
+                            [placeholderText]="'Bank Details'"
+                            [formControlName]="'cbankDetails'"
+                          ></app-mat-input>
                         </div>
                       </div>
                     </mat-tab>
@@ -462,396 +298,235 @@
                       label="COMMUNICATION DETAILS"
                       style="overflow: hidden !important"
                     >
-                      <div class="row">
-                        <div
-                          class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                      <mat-tab-group>
+                        <mat-tab
+                          label="Billing Address"
+                          style="overflow: hidden !important"
                         >
-                          <div class="m-2">
-                            <div class="card">
-                              <div class="card-header">
-                                <p class="subHeader">Billing Address</p>
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p style="color: #667085; font-weight: 600">
+                                  Country
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="countryData"
+                                    [controlName]="'cbCountry'"
+                                    [label]="'Country'"
+                                    [groupName]="vendorForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
                               </div>
-                              <div class="p-3">
-                                <div class="row">
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Address</mat-label>
-                                      <label
-                                        for="exampleFormControlInput1"
-                                        class="form-label-sm"
-                                      ></label>
-                                      <textarea
-                                        type="text"
-                                        formControlName="cbAddress"
-                                        [(ngModel)]="bAddress"
-                                        matInput
-                                        placeholder=""
-                                      ></textarea>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Country</mat-label>
-                                      <mat-select
-                                        [(ngModel)]="bCountry"
-                                        formControlName="cbCountry"
-                                      >
-                                        <mat-option
-                                          *ngFor="let val of countryData"
-                                          [value]="val.countryname"
-                                          [title]="val.countryname"
-                                        >
-                                          {{ val.countryname }}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>State</mat-label>
-                                      <mat-select
-                                        [(ngModel)]="bState"
-                                        formControlName="cbState"
-                                      >
-                                        <mat-option
-                                          *ngFor="let val of stateData"
-                                          [value]="val.statename"
-                                          [title]="val.statename"
-                                        >
-                                          {{ val.statename }}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>City</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cbCity"
-                                        [(ngModel)]="bCity"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>PinCode</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cbPincode"
-                                        [(ngModel)]="bPincode"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Phone</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cbPhone"
-                                        [(ngModel)]="bPhone"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p style="color: #667085; font-weight: 600">
+                                  State
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="stateData"
+                                    [controlName]="'cbState'"
+                                    [label]="'State'"
+                                    [groupName]="vendorForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div
-                          class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-3"
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="City"
+                                [placeholderText]="'TYPE CITY'"
+                                [formControlName]="'cbCity'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Phone Number"
+                                [placeholderText]="'TYPE P.NO'"
+                                [formControlName]="'cbPhone'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Address"
+                                [placeholderText]="'ADDRESS'"
+                                [formControlName]="'cbAddress'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Pincode"
+                                [placeholderText]="'TYPE PinCode'"
+                                [formControlName]="'cbPincode'"
+                              ></app-mat-input>
+                            </div>
+                          </div>
+                        </mat-tab>
+                        <mat-tab
+                          label="DeliveryAddress"
+                          style="overflow: hidden !important"
                         >
-                          <div class="m-2">
-                            <div class="card">
-                              <div class="card-header">
-                                <p class="subHeader">Delivery Address</p>
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p style="color: #667085; font-weight: 600">
+                                  Country
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="countryData"
+                                    [controlName]="'cdCountry'"
+                                    [label]="'Country'"
+                                    [groupName]="vendorForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
                               </div>
-                              <div class="p-3">
-                                <div class="row">
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Address</mat-label>
-                                      <textarea
-                                        type="text"
-                                        formControlName="cdAddress"
-                                        [(ngModel)]="dAddress"
-                                        matInput
-                                        placeholder=""
-                                      ></textarea>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Country</mat-label>
-                                      <mat-select
-                                        [(ngModel)]="dCountry"
-                                        formControlName="cdCountry"
-                                      >
-                                        <mat-option
-                                          *ngFor="let val of countryData"
-                                          [value]="val.countryname"
-                                          [title]="val.countryname"
-                                        >
-                                          {{ val.countryname }}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>State</mat-label>
-                                      <mat-select
-                                        [(ngModel)]="dState"
-                                        formControlName="cdState"
-                                      >
-                                        <mat-option
-                                          *ngFor="let val of stateData"
-                                          [value]="val.statename"
-                                          [title]="val.statename"
-                                        >
-                                          {{ val.statename }}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>City</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cdCity"
-                                        [(ngModel)]="dCity"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Pincode</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cdPincode"
-                                        [(ngModel)]="dPincode"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
-                                  <div
-                                    class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6"
-                                  >
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="width: 100%"
-                                    >
-                                      <mat-label>Phone</mat-label>
-                                      <input
-                                        type="text"
-                                        formControlName="cdPhone"
-                                        [(ngModel)]="dPhone"
-                                        matInput
-                                        placeholder=""
-                                      />
-                                    </mat-form-field>
-                                  </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p style="color: #667085; font-weight: 600">
+                                  State
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="stateData"
+                                    [controlName]="'cdState'"
+                                    [label]="'State'"
+                                    [groupName]="vendorForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="City"
+                                [placeholderText]="'TYPE CITY'"
+                                [formControlName]="'cdCity'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Phone Number"
+                                [placeholderText]="'TYPE P.NO'"
+                                [formControlName]="'cdPhone'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Address"
+                                [placeholderText]="'ADDRESS'"
+                                [formControlName]="'cdAddress'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="vendorForm"
+                                labelText="Pincode"
+                                [placeholderText]="'TYPE PinCode'"
+                                [formControlName]="'cdPincode'"
+                              ></app-mat-input>
+                            </div>
+                          </div>
+                        </mat-tab>
+                      </mat-tab-group>
                     </mat-tab>
                     <mat-tab
                       label="CONTACT PERSONS"
                       style="overflow: hidden !important"
                     >
-                      <div class="p-4">
-                        <div class="row">
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Contact Person Name</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpName"
-                                [(ngModel)]="cpName"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Phone</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpPhone"
-                                [(ngModel)]="cpPhone"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Designation</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpDesignation"
-                                [(ngModel)]="cpDesignation"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Department</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpDepartment"
-                                [(ngModel)]="cpDepartment"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>Mobile No</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpMobile"
-                                [(ngModel)]="cpMobile"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div
-                            class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-3"
-                          >
-                            <mat-form-field
-                              appearance="outline"
-                              style="width: 100%"
-                            >
-                              <mat-label>EMAIL ID</mat-label>
-                              <input
-                                type="text"
-                                formControlName="ccpEmail"
-                                [(ngModel)]="cpEmail"
-                                matInput
-                                placeholder=""
-                              />
-                            </mat-form-field>
-                          </div>
+                      <div
+                        class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Contact Person Name"
+                            [placeholderText]="'Name'"
+                            [formControlName]="'ccpName'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Designation"
+                            [placeholderText]="'Designation'"
+                            [formControlName]="'ccpDesignation'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Department"
+                            [placeholderText]="'Department'"
+                            [formControlName]="'ccpDepartment'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Mobile NO"
+                            [placeholderText]="'Phone NO'"
+                            [formControlName]="'ccpMobile'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Email ID"
+                            [placeholderText]="'email ID'"
+                            [formControlName]="'ccpEmail'"
+                          ></app-mat-input>
                         </div>
                       </div>
                     </mat-tab>
                     <mat-tab label="REMARKS" style="overflow: none !important">
-                      <div class="p-4">
-                        <div
-                          class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-6 mt-3"
-                        >
-                          <mat-form-field
-                            appearance="outline"
-                            style="width: 100%"
-                          >
-                            <mat-label>Remarks</mat-label>
-                            <textarea
-                              type="text"
-                              formControlName="cremarks"
-                              [(ngModel)]="remarks"
-                              matInput
-                              placeholder=""
-                            ></textarea>
-                          </mat-form-field>
+                      <div
+                        class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="vendorForm"
+                            labelText="Remarks"
+                            [placeholderText]="'Remarks'"
+                            [formControlName]="'cremarks'"
+                          ></app-mat-input>
                         </div>
                       </div>
                     </mat-tab>
@@ -859,55 +534,12 @@
                 </div>
               </div>
             </div>
-            <div
-              class="row mt-4"
-              style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
-              "
-            >
-              <button
-                #esave
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                Clear
-              </button>
-            </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateVendor"
+              (clickSave)="submit()"
+              (clickClearAll)="clearAll()"
+            ></app-action-button>
           </div>
         </div>
       </form>

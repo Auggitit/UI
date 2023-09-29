@@ -193,8 +193,13 @@ const routes: Routes = [
   { path: 'uom-create', component: UomCreateComponent },
   { path: 'country-master-list', component: CountryMasterListComponent },
   { path: 'country-master-create', component: CountryMasterCreateComponent },
+  {
+    path: 'country-master-create/:id',
+    component: CountryMasterCreateComponent,
+  },
   { path: 'state-master-list', component: StateMasterListComponent },
   { path: 'state-master-create', component: StateMasterCreateComponent },
+  { path: 'state-master-create/:id', component: StateMasterCreateComponent },
 ];
 
 @NgModule({
