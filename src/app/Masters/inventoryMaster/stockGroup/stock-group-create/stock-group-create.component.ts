@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
@@ -12,6 +12,7 @@ import {
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-stock-group-create',
@@ -19,34 +20,36 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./stock-group-create.component.scss'],
 })
 export class StockGroupCreateComponent implements OnInit {
-  //Set Element Ref
   @ViewChild('ename') ename: ElementRef | undefined;
   @ViewChild('eunder') eunder: MatSelect | undefined;
   @ViewChild('esave') esave: ElementRef | undefined;
 
-  loading: boolean = false;
-
-  //Variable Declaration
   groupForm!: FormGroup;
   saveAsOptions: dropDownData[] = exportOptions;
+  groupDropDownData: dropDownData[] = [];
 
   uniqueID: any;
   groupcode: any;
   groupname: any;
   groupundername: any;
   groupundercode: any;
+  groupData: any;
+  loading: boolean = false;
 
   selectedID: any;
   displayedColumns: string[] = ['GROUP_NAME', 'ACTIONS'];
   dataSource!: MatTableDataSource<any>;
   savedData: any;
+  isCreateStockGroup: boolean = true;
+  oldid: any;
 
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
     public fb: FormBuilder,
-    public router: Router
-  ) {}
+    public router: Router,
+    public activatedRoute: ActivatedRoute
+  ) { }
 
   //Validators
   setValidations() {
@@ -63,22 +66,42 @@ export class StockGroupCreateComponent implements OnInit {
     this.setValidations();
     this.getMaxCode();
     this.loaddata();
+
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateStockGroup = false;
+
+      this.api.get_GroupDataWithID(this.oldid).subscribe((res) => {
+        this.groupForm.patchValue({
+          cgroupname: res.groupname,
+          cgroupunder: res.groupunder,
+        });
+        this.groupcode = res.groupcode;
+      });
+    }
   }
 
   onClickButton(): void {
     this.router.navigateByUrl('stock-group-list');
   }
 
-  //Load Functions
+  onClickAddButton(): void {
+    this.router.navigateByUrl('stock-group-create');
+  }
+
   loaddata() {
     this.api.get_GroupData().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.savedData = res;
-      this.dataSource.filterPredicate = function (record, filter) {
-        return (
-          record.groupname.toLocaleLowerCase() == filter.toLocaleLowerCase()
-        );
-      };
+      this.groupData = res;
+      const newMap = new Map();
+      res.map((item: any) => {
+        return {
+          name: item.groupname,
+          id: item.groupcode,
+        };
+      })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.groupDropDownData = [...newMap.values()];
     });
   }
   async getMaxCode() {
@@ -90,154 +113,89 @@ export class StockGroupCreateComponent implements OnInit {
     });
   }
 
-  //CRUD
-  async submit() {
-    this.loading = true;
-    setTimeout(() => {
-      this.getMaxCode().then((res) => {
-        this.uniqueID = Guid.create();
-        var postData = {
-          id: this.uniqueID.value,
-          groupcode: this.groupcode,
-          groupname: this.groupname,
-          groupunder: this.groupundercode,
-          rCreatedDateTime: new Date(),
-          rStatus: 'A',
-        };
-        this.api.Inser_GroupData(postData).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Group Successfully Saved!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-              this.getMaxCode();
-              this.ename?.nativeElement.focus();
-              this.loading = false;
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
+  submit() {
+    if (this.groupForm.valid) {
+      this.loading = true;
+      setTimeout(() => {
+        this.getMaxCode().then((res) => {
+          if (this.isCreateStockGroup) {
+            this.save();
+          } else if (!this.isCreateStockGroup) {
+            this.update();
           }
-        );
+        });
+      }, 400);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Fill Mandatory Fields',
+        text: 'Plese fill all mandatory fields',
       });
-    }, 200);
+    }
   }
 
-  update() {
-    this.loading = true;
-    setTimeout(() => {
-      var postData = {
-        id: this.selectedID,
-        groupcode: this.groupcode,
-        groupname: this.groupname,
-        groupunder: this.groupundercode,
-        rCreatedDateTime: new Date(),
-        rStatus: 'A',
-      };
-      console.log(postData);
-      this.api.Update_GroupData(this.selectedID, postData).subscribe(
+  save() {
+    this.uniqueID = Guid.create();
+    var postData = {
+      id: this.uniqueID.value,
+      groupcode: this.groupcode,
+      groupname: this.groupForm.value.cgroupname,
+      groupunder: this.groupForm.value.cgroupunder,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+    this.api.Inser_GroupData(postData).subscribe({
+      next:
         (data) => {
           let dialogRef = this.dialog.open(SuccessmsgComponent, {
-            //width: '350px',
-            data: 'Group Successfully Updated!',
+            data: 'Stock Group Successfully Saved!',
           });
           dialogRef.afterClosed().subscribe((result) => {
             this.clear();
-            this.loaddata();
-            this.getMaxCode();
-            this.setValidations();
-            this.groupForm.reset();
-            this.ename?.nativeElement.focus();
             this.loading = false;
           });
         },
-        (err) => {
-          console.log(err);
-          alert('Some Error Occured');
-        }
-      );
-    }, 200);
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
+    });
   }
 
-  edit(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify Stock Group?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(rowdata);
-        this.selectedID = rowdata.id;
-        this.groupname = rowdata.groupname;
-        this.groupundercode = rowdata.groupunder;
-        this.groupcode = rowdata.catcode;
-        const groupname = this.groupForm.get('cgroupname');
-        groupname?.clearValidators();
-        groupname?.clearAsyncValidators();
-        groupname?.updateValueAndValidity();
-      }
-    });
-  }
-  restore(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the Restoration of Stock Group?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_GroupData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Restored!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
+  update() {
+    var postdata = {
+      id: this.oldid,
+      groupcode: this.groupcode,
+      groupname: this.groupForm.value.cgroupname,
+      groupunder: this.groupForm.value.cgroupunder,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+
+    this.api.Update_GroupData(this.oldid, postdata).subscribe({
+      next: (data) => {
+        this.loading = false;
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'Stock Group Successfully Updated',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.clear();
+          this.loading = false;
+          this.router.navigateByUrl('stock-item-list');
+        });
+      },
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
     });
   }
-  delete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the deletion of this Stock Group?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_GroupData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Deleted!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
-    });
-  }
+
   clear() {
     this.groupname = '';
     this.groupundercode = '';
     this.selectedID = undefined;
+    this.loading = false;
     this.groupForm.reset();
     this.setValidations();
     this.ename?.nativeElement.focus();

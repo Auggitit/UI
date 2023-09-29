@@ -187,6 +187,7 @@ const routes: Routes = [
   { path: 'stock-item-create/:id', component: StockItemCreateComponent },
   { path: 'stock-group-list', component: StockGroupItemsComponent },
   { path: 'stock-group-create', component: StockGroupCreateComponent },
+  { path: 'stock-group-create/:id', component: StockGroupCreateComponent },
   { path: 'stock-category-list', component: StockCategoryListComponent },
   { path: 'stock-category-create', component: StockCategoryCreateComponent },
   { path: 'uom-list', component: UomListComponent },

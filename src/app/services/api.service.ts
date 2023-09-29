@@ -368,35 +368,19 @@ export class ApiService {
   Inser_GroupData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mItemgroups', postdata);
   }
-  //  Update_GroupData(id:any,postdata: any): Observable<any> {
-  //    return this.http.put<any>(this.URL + "api/mItemgroups/"+id, postdata).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
-  Update_GroupData(postdata: any, postData?: any): Observable<any> {
-    return this.POST(
-      this.URL + 'api/mItemgroups/Update_GroupData',
-      postdata
-    ).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+
+  Update_GroupData(id: any, postdata: any): Observable<any> {
+    return this.http.put<any>(this.URL + "api/mItemgroups/" + id, postdata).pipe(map((res: any) => {
+      return res;
+    }))
   }
-  //  Delete_GroupData(id:any): Observable<any> {
-  //    return this.http.delete<any>(this.URL + "api/mItemgroups/"+id).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
+
   Delete_GroupData(id: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mItemgroups/DeleteMItemsgroupsdata?id=' + id)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    return this.http.delete<any>(this.URL + "api/mItemgroups/" + id).pipe(map((res: any) => {
+      return res;
+    }))
   }
+
   get_GroupMaxID() {
     return this.http.get<any>(this.URL + 'api/mItemgroups/getMaxID').pipe(
       map((res: any) => {

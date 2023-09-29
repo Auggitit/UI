@@ -1,15 +1,26 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <app-reports-header
-        title="CREATE STOCK GROUPS"
-        [searchField]="true"
-        [reportFormGroupName]="groupForm"
-        [saveTypesOptions]="saveAsOptions"
-        [SelectSaveOptions]="'SelectSaveOptions'"
-        buttonTitle="List of Stock Group"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
+      <div *ngIf="isCreateStockGroup; else elseBlock">
+        <app-reports-header
+          title="CREATE STOCK GROUP"
+          [searchField]="true"
+          [reportFormGroupName]="groupForm"
+          [saveTypesOptions]="saveAsOptions"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          buttonTitle="List of Stock Group"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE STOCK GROUP"
+          [reportFormGroupName]="groupForm"
+          [isDownloadNeeded]="false"
+          buttonTitle="Add STOCK GROUP"
+          (onClickCreateButton)="onClickAddButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
     <div
       style="
@@ -26,106 +37,44 @@
             <p style="font-size: 1.125rem; font-weight: 600; color: black">
               ID #{{ groupcode }}
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
                   #ename
                   (keyup.enter)="catNameEnter($event)"
-                  labelText="Item Name"
+                  labelText="Group Name"
                   [placeholderText]="'Name'"
                   formControlName="cgroupname"
                   [modelName]="groupname"
+                  [groupName]="groupForm"
                 ></app-mat-input>
               </div>
 
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Group Under</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%"
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Group Under</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
-                    <mat-label>Group Under</mat-label>
-                    <mat-select
-                      #eunder
-                      formControlName="cgroupunder"
-                      [(ngModel)]="groupundercode"
-                      [value]="groupundercode"
-                      (selectionChange)="changeGroup($event)"
-                    >
-                      <mat-option
-                        *ngFor="let item of savedData"
-                        [value]="item.groupcode"
-                        >{{ item.groupname }}</mat-option
-                      >
-                    </mat-select>
-                    <small
-                      *ngIf="
-                        groupForm.controls['cgroupunder'].dirty &&
-                        groupForm.hasError('required', 'cgroupunder')
-                      "
-                      class="text-danger"
-                      >Group Under Required!</small
-                    >
-                  </mat-form-field>
+                    <app-mat-select-box
+                    [formOptions]="groupDropDownData"
+                    [controlName]="'cgroupunder'"
+                    [label]="'Group Under'"
+                    [groupName]="groupForm"
+                    [formAppearance]="'outline'"
+                    ></app-mat-select-box>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div
-              class="row mt-4"
-              style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
-              "
-            >
-              <button
-                #esave
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                Clear
-              </button>
-            </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateStockGroup"
+              (clickSave)="submit()"
+              (clickClearAll)="clear()"
+              (clickUpdate)="update()"
+            ></app-action-button>
           </div>
         </div>
       </form>
