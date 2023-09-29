@@ -12,6 +12,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 
 @Component({
   selector: 'app-ledger-list',
@@ -97,13 +98,14 @@ export class LedgerListComponent implements OnInit {
     } else {
       msg = 'Do you Modify data?';
     }
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify data?',
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: msg,
+      },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        // this.router.navigateByUrl('create-ledger/' + data.id);
         this.router.navigate(['create-ledger/' + data.id], {
           queryParams: { type: 'edit' },
         });

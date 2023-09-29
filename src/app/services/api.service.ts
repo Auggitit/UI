@@ -17,7 +17,7 @@ export class ApiService {
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   POST(path: string, body: Object = {}): Observable<any> {
     //  console.log(JSON.stringify(body));
@@ -500,32 +500,19 @@ export class ApiService {
   Insert_ItemData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mItems', postdata);
   }
-  //  Update_ItemData(id:any,postdata: any): Observable<any> {
-  //    return this.http.put<any>(this.URL + "api/mItems/"+id, postdata).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
-  Update_ItemData(postdata: any, postData?: any): Observable<any> {
-    return this.POST(this.URL + 'api/mItems/UpdateMItem', postdata).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+
+  Update_ItemData(id: any, postdata: any): Observable<any> {
+    return this.http.put<any>(this.URL + "api/mItems/" + id, postdata).pipe(map((res: any) => {
+      return res;
+    }))
   }
-  //  Delete_ItemData(id:any): Observable<any> {
-  //    return this.http.delete<any>(this.URL + "api/mItems/DeleteMItems"+id).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
-  Delete_ItemData(POSTDATA: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mItems/DeleteMItems?id=' + POSTDATA)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+
+  Delete_ItemData(id: any): Observable<any> {
+    return this.http.delete<any>(this.URL + "api/mItems/" + id).pipe(map((res: any) => {
+      return res;
+    }))
   }
+
   get_ItemMaxID() {
     return this.http.get<any>(this.URL + 'api/mItems/getMaxID').pipe(
       map((res: any) => {
@@ -610,12 +597,12 @@ export class ApiService {
     return this.http
       .get<any>(
         this.URL +
-          'api/accountentries/GetVendorOverdue?branch=' +
-          branch +
-          '&fy=' +
-          fy +
-          '&ledger=' +
-          ledger
+        'api/accountentries/GetVendorOverdue?branch=' +
+        branch +
+        '&fy=' +
+        fy +
+        '&ledger=' +
+        ledger
       )
       .pipe(
         map((res: any) => {
@@ -628,10 +615,10 @@ export class ApiService {
     return this.http
       .get<any>(
         this.URL +
-          'api/accountentries/GetAllVendorOverdue?branch=' +
-          branch +
-          '&fy=' +
-          fy
+        'api/accountentries/GetAllVendorOverdue?branch=' +
+        branch +
+        '&fy=' +
+        fy
       )
       .pipe(
         map((res: any) => {
@@ -644,12 +631,12 @@ export class ApiService {
     return this.http
       .get<any>(
         this.URL +
-          'api/accountentries/GetCustomerOverdue?branch=' +
-          branch +
-          '&fy=' +
-          fy +
-          '&ledger=' +
-          ledger
+        'api/accountentries/GetCustomerOverdue?branch=' +
+        branch +
+        '&fy=' +
+        fy +
+        '&ledger=' +
+        ledger
       )
       .pipe(
         map((res: any) => {
@@ -662,10 +649,10 @@ export class ApiService {
     return this.http
       .get<any>(
         this.URL +
-          'api/accountentries/GetAllCustomerOverdue?branch=' +
-          branch +
-          '&fy=' +
-          fy
+        'api/accountentries/GetAllCustomerOverdue?branch=' +
+        branch +
+        '&fy=' +
+        fy
       )
       .pipe(
         map((res: any) => {

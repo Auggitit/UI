@@ -103,8 +103,8 @@
                   [placeholderText]="'GSTIN No'"
                   [formControlName]="'cgstin'"
                 ></app-mat-input>
+              </div>
             </div>
-          </div>
 
             <p
               style="
@@ -152,36 +152,27 @@
               </div>
             </div>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-              <!-- <div class="col-8 col-md-12 pb-2"> -->
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
-
-            <!-- <div class="col-12 d-flex mb-0 align-items-center" style="gap: 20%"> -->
-              <p style="color: #667085; font-weight: 600">Address</p>
-              <div
-              class="col-9"
-            >
-              <mat-form-field
-                class="example-full-width"
-                appearance="outline"
-                style="width: 100%; margin-top: 6px !important"
-              >
-                <textarea
-                  style="height: 68px; vertical-align: super;"
-                  placeholder="Address"
-                  type="text"
-                  matInput
-                  formControlName="caddress"
-                  [(ngModel)]="address"
-                  autocomplete="off"
-                ></textarea>
-              </mat-form-field>
+              <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <p style="color: #667085; font-weight: 600">Address</p>
+                <div class="col-9">
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                    style="width: 100%; margin-top: 6px !important"
+                  >
+                    <textarea
+                      style="height: 68px; vertical-align: super;"
+                      placeholder="Address"
+                      type="text"
+                      matInput
+                      formControlName="caddress"
+                      [(ngModel)]="address"
+                      autocomplete="off"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
               </div>
-            <!-- </div> -->
-
             </div>
-
-            </div>
-
 
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">

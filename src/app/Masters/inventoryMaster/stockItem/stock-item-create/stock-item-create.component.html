@@ -1,16 +1,28 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <app-reports-header
-        title="CREATE STOCK iTEM"
-        [searchField]="true"
-        [reportFormGroupName]="itemForm"
-        [saveTypesOptions]="saveAsOptions"
-        [SelectSaveOptions]="'SelectSaveOptions'"
-        buttonTitle="List of Stock Item"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
+      <div *ngIf="isCreateStockItem; else elseBlock">
+        <app-reports-header
+          title="CREATE STOCK ITEM"
+          [searchField]="true"
+          [reportFormGroupName]="itemForm"
+          [saveTypesOptions]="saveAsOptions"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          buttonTitle="List of Stock Item"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE STOCK ITEM"
+          [reportFormGroupName]="itemForm"
+          [isDownloadNeeded]="false"
+          buttonTitle="Add STOCK ITEM"
+          (onClickCreateButton)="onClickAddButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
+
     <div
       style="
         background-color: white;
@@ -26,9 +38,11 @@
             <p style="font-size: 1.125rem; font-weight: 600; color: black">
               ID #{{ itemcode }}
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="itemForm"
                   #eitemname
                   (keyup.enter)="itemNameEnter($event)"
                   labelText="Item Name"
@@ -37,57 +51,37 @@
                   [modelName]="itemname"
                 ></app-mat-input>
               </div>
-
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Item Under</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%"
+              
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Item Under</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
-                    <mat-select
-                      #eunder
-                      placeholder="Item Under"
-                      formControlName="citemunder"
-                      [(ngModel)]="itemundercode"
-                      [value]="itemundercode"
-                      (selectionChange)="changeGroup($event)"
-                    >
-                      <mat-option
-                        *ngFor="let item of groupData"
-                        [value]="item.groupcode"
-                        >{{ item.groupname }}</mat-option
-                      >
-                    </mat-select>
-                    <!-- <input type="text" (keyup.enter)="catUnderEnter($event)" formControlName="ccatunder"  [(ngModel)] = "catundercode" class="form-control form-control-sm" placeholder="">       -->
-                    <small
-                      *ngIf="
-                        itemForm.controls['citemunder'].dirty &&
-                        itemForm.hasError('required', 'citemunder')
-                      "
-                      class="text-danger"
-                      >Category Under Required!</small
-                    >
-                  </mat-form-field>
+                    <app-mat-select-box
+                      [formOptions]="groupDropDownData"
+                      [controlName]="'citemunder'"
+                      [label]="'Item Under'"
+                      [groupName]="itemForm"
+                      [formAppearance]="'outline'"
+                    ></app-mat-select-box>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="itemForm"
                   labelText="Item SKU"
                   [placeholderText]="'Item SKU'"
                   [formControlName]="'citemsku'"
                   [modelName]="itemsku"
                 ></app-mat-input>
               </div>
-              <div class="col-6">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="itemForm"
                   labelText="HSN/SAC"
                   [placeholderText]="'HSN/SAC'"
                   [formControlName]="'citemhsn'"
@@ -95,148 +89,177 @@
                 ></app-mat-input>
               </div>
             </div>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
-                <app-mat-input
-                  labelText="Item Category"
-                  [placeholderText]="'Item Category'"
-                  [formControlName]="'citemsku'"
-                  [modelName]="itemsku"
-                ></app-mat-input>
-              </div>
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Item UOM</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%"
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Item Category</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
-                    <mat-select
-                      #eitemuomcode
-                      placeholder="Item UOM"
-                      formControlName="citemuomcode"
-                      [(ngModel)]="itemuomcode"
-                      [value]="itemuomcode"
-                      (selectionChange)="changeUOM($event)"
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      style="width: 100%"
                     >
-                      <mat-option
-                        *ngFor="let item of uomData"
-                        [value]="item.uomcode"
-                        >{{ item.uomname }}</mat-option
-                      >
-                    </mat-select>
-                    <!-- <input type="text" (keyup.enter)="catUnderEnter($event)" formControlName="ccatunder"  [(ngModel)] = "catundercode" class="form-control form-control-sm" placeholder="">       -->
-                    <small
-                      *ngIf="
-                        itemForm.controls['citemuomcode'].dirty &&
-                        itemForm.hasError('required', 'citemuomcode')
-                      "
-                      class="text-danger"
-                      >Category Under Required!</small
-                    >
-                  </mat-form-field>
-                </div>
-              </div>
-            </div>
-
-            <p style="font-size: 1.125rem; font-weight: 600; color: black">
-              TAX DETAILS
-            </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Taxability Type</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%"
-                  >
-                    <mat-select
-                      placeholder="Taxability Type"
-                      #etaxabletype
-                      formControlName="ctaxabletype"
-                      [(ngModel)]="taxabletype"
-                      [value]="taxabletype"
-                      (selectionChange)="changeTaxability($event)"
-                    >
-                      <mat-option value="Taxable">Taxable</mat-option>
-                      <mat-option value="Nil Rated">Nil Rated</mat-option>
-                      <mat-option value="Exempt">Exempt</mat-option>
-                      <mat-option value="Not Applicable"
-                        >Not Applicable</mat-option
-                      >
-                    </mat-select>
-                    <!-- <input type="text" (keyup.enter)="catUnderEnter($event)" formControlName="ccatunder"  [(ngModel)] = "catundercode" class="form-control form-control-sm" placeholder="">       -->
-                    <small
-                      *ngIf="
-                        itemForm.controls['ctaxabletype'].dirty &&
-                        itemForm.hasError('required', 'ctaxabletype')
-                      "
-                      class="text-danger"
-                      >Category Under Required!</small
-                    >
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Type of Supply</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                    style="width: 100%"
-                  >
-                    <div class="mb-0">
                       <mat-select
-                        placeholder="Type of Supply"
-                        #ectypeofsupply
-                        formControlName="ctypeofsupply"
-                        [(ngModel)]="typeofsupply"
-                        [value]="typeofsupply"
-                        (selectionChange)="changeTOS($event)"
+                        #eitemuomcode
+                        placeholder="Item Category"
+                        formControlName="citemcatcode"
+                        [(ngModel)]="itemcatcode"
+                        [value]="itemcatcode"
+                        (selectionChange)="changeCategory($event)"
                       >
-                        <mat-option value="Goods">Goods</mat-option>
-                        <mat-option value="Services">Services</mat-option>
+                        <mat-option
+                          *ngFor="let item of categoryData"
+                          [value]="item.catcode"
+                          >{{ item.catname }}</mat-option
+                        >
                       </mat-select>
-                      <!-- <input type="text" (keyup.enter)="catUnderEnter($event)" formControlName="ccatunder"  [(ngModel)] = "catundercode" class="form-control form-control-sm" placeholder="">       -->
                       <small
                         *ngIf="
-                          itemForm.controls['ctypeofsupply'].dirty &&
-                          itemForm.hasError('required', 'ctypeofsupply')
+                          itemForm.controls['citemcatcode'].dirty &&
+                          itemForm.hasError('required', 'citemcatcode')
                         "
                         class="text-danger"
                         >Category Under Required!</small
                       >
-                    </div>
-                  </mat-form-field>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <p style="color: #667085; font-weight: 600">Item UOM</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      style="width: 100%"
+                    >
+                      <mat-select
+                        #eitemuomcode
+                        placeholder="Item UOM"
+                        formControlName="citemuomcode"
+                        [(ngModel)]="itemuomcode"
+                        [value]="itemuomcode"
+                        (selectionChange)="changeUOM($event)"
+                      >
+                        <mat-option
+                          *ngFor="let item of uomData"
+                          [value]="item.uomcode"
+                          >{{ item.uomname }}</mat-option
+                        >
+                      </mat-select>
+                      <small
+                        *ngIf="
+                          itemForm.controls['citemuomcode'].dirty &&
+                          itemForm.hasError('required', 'citemuomcode')
+                        "
+                        class="text-danger"
+                        >Category Under Required!</small
+                      >
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+
+            <p style="font-size: 1.125rem; font-weight: 600; color: black;
+              padding-bottom: 20px; padding-top: 20px;">
+              TAX DETAILS
+            </p>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Taxability Type</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      style="width: 100%"
+                    >
+                      <mat-select
+                        placeholder="Taxability Type"
+                        #etaxabletype
+                        formControlName="ctaxabletype"
+                        [(ngModel)]="taxabletype"
+                        [value]="taxabletype"
+                        (selectionChange)="changeTaxability($event)"
+                      >
+                        <mat-option value="Taxable">Taxable</mat-option>
+                        <mat-option value="Nil Rated">Nil Rated</mat-option>
+                        <mat-option value="Exempt">Exempt</mat-option>
+                        <mat-option value="Not Applicable"
+                          >Not Applicable</mat-option
+                        >
+                      </mat-select>
+                      <small
+                        *ngIf="
+                          itemForm.controls['ctaxabletype'].dirty &&
+                          itemForm.hasError('required', 'ctaxabletype')
+                        "
+                        class="text-danger"
+                        >Category Under Required!</small
+                      >
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Type of Supply</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      style="width: 100%"
+                    >
+                      <div class="mb-0">
+                        <mat-select
+                          placeholder="Type of Supply"
+                          #ectypeofsupply
+                          formControlName="ctypeofsupply"
+                          [(ngModel)]="typeofsupply"
+                          [value]="typeofsupply"
+                          (selectionChange)="changeTOS($event)"
+                        >
+                          <mat-option value="Goods">Goods</mat-option>
+                          <mat-option value="Services">Services</mat-option>
+                        </mat-select>
+                        <small
+                          *ngIf="
+                            itemForm.controls['ctypeofsupply'].dirty &&
+                            itemForm.hasError('required', 'ctypeofsupply')
+                          "
+                          class="text-danger"
+                          >Category Under Required!</small
+                        >
+                      </div>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="itemForm"
                   labelText="GST"
                   [placeholderText]="'GST'"
                   [formControlName]="'cgst'"
                   [modelName]="gst"
                 ></app-mat-input>
               </div>
-              <div class="col-6">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
+                  [groupName]="itemForm"
                   labelText="CESS"
                   [placeholderText]="'CESS'"
                   [formControlName]="'ccess'"
@@ -245,55 +268,13 @@
               </div>
             </div>
 
-            <div
-              class="row mt-4"
-              style="
-                align-items: flex-end;
-                justify-content: flex-end;
-                gap: 10px;
-              "
-            >
-              <button
-                #esave
-                [disabled]="loading"
-                style="
-                  margin-right: 5px;
-                  background-color: #419fc7;
-                  border: 1px solid #419fc7;
-                  border-radius: 8px;
-                  color: white;
-                  box-shadow: none;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                <div
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  *ngIf="loading"
-                >
-                  <span class="sr-only">Loading...</span>
-                </div>
-                Save
-              </button>
-              <button
-                style="
-                  border: 1px solid #419fc7;
-                  background-color: white;
-                  color: #419fc7;
-                  border-radius: 8px;
-                  padding: 10px;
-                  padding-right: 20px;
-                  padding-left: 20px;
-                  padding-top: 10px;
-                  padding-bottom: 10px;
-                "
-              >
-                Clear
-              </button>
-            </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateStockItem"
+              (clickSave)="submit()"
+              (clickClearAll)="clear()"
+              (clickUpdate)="update()"
+            ></app-action-button>
           </div>
         </div>
       </form>

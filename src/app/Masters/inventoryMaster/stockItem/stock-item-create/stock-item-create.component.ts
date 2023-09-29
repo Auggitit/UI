@@ -6,9 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-// import { ApiService } from '../../../services/api.service';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 import {
   dropDownData,
@@ -37,9 +36,10 @@ export class StockItemCreateComponent implements OnInit {
   taxabletype: any;
   gst: any = 0;
   cess: any = 0;
-  vat: any;
+  vat: any = 0;
   rateofduty: any = 1;
   groupData: any;
+  groupDropDownData: dropDownData[] = [];
   categoryData: any;
   uomData: any;
   gstapplicable: any = 'NO';
@@ -49,7 +49,8 @@ export class StockItemCreateComponent implements OnInit {
   uniqueID: any;
   saveAsOptions: dropDownData[] = exportOptions;
   loading: boolean = false;
-
+  isCreateStockItem: boolean = true;
+  oldid: any;
   gstreadonly: boolean = true;
   cessreadonly: boolean = true;
 
@@ -57,8 +58,9 @@ export class StockItemCreateComponent implements OnInit {
     public api: ApiService,
     public dialog: MatDialog,
     public fb: FormBuilder,
-    public router: Router
-  ) {}
+    public router: Router,
+    public activatedRoute: ActivatedRoute
+  ) { }
 
   ngAfterViewInit() {
     this.eitemname?.nativeElement.focus();
@@ -69,27 +71,58 @@ export class StockItemCreateComponent implements OnInit {
     this.loadgroup();
     this.loadcategory();
     this.loaduom();
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateStockItem = false;
+
+      this.api.get_ItemDataWithID(this.oldid).subscribe((res) => {
+        this.itemForm.patchValue({
+          citemname: res.itemname,
+          citemunder: res.itemunder,
+          citemsku: res.itemsku,
+          citemhsn: res.itemhsn,
+          citemcatcode: res.itemcategory,
+          citemuomcode: res.uom,
+          ctaxabletype: res.taxable,
+          ctypeofsupply: res.typeofSupply,
+          cgst: res.gst,
+          ccess: res.cess,
+        });
+        this.itemcode = res.itemcode;
+      });
+    }
   }
 
   onClickButton(): void {
     this.router.navigateByUrl('stock-item-list');
   }
 
+  onClickAddButton(): void {
+    this.router.navigateByUrl('stock-item-create');
+  }
+
   loadgroup() {
     this.api.get_GroupData().subscribe((res) => {
-      console.log(res);
       this.groupData = res;
+      const newMap = new Map();
+      res.map((item: any) => {
+        return {
+          name: item.groupname,
+          id: item.groupcode,
+        };
+      })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.groupDropDownData = [...newMap.values()];
     });
   }
   loadcategory() {
     this.api.get_CategoryData().subscribe((res) => {
-      console.log(res);
       this.categoryData = res;
     });
   }
   loaduom() {
     this.api.get_UOMData().subscribe((res) => {
-      console.log(res);
       this.uomData = res;
     });
   }
@@ -118,21 +151,7 @@ export class StockItemCreateComponent implements OnInit {
     });
   }
 
-  submit() {
-    if (this.itemForm.valid) {
-      if (this.custumValidate() == true) {
-        this.saveDetails();
-      }
-    } else {
-      Swal.fire({
-        icon: 'info',
-        title: 'Fill Mandatory Fields',
-        text: 'Plese fill all mandatory fields',
-      });
-    }
-  }
-
-  custumValidate() {
+  validate() {
     var val;
     if (this.taxabletype == 'Taxable') {
       if (this.gst == '' || this.gst == undefined || this.gst == Number.isNaN) {
@@ -165,62 +184,6 @@ export class StockItemCreateComponent implements OnInit {
     return val;
   }
 
-  saveDetails() {
-    if (this.itemsku == null || this.itemsku == undefined) {
-      this.itemsku = '';
-    }
-    if (this.itemhsn == null || this.itemhsn == undefined) {
-      this.itemhsn = '';
-    }
-    if (this.typeofsupply == null || this.typeofsupply == undefined) {
-      this.typeofsupply = 'Goods';
-    }
-
-    this.loading = true;
-    setTimeout(() => {
-      this.getMaxCode().then((res) => {
-        this.uniqueID = Guid.create();
-        var postData = {
-          id: this.uniqueID.value,
-          itemcode: this.itemcode,
-          itemname: this.itemname,
-          itemunder: this.itemundercode,
-          itemcategory: this.itemcatcode,
-          uom: this.itemuomcode,
-          gstApplicable: this.gstapplicable,
-          gstCalculationtype: 'N/A',
-          taxable: this.taxabletype,
-          gst: this.gst,
-          cess: this.cess,
-          vat: this.vat,
-          typeofSupply: this.typeofsupply,
-          rateofDuty: this.rateofduty,
-          rCreatedDateTime: new Date(),
-          rStatus: 'A',
-          itemsku: this.itemsku,
-          itemhsn: this.itemhsn,
-        };
-        this.api.Insert_ItemData(postData).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Stock Item Successfully Saved!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.getMaxCode();
-              this.clear();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-            this.loading = false;
-          }
-        );
-      });
-    }, 200);
-  }
-
   clear() {
     this.itemname = '';
     this.itemsku = '';
@@ -247,7 +210,6 @@ export class StockItemCreateComponent implements OnInit {
 
   changeTaxability(event: any) {
     this.taxabletype = event.source.triggerValue;
-    console.log(this.taxabletype);
     if (this.taxabletype == 'Taxable') {
       this.gstreadonly = false;
       this.cessreadonly = false;
@@ -298,5 +260,110 @@ export class StockItemCreateComponent implements OnInit {
 
   gotoList() {
     this.router.navigateByUrl('/stockitemlist');
+  }
+
+  submit() {
+    var res = this.validate();
+    if (res == true) {
+      if (this.itemForm.valid) {
+        this.loading = true;
+        setTimeout(() => {
+          this.getMaxCode().then((res) => {
+            if (this.isCreateStockItem) {
+              this.save();
+            } else if (!this.isCreateStockItem) {
+              this.update();
+            }
+          });
+        }, 400);
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Fill Mandatory Fields',
+          text: 'Plese fill all mandatory fields',
+        });
+      }
+    }
+  }
+
+  save() {
+    this.uniqueID = Guid.create();
+    var postData = {
+      id: this.uniqueID.value,
+      itemcode: this.itemcode,
+      itemname: this.itemForm.value.citemname,
+      itemunder: this.itemForm.value.citemunder,
+      itemcategory: this.itemForm.value.citemcatcode,
+      uom: this.itemForm.value.citemuomcode,
+      gstApplicable: '',
+      gstCalculationtype: 'N/A',
+      taxable: this.itemForm.value.ctaxabletype,
+      gst: this.itemForm.value.cgst,
+      cess: this.itemForm.value.ccess,
+      vat: this.vat,
+      typeofSupply: this.itemForm.value.ctypeofsupply,
+      rateofDuty: this.rateofduty,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+      itemsku: this.itemForm.value.citemsku,
+      itemhsn: this.itemForm.value.citemhsn,
+    };
+    this.api.Insert_ItemData(postData).subscribe({
+      next:
+        (data) => {
+          let dialogRef = this.dialog.open(SuccessmsgComponent, {
+            data: 'Stock Item Successfully Saved!',
+          });
+          dialogRef.afterClosed().subscribe((result) => {
+            this.clear();
+            this.loading = false;
+          });
+        },
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
+    });
+  }
+
+  update() {
+    var postdata = {
+      id: this.oldid,
+      itemcode: this.itemcode,
+      itemname: this.itemForm.value.citemname,
+      itemunder: this.itemForm.value.citemunder,
+      itemcategory: this.itemForm.value.citemcatcode,
+      uom: this.itemForm.value.citemuomcode,
+      gstApplicable: '',
+      gstCalculationtype: 'N/A',
+      taxable: this.itemForm.value.ctaxabletype,
+      gst: this.itemForm.value.cgst,
+      cess: this.itemForm.value.ccess,
+      vat: this.vat,
+      typeofSupply: this.itemForm.value.ctypeofsupply,
+      rateofDuty: this.rateofduty,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+      itemsku: this.itemForm.value.citemsku,
+      itemhsn: this.itemForm.value.citemhsn,
+    };
+
+    this.api.Update_ItemData(this.oldid, postdata).subscribe({
+      next: (data) => {
+        this.loading = false;
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'Stock Item Successfully Updated',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.clear();
+          this.loading = false;
+          this.router.navigateByUrl('stock-item-list');
+        });
+      },
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
+    });
   }
 }

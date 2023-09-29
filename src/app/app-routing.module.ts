@@ -184,6 +184,7 @@ const routes: Routes = [
   { path: 'create-customer', component: CustomerCreateComponent },
   { path: 'stock-item-list', component: StockItemListComponent },
   { path: 'stock-item-create', component: StockItemCreateComponent },
+  { path: 'stock-item-create/:id', component: StockItemCreateComponent },
   { path: 'stock-group-list', component: StockGroupItemsComponent },
   { path: 'stock-group-create', component: StockGroupCreateComponent },
   { path: 'stock-category-list', component: StockCategoryListComponent },
