@@ -1,13 +1,24 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <app-reports-header
-        title="CREATE STOCK CATEGORY"
-        [reportFormGroupName]="categoryForm"
-        buttonTitle="List of Stock Category"
-        [isDownloadNeeded]="false"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
+      <div *ngIf="isCreateCategory; else elseBlock">
+        <app-reports-header
+          title="CREATE STOCK CATEGORY"
+          [reportFormGroupName]="categoryForm"
+          buttonTitle="List of Stock Category"
+          [isDownloadNeeded]="false"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
+      </div>
+      <ng-template #elseBlock>
+        <app-reports-header
+          title="UPDATE STOCK CATEGORY"
+          [reportFormGroupName]="categoryForm"
+          [isDownloadNeeded]="false"
+          buttonTitle="Add STOCK CATEGORY"
+          (onClickCreateButton)="onClickAddButton()"
+        ></app-reports-header>
+      </ng-template>
     </div>
     <div
       style="
@@ -24,8 +35,8 @@
             <p style="font-size: 1.125rem; font-weight: 600; color: black">
               ID #{{ catcode }}
             </p>
-            <div class="p-0 d-flex justify-content-between col-12">
-              <div class="col-6">
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
                   [groupName]="categoryForm"
                   labelText="Category Name"
@@ -34,31 +45,31 @@
                 ></app-mat-input>
               </div>
 
-              <div
-                class="col-6 d-flex mb-0 align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Category Name</p>
-                <div
-                  class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                >
-                  <app-mat-select-box
-                    [formOptions]="categetoryDropDownData"
-                    [controlName]="'ccatunder'"
-                    [label]="'Category Name'"
-                    [groupName]="categoryForm"
-                    [formAppearance]="'outline'"
-                  ></app-mat-select-box>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                  <p style="color: #667085; font-weight: 600">Category Name</p>
+                  <div
+                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                  >
+                    <app-mat-select-box
+                      [formOptions]="categetoryDropDownData"
+                      [controlName]="'ccatunder'"
+                      [label]="'Category Name'"
+                      [groupName]="categoryForm"
+                      [formAppearance]="'outline'"
+                    ></app-mat-select-box>
+                  </div>
                 </div>
               </div>
             </div>
 
             <app-action-button
               [loading]="loading"
+              [isSave]="isCreateCategory"
               (clickSave)="submit()"
               (clickClearAll)="clear()"
               (clickUpdate)="update()"
             ></app-action-button>
-            <!-- [isSave]="isCreateLedger" -->
           </div>
         </div>
       </form>

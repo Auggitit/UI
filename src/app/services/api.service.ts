@@ -302,35 +302,19 @@ export class ApiService {
   Inser_CateData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mCategories', postdata);
   }
-  //  Update_CateData(id:any,postdata: any): Observable<any> {
-  //    return this.http.put<any>(this.URL + "api/mCategories/"+id, postdata).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
-  Update_CateData(postdata: any, postData?: any): Observable<any> {
-    return this.POST(
-      this.URL + 'api/mCategories/Update_CateData',
-      postdata
-    ).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+
+  Update_CateData(id: any, postdata: any): Observable<any> {
+    return this.http.put<any>(this.URL + "api/mCategories/" + id, postdata).pipe(map((res: any) => {
+      return res;
+    }))
   }
-  //  Delete_CateData(id:any): Observable<any> {
-  //    return this.http.delete<any>(this.URL + "api/mCategories/"+id).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
+
   Delete_CateData(id: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mCategories/Deletecatdata?id=' + id)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    return this.http.delete<any>(this.URL + "api/mCategories/" + id).pipe(map((res: any) => {
+      return res;
+    }))
   }
+
   get_CategoryMaxID() {
     return this.http
       .get<any>(this.URL + 'api/mCategories/getMaxCategoryID')

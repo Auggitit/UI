@@ -190,6 +190,7 @@ const routes: Routes = [
   { path: 'stock-group-create/:id', component: StockGroupCreateComponent },
   { path: 'stock-category-list', component: StockCategoryListComponent },
   { path: 'stock-category-create', component: StockCategoryCreateComponent },
+  { path: 'stock-category-create/:id', component: StockCategoryCreateComponent },
   { path: 'uom-list', component: UomListComponent },
   { path: 'uom-create', component: UomCreateComponent },
   { path: 'country-master-list', component: CountryMasterListComponent },

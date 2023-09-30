@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-stock-category-list',
@@ -23,6 +24,7 @@ export class StockCategoryListComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   searchCategory: any;
   tableHeaderAlignValue: string = 'left';
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -77,16 +79,41 @@ export class StockCategoryListComponent implements OnInit {
     } else {
       msg = 'Do you Modify data?';
     }
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify data?',
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: msg,
+      },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        // this.router.navigateByUrl('create-ledger/' + data.id);
         this.router.navigate(['stock-category-create/' + data.id], {
           queryParams: { type: 'edit' },
         });
+      }
+    });
+  }
+
+  onClickDelete(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_CateData(data.id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Stock Category Deleted Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
       }
     });
   }

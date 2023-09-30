@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
@@ -12,6 +12,7 @@ import {
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-stock-category-create',
@@ -38,13 +39,16 @@ export class StockCategoryCreateComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   savedData: any;
   categetoryDropDownData: dropDownData[] = [];
-  isCreateLedger: boolean = false;
+  isCreateCategory: boolean = true;
+  oldid: any;
+
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
     public fb: FormBuilder,
-    public router: Router
-  ) {}
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+  ) { }
   //Validators
   setValidations() {
     this.categoryForm = this.fb.group({
@@ -61,6 +65,20 @@ export class StockCategoryCreateComponent implements OnInit {
     this.setValidations();
     this.getMaxCode();
     this.loaddata();
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateCategory = false;
+
+      this.api.get_CategoryDataWithID(this.oldid).subscribe((res) => {
+        this.categoryForm.patchValue({
+          ccatname: res.catname,
+          ccatunder: res.catunder,
+        });
+        this.catcode = res.catcode;
+      });
+    }
+
     this.categoryForm.get('ccatunder')?.valueChanges.subscribe((value) => {
       let stateCode = this.categetoryDropDownData.filter(
         (item) => item.id === value
@@ -72,7 +90,11 @@ export class StockCategoryCreateComponent implements OnInit {
   onClickButton(): void {
     this.router.navigateByUrl('stock-category-list');
   }
-  //Load Functions
+
+  onClickAddButton(): void {
+    this.router.navigateByUrl('stock-category-create');
+  }
+
   loaddata() {
     this.api.get_CategoryData().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res);
@@ -87,8 +109,6 @@ export class StockCategoryCreateComponent implements OnInit {
         })
         .forEach((item: any) => newMap.set(item.id, item));
       this.categetoryDropDownData = [...newMap.values()];
-
-      console.log(res, 'essssssssssssssssssssssssssss');
     });
   }
 
@@ -101,154 +121,91 @@ export class StockCategoryCreateComponent implements OnInit {
     });
   }
 
-  //CRUD
-  async submit() {
-    this.loading = true;
-    setTimeout(() => {
-      this.getMaxCode().then((res) => {
-        this.uniqueID = Guid.create();
-        var postData = {
-          id: this.uniqueID.value,
-          catcode: this.categoryForm.value.ccatunder,
-          catname: this.categoryForm.value.ccatname,
-          catunder: this.categoryForm.value.ccatunder,
-          rCreatedDateTime: new Date(),
-          rStatus: 'A',
-        };
-        this.api.Inser_CateData(postData).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Category Successfully Saved!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-              this.getMaxCode();
-              this.ename?.nativeElement.focus();
-              this.loading = false;
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
+  submit() {
+    if (this.categoryForm.valid) {
+      this.loading = true;
+      setTimeout(() => {
+        this.getMaxCode().then((res) => {
+          if (this.isCreateCategory) {
+            this.save();
+          } else if (!this.isCreateCategory) {
+            this.update();
           }
-        );
+        });
+      }, 400);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Fill Mandatory Fields',
+        text: 'Plese fill all mandatory fields',
       });
-    }, 200);
+    }
   }
-  update() {
-    this.loading = true;
-    setTimeout(() => {
-      var postData = {
-        id: this.selectedID,
-        catcode: this.catcode,
-        catname: this.catname,
-        catunder: this.catundercode,
-        rCreatedDateTime: new Date(),
-        rStatus: 'A',
-      };
-      console.log(postData);
-      this.api.Update_CateData(this.selectedID, postData).subscribe(
+
+  save() {
+    this.uniqueID = Guid.create();
+    var postData = {
+      id: this.uniqueID.value,
+      catcode: this.categoryForm.value.ccatunder,
+      catname: this.categoryForm.value.ccatname,
+      catunder: this.categoryForm.value.ccatunder,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+    this.api.Inser_CateData(postData).subscribe({
+      next:
         (data) => {
           let dialogRef = this.dialog.open(SuccessmsgComponent, {
-            //width: '350px',
-            data: 'Category Successfully Updated!',
+            data: 'Stock Category Successfully Saved!',
           });
           dialogRef.afterClosed().subscribe((result) => {
             this.clear();
-            this.loaddata();
-            this.getMaxCode();
-            this.setValidations();
-            this.categoryForm.reset();
-            this.ename?.nativeElement.focus();
             this.loading = false;
           });
         },
-        (err) => {
-          console.log(err);
-          alert('Some Error Occured');
-        }
-      );
-    }, 200);
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
+    });
   }
+
+  update() {
+    var postdata = {
+      id: this.oldid,
+      catcode: this.categoryForm.value.ccatunder,
+      catname: this.categoryForm.value.ccatname,
+      catunder: this.categoryForm.value.ccatunder,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+
+    this.api.Update_CateData(this.oldid, postdata).subscribe({
+      next: (data) => {
+        this.loading = false;
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'Stock Category Successfully Updated',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.clear();
+          this.loading = false;
+          this.router.navigateByUrl('stock-category-list');
+        });
+      },
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
+    });
+  }
+
   clear() {
     this.catname = '';
     this.catundercode = '';
+    this.loading = false;
     this.selectedID = undefined;
     this.setValidations();
     this.categoryForm.reset();
-  }
-  // edit(rowdata: any) {
-  //   const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-  //     width: '350px',
-  //     data: 'Do you Modify data?',
-  //   });
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       console.log(rowdata);
-  //       this.selectedID = rowdata.id;
-  //       this.catname = rowdata.catname;
-  //       this.catundercode = rowdata.catunder;
-  //       this.catcode = rowdata.catcode;
-  //       const catname = this.categoryForm.get('ccatname');
-  //       catname?.clearValidators();
-  //       catname?.clearAsyncValidators();
-  //       catname?.updateValueAndValidity();
-  //     }
-  //   });
-  // }
-  // restore(rowdata: any) {
-  //   const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-  //     width: '350px',
-  //     data: 'Do you confirm the Restoration of this Category data?',
-  //   });
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.api.delete_LedgerGroup(rowdata.id).subscribe(
-  //         (data) => {
-  //           let dialogRef = this.dialog.open(SuccessmsgComponent, {
-  //             //width: '350px',
-  //             data: 'Successfully Restored!',
-  //           });
-  //           dialogRef.afterClosed().subscribe((result) => {
-  //             this.clear();
-  //             this.loaddata();
-  //           });
-  //         },
-  //         (err) => {
-  //           console.log(err);
-  //           alert('Some Error Occured');
-  //         }
-  //       );
-  //     }
-  //   });
-  // }
-  delete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the deletion of this Category data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_CateData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Deleted!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
-    });
   }
 
   //Enter Key Events (Focus)
@@ -270,7 +227,6 @@ export class StockCategoryCreateComponent implements OnInit {
   //Dropdown Events
   changeCategory(event: MatSelectChange) {
     this.catundercode = event.value;
-    console.log('sel' + event.value);
     this.ename?.nativeElement.focus();
   }
 
