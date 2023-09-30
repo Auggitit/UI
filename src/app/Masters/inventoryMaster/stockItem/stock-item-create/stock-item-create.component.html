@@ -4,10 +4,8 @@
       <div *ngIf="isCreateStockItem; else elseBlock">
         <app-reports-header
           title="CREATE STOCK ITEM"
-          [searchField]="true"
-          [reportFormGroupName]="itemForm"
-          [saveTypesOptions]="saveAsOptions"
-          [SelectSaveOptions]="'SelectSaveOptions'"
+          [isDownloadNeeded]="false"
+          [isReports]="false"
           buttonTitle="List of Stock Item"
           (onClickCreateButton)="onClickButton()"
         ></app-reports-header>
@@ -47,8 +45,7 @@
                   (keyup.enter)="itemNameEnter($event)"
                   labelText="Item Name"
                   [placeholderText]="'Name'"
-                  formControlName="citemname"
-                  [modelName]="itemname"
+                  [controlName]="'citemname'"
                 ></app-mat-input>
               </div>
 

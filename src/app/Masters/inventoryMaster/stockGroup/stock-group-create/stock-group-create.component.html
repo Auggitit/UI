@@ -4,12 +4,10 @@
       <div *ngIf="isCreateStockGroup; else elseBlock">
         <app-reports-header
           title="CREATE STOCK GROUP"
-          [searchField]="true"
-          [reportFormGroupName]="groupForm"
-          [saveTypesOptions]="saveAsOptions"
-          [SelectSaveOptions]="'SelectSaveOptions'"
           buttonTitle="List of Stock Group"
           (onClickCreateButton)="onClickButton()"
+          [isDownloadNeeded]="false"
+          [isReports]="false"
         ></app-reports-header>
       </div>
       <ng-template #elseBlock>
@@ -44,8 +42,7 @@
                   (keyup.enter)="catNameEnter($event)"
                   labelText="Group Name"
                   [placeholderText]="'Name'"
-                  formControlName="cgroupname"
-                  [modelName]="groupname"
+                  [controlName]="'cgroupname'"
                   [groupName]="groupForm"
                 ></app-mat-input>
               </div>
