@@ -10,6 +10,10 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 
 @Component({
   selector: 'app-customer-list',
@@ -78,7 +82,8 @@ export class CustomerListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
   ) {
     this.customerForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -182,6 +187,37 @@ export class CustomerListComponent implements OnInit {
     this.api.getCustomersOnly().subscribe((res) => {
       console.log(res, '...........response');
       this.getFilterData(formValues, res);
+    });
+  }
+
+  onClickEdit(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: msg,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.router.navigate(['customer-create/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
+  }
+
+  onClickDelete(rowdata: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
     });
   }
 
