@@ -97,50 +97,7 @@ export class NewVendorComponent implements OnInit {
     public router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.setValidations();
-    this.loadCountrydata();
-    this.loadStatedata();
-  }
-
-  onClickButton(): void {
-    this.router.navigateByUrl('vendor-list');
-  }
-
-  loadCountrydata() {
-    console.log("data",this.api.get_CountryData())
-    this.api.get_CountryData().subscribe((res) => {
-      this.countryData = res;
-      const newMap = new Map();
-      res
-        .map((item: any) => {
-          return {
-            name: item.countryname,
-            id: item.countryname,
-          };
-        })
-        .forEach((item: any) => newMap.set(item.id, item));
-      this.countryDropDownData = [...newMap.values()];
-    });
-  }
-
-  loadStatedata() {
-    this.api.get_StateData().subscribe((res) => {
-      this.stateData = res;
-      const newMap = new Map();
-      res
-        .map((item: any) => {
-          return {
-            name: item.statename,
-            id: item.stetecode,
-          };
-        })
-        .forEach((item: any) => newMap.set(item.id, item));
-      this.stateDropDownData = [...newMap.values()];
-    });
-  }
-
-  setValidations() {
+  setValidations(): void {
     this.vendorForm = this.fb.group({
       ctype: null,
       csalutation: null,
@@ -181,6 +138,49 @@ export class NewVendorComponent implements OnInit {
       ccpMobile: null,
       ccpEmail: null,
       cremarks: null,
+    });
+  }
+
+  ngOnInit(): void {
+    this.setValidations();
+    this.loadCountrydata();
+    this.loadStatedata();
+  }
+
+  onClickButton(): void {
+    this.router.navigateByUrl('vendor-list');
+  }
+
+  loadCountrydata() {
+    console.log('data', this.api.get_CountryData());
+    this.api.get_CountryData().subscribe((res) => {
+      this.countryData = res;
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.countryname,
+            id: item.countryname,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.countryDropDownData = [...newMap.values()];
+    });
+  }
+
+  loadStatedata() {
+    this.api.get_StateData().subscribe((res) => {
+      this.stateData = res;
+      const newMap = new Map();
+      res
+        .map((item: any) => {
+          return {
+            name: item.statename,
+            id: item.stetecode,
+          };
+        })
+        .forEach((item: any) => newMap.set(item.id, item));
+      this.stateDropDownData = [...newMap.values()];
     });
   }
 
@@ -238,6 +238,7 @@ export class NewVendorComponent implements OnInit {
   // }
 
   submit() {
+    console.log(this.vendorForm.value, '-------11111------');
     if (this.vendorForm.valid) {
       this.loading = true;
       setTimeout(() => {

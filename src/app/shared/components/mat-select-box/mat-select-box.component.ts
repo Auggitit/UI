@@ -10,7 +10,7 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 @Component({
   selector: 'app-mat-select-box',
   template: `<form
-    *ngIf="formOptions?.length && groupName && formAppearance"
+    *ngIf="formOptions?.length && groupName && formAppearance && controlName"
     [formGroup]="groupName"
     class="p-0 m-0"
   >
@@ -44,11 +44,8 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
           'font-size': '15px'
         }"
       >
-        <ng-container>
-          <mat-option
-            *ngFor="let item of formOptions"
-            [value]="item.id || item.name"
-          >
+        <ng-container *ngFor="let item of formOptions">
+          <mat-option [value]="item.id || item.name">
             {{ item.name }}</mat-option
           >
         </ng-container>

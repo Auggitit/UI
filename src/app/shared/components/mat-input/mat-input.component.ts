@@ -11,7 +11,7 @@ export class MatInputComponent implements OnInit {
   @Input() inputType: string = 'text';
   @Input() placeholderText: string = 'Label Text';
   @Input() groupName!: FormGroup;
-  @Input() formControlName!: FormControlName | any;
+  @Input() controlName!: FormControlName | any;
   @Input() modelName: any;
   @Input() isRequired: boolean = true;
   value: any = 'values';
@@ -19,6 +19,6 @@ export class MatInputComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log("iside input",this.groupName)
+    console.log('iside input', this.groupName);
   }
 }

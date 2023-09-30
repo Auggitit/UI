@@ -2,14 +2,14 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <div *ngIf="isCreateState; else elseBlock">
-      <app-reports-header
-        title="CREATE STATE MASTER"
-        [searchField]="true"
-        [reportFormGroupName]="stateForm"
-        [saveTypesOptions]="saveAsOptions"
-        buttonTitle="List of State Master"
-        (onClickCreateButton)="onClickButton()"
-      ></app-reports-header>
+        <app-reports-header
+          title="CREATE STATE MASTER"
+          [searchField]="true"
+          [reportFormGroupName]="stateForm"
+          [saveTypesOptions]="saveAsOptions"
+          buttonTitle="List of State Master"
+          (onClickCreateButton)="onClickButton()"
+        ></app-reports-header>
       </div>
       <ng-template #elseBlock>
         <app-reports-header
@@ -46,19 +46,19 @@
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
                 <div
-                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-              >
-                <p style="color: #667085; font-weight: 600">Country Name</p>
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600">Country Name</p>
 
-                <app-mat-select-box
-                [formOptions]="countryDropDownData"
-                [controlName]="'cCountry'"
-                [label]="'Country Name'"
-                [groupName]="stateForm"
-                [formAppearance]="'outline'"
-                selectWidth="201px"
-              ></app-mat-select-box>
-              </div>
+                  <app-mat-select-box
+                    [formOptions]="countryDropDownData"
+                    [controlName]="'cCountry'"
+                    [label]="'Country Name'"
+                    [groupName]="stateForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
+                </div>
               </div>
             </div>
 
@@ -68,7 +68,7 @@
                   [groupName]="stateForm"
                   labelText="State Name"
                   [placeholderText]="'State Name'"
-                  [formControlName]="'sname'"
+                  [controlName]="'sname'"
                 ></app-mat-input>
               </div>
 
@@ -77,7 +77,7 @@
                   [groupName]="stateForm"
                   labelText="State Code"
                   [placeholderText]="'State Code'"
-                  [formControlName]="'scode'"
+                  [controlName]="'scode'"
                 ></app-mat-input>
               </div>
             </div>

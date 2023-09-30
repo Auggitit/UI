@@ -48,13 +48,15 @@
                   [groupName]="ledgerForm"
                   labelText="Ledger Name"
                   [placeholderText]="'Ledger Name'"
-                  [formControlName]="'cledgerName'"
+                  [controlName]="'cledgerName'"
                 ></app-mat-input>
               </div>
 
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
-                  <p style="color: #667085; font-weight: 600;">Ledger Under</p>
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600">Ledger Under</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
@@ -101,7 +103,7 @@
                   [groupName]="ledgerForm"
                   labelText="GSTIN No"
                   [placeholderText]="'GSTIN No'"
-                  [formControlName]="'cgstin'"
+                  [controlName]="'cgstin'"
                 ></app-mat-input>
               </div>
             </div>
@@ -119,7 +121,9 @@
             </p>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
                   <p style="color: #667085; font-weight: 600">Country</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
@@ -135,7 +139,9 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
                   <p style="color: #667085; font-weight: 600">State</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
@@ -152,7 +158,9 @@
               </div>
             </div>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-              <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+              <div
+                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+              >
                 <p style="color: #667085; font-weight: 600">Address</p>
                 <div class="col-9">
                   <mat-form-field
@@ -161,7 +169,7 @@
                     style="width: 100%; margin-top: 6px !important"
                   >
                     <textarea
-                      style="height: 68px; vertical-align: super;"
+                      style="height: 68px; vertical-align: super"
                       placeholder="Address"
                       type="text"
                       matInput
@@ -180,7 +188,7 @@
                   [groupName]="ledgerForm"
                   labelText="Pincode"
                   [placeholderText]="'Pincode'"
-                  [formControlName]="'cpincode'"
+                  [controlName]="'cpincode'"
                 ></app-mat-input>
               </div>
             </div>

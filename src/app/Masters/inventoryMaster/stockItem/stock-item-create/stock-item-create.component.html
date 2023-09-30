@@ -51,9 +51,11 @@
                   [modelName]="itemname"
                 ></app-mat-input>
               </div>
-              
+
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
                   <p style="color: #667085; font-weight: 600">Item Under</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
@@ -75,7 +77,7 @@
                   [groupName]="itemForm"
                   labelText="Item SKU"
                   [placeholderText]="'Item SKU'"
-                  [formControlName]="'citemsku'"
+                  [controlName]="'citemsku'"
                   [modelName]="itemsku"
                 ></app-mat-input>
               </div>
@@ -84,14 +86,16 @@
                   [groupName]="itemForm"
                   labelText="HSN/SAC"
                   [placeholderText]="'HSN/SAC'"
-                  [formControlName]="'citemhsn'"
+                  [controlName]="'citemhsn'"
                   [modelName]="itemhsn"
                 ></app-mat-input>
               </div>
             </div>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
                   <p style="color: #667085; font-weight: 600">Item Category</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
@@ -128,8 +132,10 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
-                <p style="color: #667085; font-weight: 600">Item UOM</p>
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600">Item UOM</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
@@ -166,14 +172,25 @@
               </div>
             </div>
 
-            <p style="font-size: 1.125rem; font-weight: 600; color: black;
-              padding-bottom: 20px; padding-top: 20px;">
+            <p
+              style="
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+                padding-bottom: 20px;
+                padding-top: 20px;
+              "
+            >
               TAX DETAILS
             </p>
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
-                  <p style="color: #667085; font-weight: 600">Taxability Type</p>
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600">
+                    Taxability Type
+                  </p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
                   >
@@ -211,7 +228,9 @@
               </div>
 
               <div class="col-lg-6 col-md-12 pb-2">
-                <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
                   <p style="color: #667085; font-weight: 600">Type of Supply</p>
                   <div
                     class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
@@ -253,7 +272,7 @@
                   [groupName]="itemForm"
                   labelText="GST"
                   [placeholderText]="'GST'"
-                  [formControlName]="'cgst'"
+                  [controlName]="'cgst'"
                   [modelName]="gst"
                 ></app-mat-input>
               </div>
@@ -262,7 +281,7 @@
                   [groupName]="itemForm"
                   labelText="CESS"
                   [placeholderText]="'CESS'"
-                  [formControlName]="'ccess'"
+                  [controlName]="'ccess'"
                   [modelName]="cess"
                 ></app-mat-input>
               </div>

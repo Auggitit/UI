@@ -1,11 +1,11 @@
-<form *ngIf="groupName" [formGroup]="groupName" class="p-0 m-0">
-  <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
-    <p style="color: #667085; font-weight: 600">
+<form *ngIf="groupName && controlName" [formGroup]="groupName" class="p-0 m-0">
+  <div
+    class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+  >
+    <p style="color: #667085; font-weight: 600; margin: 0px">
       {{ labelText }} <span *ngIf="isRequired" style="color: red">*</span>
     </p>
-    <div
-      
-    >
+    <div>
       <mat-form-field appearance="outline">
         <mat-label style="color: #b9b9b9; font-weight: 400">{{
           placeholderText
@@ -15,7 +15,7 @@
           [type]="inputType"
           matInput
           autocomplete="off"
-          [formControlName]="formControlName"
+          [formControlName]="controlName"
         />
       </mat-form-field>
     </div>
