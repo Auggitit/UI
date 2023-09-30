@@ -148,9 +148,11 @@ export class LedgerListComponent implements OnInit {
   }
 
   onClickDelete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the deletion of this ledger data?',
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {

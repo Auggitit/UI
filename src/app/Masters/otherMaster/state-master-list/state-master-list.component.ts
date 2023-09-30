@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 @Component({
   selector: 'app-state-master-list',
   templateUrl: './state-master-list.component.html',
@@ -135,10 +136,11 @@ export class StateMasterListComponent implements OnInit {
   }
 
   onClickEdit(data: any) {
-
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you need to Modify data?',
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: "Do you Modify data?",
+      },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
@@ -151,9 +153,11 @@ export class StateMasterListComponent implements OnInit {
   }
 
   onClickDelete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the deletion of this Country data?',
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
