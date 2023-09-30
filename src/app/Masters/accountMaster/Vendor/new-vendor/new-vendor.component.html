@@ -52,7 +52,7 @@
           </p>
           <div class="col-12 d-flex flex-wrap align-items-center pb-2">
             <div
-              class="d-flex flex-wrap mb-0 align-items-center col-lg-2 col-md-12"
+              class="d-flex flex-wrap mb-0 align-items-center col-lg-4 col-md-12"
             >
               <p
                 class=""
@@ -67,14 +67,13 @@
               </p>
               <app-mat-select-box
                 [formOptions]="salutationData"
-                [controlName]="'salutation'"
-                [label]="'Salutation'"
+                [controlName]="'csalutation'"
                 [groupName]="vendorForm"
                 [formAppearance]="'outline'"
-                selectWidth="57px"
+                selectWidth="120px"
               ></app-mat-select-box>
             </div>
-            <div class="col-lg-5 col-md-12 pb-2">
+            <div class="col-lg-4 col-md-12 pb-2">
               <app-mat-input
                 [groupName]="vendorForm"
                 labelText="First Name"
@@ -82,12 +81,13 @@
                 [controlName]="'cfirstName'"
               ></app-mat-input>
             </div>
-            <div class="col-lg-5 col-md-12 pb-2">
+            <div class="col-lg-4 col-md-12 pb-2">
               <app-mat-input
                 [groupName]="vendorForm"
                 labelText="Last Name"
                 [placeholderText]="'Last Name'"
                 [controlName]="'clastName'"
+                [isRequired]="false"
               ></app-mat-input>
             </div>
           </div>
@@ -106,6 +106,7 @@
                 labelText="Email ID"
                 [placeholderText]="'Email ID'"
                 [controlName]="'cemail'"
+                [isRequired]="false"
               ></app-mat-input>
             </div>
           </div>
@@ -116,6 +117,7 @@
                 labelText="Website"
                 [placeholderText]="'Website'"
                 [controlName]="'cwebsite'"
+                [isRequired]="false"
               ></app-mat-input>
             </div>
             <div class="col-lg-6 col-md-12 pb-2">
@@ -127,7 +129,7 @@
                 </p>
 
                 <app-mat-select-box
-                  [formOptions]="countryData"
+                  [formOptions]="countryDropDownData"
                   [controlName]="'ccurrency'"
                   [label]="'Currency'"
                   [groupName]="vendorForm"
@@ -177,7 +179,7 @@
                             </p>
                             <div>
                               <app-mat-select-box
-                                [formOptions]="stateData"
+                                [formOptions]="stateDropDownData"
                                 [controlName]="'cstate'"
                                 [label]="'Place of Supply'"
                                 [groupName]="vendorForm"
@@ -223,6 +225,7 @@
                             labelText="TYPE GSTIN"
                             [placeholderText]="'GSTIN No'"
                             [controlName]="'cgstNo'"
+                            [isRequired]="false"
                           ></app-mat-input>
                         </div>
                         <div class="col-lg-6 col-md-12 pb-2">
@@ -231,6 +234,7 @@
                             labelText="TYPE PAN"
                             [placeholderText]="'PAN NO'"
                             [controlName]="'cpanNo'"
+                            [isRequired]="false"
                           ></app-mat-input>
                         </div>
                         <div class="col-lg-6 col-md-12 pb-2">
@@ -239,6 +243,7 @@
                             labelText="CIN NO"
                             [placeholderText]="'TYPE CIN'"
                             [controlName]="'ccinNo'"
+                            [isRequired]="false"
                           ></app-mat-input>
                         </div>
                       </div>
@@ -254,6 +259,7 @@
                           labelText="Balance To Pay"
                           [placeholderText]="'RS.500'"
                           [controlName]="'cbalanceToPay'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -262,6 +268,7 @@
                           labelText="Balance To Collect"
                           [placeholderText]="'RS.250'"
                           [controlName]="'cbalanceToColl'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -270,6 +277,7 @@
                           labelText="Term in Days"
                           [placeholderText]="'5'"
                           [controlName]="'cpaymentTerm'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -278,6 +286,7 @@
                           labelText="Credit Limit"
                           [placeholderText]="'1000'"
                           [controlName]="'ccreditLimit'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -286,6 +295,7 @@
                           labelText="Bank Details"
                           [placeholderText]="'Bank Details'"
                           [controlName]="'cbankDetails'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                     </div>
@@ -317,7 +327,7 @@
                               </p>
                               <div>
                                 <app-mat-select-box
-                                  [formOptions]="countryData"
+                                  [formOptions]="countryDropDownData"
                                   [controlName]="'cbCountry'"
                                   [label]="'Country'"
                                   [groupName]="vendorForm"
@@ -342,7 +352,7 @@
                               </p>
                               <div>
                                 <app-mat-select-box
-                                  [formOptions]="stateData"
+                                  [formOptions]="stateDropDownData"
                                   [controlName]="'cbState'"
                                   [label]="'State'"
                                   [groupName]="vendorForm"
@@ -362,6 +372,7 @@
                               labelText="City"
                               [placeholderText]="'TYPE CITY'"
                               [controlName]="'cbCity'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -370,6 +381,7 @@
                               labelText="Phone Number"
                               [placeholderText]="'TYPE P.NO'"
                               [controlName]="'cbPhone'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -378,6 +390,7 @@
                               labelText="Address"
                               [placeholderText]="'ADDRESS'"
                               [controlName]="'cbAddress'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -386,6 +399,7 @@
                               labelText="Pincode"
                               [placeholderText]="'TYPE PinCode'"
                               [controlName]="'cbPincode'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                         </div>
@@ -412,7 +426,7 @@
                               </p>
                               <div>
                                 <app-mat-select-box
-                                  [formOptions]="countryData"
+                                  [formOptions]="countryDropDownData"
                                   [controlName]="'cdCountry'"
                                   [label]="'Country'"
                                   [groupName]="vendorForm"
@@ -437,7 +451,7 @@
                               </p>
                               <div>
                                 <app-mat-select-box
-                                  [formOptions]="stateData"
+                                  [formOptions]="stateDropDownData"
                                   [controlName]="'cdState'"
                                   [label]="'State'"
                                   [groupName]="vendorForm"
@@ -457,6 +471,7 @@
                               labelText="City"
                               [placeholderText]="'TYPE CITY'"
                               [controlName]="'cdCity'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -465,6 +480,7 @@
                               labelText="Phone Number"
                               [placeholderText]="'TYPE P.NO'"
                               [controlName]="'cdPhone'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -473,6 +489,7 @@
                               labelText="Address"
                               [placeholderText]="'ADDRESS'"
                               [controlName]="'cdAddress'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
@@ -481,6 +498,7 @@
                               labelText="Pincode"
                               [placeholderText]="'TYPE PinCode'"
                               [controlName]="'cdPincode'"
+                              [isRequired]="false"
                             ></app-mat-input>
                           </div>
                         </div>
@@ -500,6 +518,7 @@
                           labelText="Contact Person Name"
                           [placeholderText]="'Name'"
                           [controlName]="'ccpName'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -508,6 +527,7 @@
                           labelText="Designation"
                           [placeholderText]="'Designation'"
                           [controlName]="'ccpDesignation'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -516,6 +536,7 @@
                           labelText="Department"
                           [placeholderText]="'Department'"
                           [controlName]="'ccpDepartment'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -524,6 +545,7 @@
                           labelText="Mobile NO"
                           [placeholderText]="'Phone NO'"
                           [controlName]="'ccpMobile'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                       <div class="col-lg-6 col-md-12 pb-2">
@@ -532,6 +554,7 @@
                           labelText="Email ID"
                           [placeholderText]="'email ID'"
                           [controlName]="'ccpEmail'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                     </div>
@@ -546,6 +569,7 @@
                           labelText="Remarks"
                           [placeholderText]="'Remarks'"
                           [controlName]="'cremarks'"
+                          [isRequired]="false"
                         ></app-mat-input>
                       </div>
                     </div>

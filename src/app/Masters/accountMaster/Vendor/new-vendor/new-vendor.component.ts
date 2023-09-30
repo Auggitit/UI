@@ -21,51 +21,10 @@ import Swal from 'sweetalert2';
 export class NewVendorComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   loading: boolean = false;
-  countryData: any;
-  stateData: any;
   isCreateVendor: boolean = true;
   ledgercode: any;
   uniqueID: any;
   vendorForm!: FormGroup;
-  type: any;
-  salutation: any;
-  firstName: any;
-  lastName: any;
-  displayName: any;
-  mobile: any;
-  email: any;
-  website: any;
-  currency: any;
-  balanceToPay: any;
-  balanceToColl: any;
-  paymentTerm: any;
-  creditLimit: any;
-  bankDetails: any;
-  gstTreatment: any;
-  gstNo: any;
-  state: any;
-  statecode: any;
-  panNo: any;
-  cinNo: any;
-  bAddress: any;
-  bCountry: any;
-  bCity: any;
-  bState: any;
-  bPincode: any;
-  bPhone: any;
-  dAddress: any;
-  dCountry: any;
-  dCity: any;
-  dState: any;
-  dPincode: any;
-  dPhone: any;
-  cpName: any;
-  cpPhone: any;
-  cpDesignation: any;
-  cpDepartment: any;
-  cpMobile: any;
-  cpEmail: any;
-  remarks: any;
   salutationData = [
     { name: 'Mr.', id: 1 },
     { name: 'V', id: 2 },
@@ -76,20 +35,6 @@ export class NewVendorComponent implements OnInit {
   countryDropDownData: dropDownData[] = [];
   stateDropDownData: dropDownData[] = [];
 
-  regTypeData = [
-    {
-      text: 'Registred Business - Regular',
-      value: 'Registred Business - Regular',
-    },
-    {
-      text: 'Registred Business - Composition',
-      value: 'Registred Business - Composition',
-    },
-    { text: 'Unregistred Business', value: 'Unregistred Business' },
-    { text: 'Overseas Business', value: 'Overseas Business' },
-    { text: 'Deemed Export', value: 'Deemed Export' },
-  ];
-
   constructor(
     public api: ApiService,
     public fb: FormBuilder,
@@ -99,45 +44,45 @@ export class NewVendorComponent implements OnInit {
 
   setValidations(): void {
     this.vendorForm = this.fb.group({
-      ctype: null,
-      csalutation: null,
+      ctype: [''],
+      csalutation: [''],
       cfirstName: ['', Validators.required],
-      clastName: null,
+      clastName: [''],
       cdisplayName: ['', Validators.required],
       cmobile: ['', Validators.required],
-      cemail: null,
-      cwebsite: null,
-      ccurrency: null,
-      cbalanceToPay: null,
-      cbalanceToColl: null,
-      cpaymentTerm: null,
-      ccreditLimit: null,
-      cbankDetails: null,
-      cgstTreatment: ['', Validators.required],
-      cgstNo: null,
+      cemail: [''],
+      cwebsite: [''],
+      ccurrency: [''],
+      cbalanceToPay: [''],
+      cbalanceToColl: [''],
+      cpaymentTerm: [''],
+      ccreditLimit: [''],
+      cbankDetails: [''],
+      cgstTreatment: [''],
+      cgstNo: [''],
       cstate: ['', Validators.required],
-      cstatecode: null,
-      cpanNo: null,
-      ccinNo: null,
-      cbAddress: null,
-      cbCountry: null,
-      cbCity: null,
-      cbState: null,
-      cbPincode: null,
-      cbPhone: null,
-      cdAddress: null,
-      cdCountry: null,
-      cdCity: null,
-      cdState: null,
-      cdPincode: null,
-      cdPhone: null,
-      ccpName: null,
-      ccpPhone: null,
-      ccpDesignation: null,
-      ccpDepartment: null,
-      ccpMobile: null,
-      ccpEmail: null,
-      cremarks: null,
+      cstatecode: [''],
+      cpanNo: [''],
+      ccinNo: [''],
+      cbAddress: [''],
+      cbCountry: [''],
+      cbCity: [''],
+      cbState: [''],
+      cbPincode: [''],
+      cbPhone: [''],
+      cdAddress: [''],
+      cdCountry: [''],
+      cdCity: [''],
+      cdState: [''],
+      cdPincode: [''],
+      cdPhone: [''],
+      ccpName: [''],
+      ccpPhone: [''],
+      ccpDesignation: [''],
+      ccpDepartment: [''],
+      ccpMobile: [''],
+      ccpEmail: [''],
+      cremarks: [''],
     });
   }
 
@@ -145,6 +90,13 @@ export class NewVendorComponent implements OnInit {
     this.setValidations();
     this.loadCountrydata();
     this.loadStatedata();
+
+    this.vendorForm.get('cstatecode')?.valueChanges.subscribe((value) => {
+      let stateCode = this.stateDropDownData.filter(
+        (item) => item.id === value
+      );
+      this.vendorForm.get('cstate')?.setValue(stateCode[0].name);
+    });
   }
 
   onClickButton(): void {
@@ -152,9 +104,7 @@ export class NewVendorComponent implements OnInit {
   }
 
   loadCountrydata() {
-    console.log('data', this.api.get_CountryData());
     this.api.get_CountryData().subscribe((res) => {
-      this.countryData = res;
       const newMap = new Map();
       res
         .map((item: any) => {
@@ -170,7 +120,6 @@ export class NewVendorComponent implements OnInit {
 
   loadStatedata() {
     this.api.get_StateData().subscribe((res) => {
-      this.stateData = res;
       const newMap = new Map();
       res
         .map((item: any) => {
@@ -184,21 +133,6 @@ export class NewVendorComponent implements OnInit {
     });
   }
 
-  changeCurrency(event: MatSelectChange) {
-    this.currency = event.value;
-  }
-  changeGstTreatment(event: MatSelectChange) {
-    this.gstTreatment = event.value;
-  }
-  changeState(event: MatSelectChange) {
-    this.statecode = event.value;
-    this.state = event.source.triggerValue;
-  }
-  typeChange(event: any) {
-    console.log(event.value);
-    this.type = event.value;
-  }
-
   async getMaxCode() {
     return new Promise((resolve) => {
       this.api.getMaxLedgerID().subscribe((res) => {
@@ -207,35 +141,6 @@ export class NewVendorComponent implements OnInit {
       });
     });
   }
-
-  // validate()
-  // {
-  //   if(this.ledgerUnder != undefined)
-  //   {
-  //     if(this.ledgerUnder.length == 0)
-  //     {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Select Account Group!',
-  //         text: 'Please Select Account Group!'
-  //       })
-  //       return false;
-  //     }
-  //     else
-  //     {
-  //       return true;
-  //     }
-  //   }
-  //   else
-  //   {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Select Account Group!',
-  //       text: 'Please Select Account Group!'
-  //     })
-  //     return false;
-  //   }
-  // }
 
   submit() {
     console.log(this.vendorForm.value, '-------11111------');
@@ -257,70 +162,71 @@ export class NewVendorComponent implements OnInit {
 
   save() {
     this.uniqueID = Guid.create();
+    const formValue = this.vendorForm.value;
     var postdata = {
       id: this.uniqueID.value,
-      type: this.type,
-      salutation: this.salutation,
-      firstName: this.firstName,
-      lastName: this.lastName,
+      type: formValue.ctype,
+      salutation: formValue.csalutation,
+      firstName: formValue.cfirstName,
+      lastName: formValue.clastName,
       ledgerCode: this.ledgercode,
-      companyDisplayName: this.displayName,
-      companyMobileNo: this.mobile,
-      companyEmailID: this.email,
-      companyWebSite: this.website,
+      companyDisplayName: formValue.cdisplayName,
+      companyMobileNo: formValue.cmobile,
+      companyEmailID: formValue.cemail,
+      companyWebSite: formValue.cwebsite,
       groupName: 'SUNDRY CREDITOR',
       groupCode: 'LG0031',
-      contactPersonName: this.cpName,
-      contactPhone: this.cpPhone,
-      designation: this.cpDesignation,
-      department: this.cpDepartment,
-      mobileNo: this.cpPhone,
-      emailID: this.cpEmail,
-      currency: this.currency,
-      balancetoPay: this.balanceToPay,
-      balancetoCollect: this.balanceToColl,
-      paaymentTerm: this.paymentTerm,
-      creditLimit: this.creditLimit,
-      bankDetails: this.bankDetails,
-      stateName: this.state,
-      stateCode: this.statecode,
-      gstTreatment: this.gstTreatment,
-      gstNo: this.gstNo,
-      panNo: this.panNo,
-      cinNo: this.cinNo,
-      bilingAddress: this.bAddress,
-      bilingCountry: this.bCountry,
-      bilingCity: this.bCity,
-      bilingState: this.bState,
-      bilingPincode: this.bPincode,
-      bilingPhone: this.bPhone,
-      deliveryAddress: this.dAddress,
-      deliveryCountry: this.dCountry,
-      deliveryCity: this.dCountry,
-      deliveryState: this.dState,
-      deliveryPinCode: this.dPincode,
-      deliveryPhone: this.dPhone,
-      notes: this.remarks,
+      contactPersonName: formValue.ccpName,
+      contactPhone: formValue.ccpPhone,
+      designation: formValue.ccpDesignation,
+      department: formValue.ccpDepartment,
+      mobileNo: formValue.ccpPhone,
+      emailID: formValue.ccpEmail,
+      currency: formValue.ccurrency,
+      balancetoPay: formValue.cbalanceToPay,
+      balancetoCollect: formValue.cbalanceToColl,
+      paaymentTerm: formValue.cpaymentTerm,
+      creditLimit: formValue.ccreditLimit,
+      bankDetails: formValue.cbankDetails,
+      stateName: formValue.cstate,
+      stateCode: formValue.cstatecode,
+      gstTreatment: formValue.cgstTreatment,
+      gstNo: formValue.cgstNo,
+      panNo: formValue.cpanNo,
+      cinNo: formValue.ccinNo,
+      bilingAddress: formValue.cbAddress,
+      bilingCountry: formValue.cbCountry,
+      bilingCity: formValue.cbCity,
+      bilingState: formValue.cbState,
+      bilingPincode: formValue.cbPincode,
+      bilingPhone: formValue.cbPhone,
+      deliveryAddress: formValue.cdAddress,
+      deliveryCountry: formValue.cdCountry,
+      deliveryCity: formValue.cdCity,
+      deliveryState: formValue.cdState,
+      deliveryPinCode: formValue.cdPincode,
+      deliveryPhone: formValue.cdPhone,
+      notes: formValue.cremarks,
       rCreatedDateTime: new Date(),
       rStatus: 'A',
     };
-    console.log(postdata);
-    this.api.Inser_LedgerData(postdata).subscribe(
-      (data) => {
-        this.loading = false;
+
+    this.api.Inser_LedgerData(postdata).subscribe({
+      next: (data) => {
         let dialogRef = this.dialog.open(SuccessmsgComponent, {
-          //width: '350px',
           data: 'Successfully Saved!',
         });
         dialogRef.afterClosed().subscribe((result) => {
           this.clearAll();
+          this.loading = false;
+          this.router.navigateByUrl('vendor-list');
         });
       },
-      (err) => {
-        console.log(err);
+      error: (err) => {
         alert('Some Error Occured');
-      }
-    );
+        this.loading = false;
+      },
+    });
   }
 
   gotoList() {
@@ -328,44 +234,6 @@ export class NewVendorComponent implements OnInit {
   }
 
   clearAll() {
-    this.type = '';
-    this.salutation = '';
-    this.firstName = '';
-    this.lastName = '';
-    this.displayName = '';
-    this.mobile = '';
-    this.email = '';
-    this.website = '';
-    this.currency = '';
-    this.balanceToPay = '';
-    this.balanceToColl = '';
-    this.paymentTerm = '';
-    this.creditLimit = '';
-    this.bankDetails = '';
-    this.gstTreatment = '';
-    this.gstNo = '';
-    this.state = '';
-    this.statecode = '';
-    this.panNo = '';
-    this.cinNo = '';
-    this.bAddress = '';
-    this.bCountry = '';
-    this.bCity = '';
-    this.bState = '';
-    this.bPincode = '';
-    this.bPhone = '';
-    this.dAddress = '';
-    this.dCountry = '';
-    this.dCity = '';
-    this.dState = '';
-    this.dPincode = '';
-    this.dPhone = '';
-    this.cpName = '';
-    this.cpPhone = '';
-    this.cpDesignation = '';
-    this.cpDepartment = '';
-    this.cpMobile = '';
-    this.cpEmail = '';
-    this.remarks = '';
+    this.vendorForm.reset();
   }
 }
