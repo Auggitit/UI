@@ -181,6 +181,8 @@ const routes: Routes = [
   { path: 'vendor-list', component: VendorListComponent },
   { path: 'create-vendor', component: NewVendorComponent },
   { path: 'customer-list', component: CustomerListComponent },
+  { path: 'customer-create', component: CustomerCreateComponent },
+  { path: 'customer-create/:id', component: CustomerCreateComponent },
   { path: 'create-customer', component: CustomerCreateComponent },
   { path: 'stock-item-list', component: StockItemListComponent },
   { path: 'stock-item-create', component: StockItemCreateComponent },

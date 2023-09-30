@@ -1,1 +1,568 @@
-<p>customer-create works!</p>
+<div class="content-wrapper">
+    <div class="p-4" style="background-color: #f9f9fc">
+      <div class="pb-3">
+        <app-reports-header
+          title="CREATE CUSTOMER"
+          buttonTitle="List of Customer"
+          (onClickCreateButton)="onClickButton()"
+          [isDownloadNeeded]="false"
+          [isReports]="false"
+        ></app-reports-header>
+      </div>
+      <div
+        style="
+          background-color: white;
+          border-radius: 8px;
+          padding: 20px;
+          border: 1px solid #e0e2e7;
+          margin-bottom: 4px;
+        "
+      >
+        <div class="row">
+          <div class="col-12">
+            <p
+              style="
+                padding-bottom: 12px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+              "
+            >
+              CUSTOMER DETAILS
+            </p>
+  
+            <div class="col-6">
+              <app-mat-input
+                [groupName]="customerForm"
+                labelText="Customer Name"
+                [placeholderText]="'Name'"
+                [controlName]="'customerName'"
+              ></app-mat-input>
+            </div>
+            <p
+              style="
+                padding-bottom: 20px;
+                padding-top: 20px;
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: black;
+              "
+            >
+              PRIMARY CONTACT PERSON
+            </p>
+            <div class="col-12 d-flex flex-wrap align-items-center pb-2">
+              <div
+                class="d-flex flex-wrap mb-0 align-items-center col-lg-2 col-md-12"
+              >
+                <p
+                  class=""
+                  style="
+                    color: #667085;
+                    font-weight: 600;
+                    padding-right: 10px;
+                    margin: 0px;
+                  "
+                >
+                  Salutation
+                </p>
+                <app-mat-select-box
+                  [formOptions]="salutationData"
+                  [controlName]="'salutation'"
+                  [label]="'Salutation'"
+                  [groupName]="customerForm"
+                  [formAppearance]="'outline'"
+                  selectWidth="57px"
+                ></app-mat-select-box>
+              </div>
+              <div class="col-lg-5 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="customerForm"
+                  labelText="First Name"
+                  [placeholderText]="'First Name'"
+                  [controlName]="'firstName'"
+                ></app-mat-input>
+              </div>
+              <div class="col-lg-5 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="customerForm"
+                  labelText="Last Name"
+                  [placeholderText]="'Last Name'"
+                  [controlName]="'lastName'"
+                ></app-mat-input>
+              </div>
+            </div>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="customerForm"
+                  labelText="Mobile Number"
+                  [placeholderText]="'Mobile Number'"
+                  [controlName]="'mobile'"
+                ></app-mat-input>
+              </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="customerForm"
+                  labelText="Email ID"
+                  [placeholderText]="'Email ID'"
+                  [controlName]="'email'"
+                ></app-mat-input>
+              </div>
+            </div>
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="customerForm"
+                  labelText="Website"
+                  [placeholderText]="'Website'"
+                  [controlName]="'website'"
+                ></app-mat-input>
+              </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; margin: 0px">
+                    Currency
+                  </p>
+  
+                  <app-mat-select-box
+                    [formOptions]="currencyDropDownData"
+                    [controlName]="'currency'"
+                    [label]="'Currency'"
+                    [groupName]="customerForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+              <p
+                style="
+                  padding-bottom: 20px;
+                  padding-top: 20px;
+                  padding-left: 7.5px;
+                  padding-right: 7.5px;
+                  font-size: 1.125rem;
+                  font-weight: 600;
+                  color: black;
+                "
+              >
+                OTHER DETAILS
+              </p>
+              <div
+                class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"
+              >
+                <div class="card" style="box-shadow: none">
+                  <mat-tab-group>
+                    <mat-tab label="GST DETAILS">
+                      <div class="col-12">
+                        <div
+                          class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                        >
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                            >
+                              <p
+                                style="
+                                  color: #667085;
+                                  font-weight: 600;
+                                  margin: 0px;
+                                "
+                              >
+                                Place of Supply
+                              </p>
+                              <div>
+                                <app-mat-select-box
+                                  [formOptions]="stateDropDownData"
+                                  [controlName]="'gstState'"
+                                  [label]="'Place of Supply'"
+                                  [groupName]="customerForm"
+                                  [formAppearance]="'outline'"
+                                  selectWidth="201px"
+                                ></app-mat-select-box>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                            >
+                              <p
+                                style="
+                                  color: #667085;
+                                  font-weight: 600;
+                                  margin: 0px;
+                                "
+                              >
+                                Currency
+                              </p>
+                              <div>
+                                <app-mat-select-box
+                                  [formOptions]="currencyDropDownData"
+                                  [controlName]="'gstCurrency'"
+                                  [label]="'Currency'"
+                                  [groupName]="customerForm"
+                                  [formAppearance]="'outline'"
+                                  selectWidth="201px"
+                                ></app-mat-select-box>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+  
+                        <div
+                          class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                        >
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="customerForm"
+                              labelText="GSTIN No"
+                              [placeholderText]="'GSTIN No'"
+                              [controlName]="'gstGstinNo'"
+                            ></app-mat-input>
+                          </div>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="customerForm"
+                              labelText="PAN No"
+                              [placeholderText]="'PAN No'"
+                              [controlName]="'gstPanNo'"
+                            ></app-mat-input>
+                          </div>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <app-mat-input
+                              [groupName]="customerForm"
+                              labelText="CIN No"
+                              [placeholderText]="'CIN No'"
+                              [controlName]="'gstCinNo'"
+                            ></app-mat-input>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-tab>
+                    <mat-tab label="PAYMENT DETAILS">
+                      <div
+                        class="col-12 p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Balance To Pay"
+                            [placeholderText]="'RS.500'"
+                            [controlName]="'payBalancePay'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Balance To Collect"
+                            [placeholderText]="'RS.250'"
+                            [controlName]="'payBalanceCollect'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Payment Term in Days"
+                            [placeholderText]="'5'"
+                            [controlName]="'payTerm'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Credit Limit"
+                            [placeholderText]="'1000'"
+                            [controlName]="'payCreditLimit'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Bank Details"
+                            [placeholderText]="'Bank Details'"
+                            [controlName]="'payBankDetails'"
+                          ></app-mat-input>
+                        </div>
+                      </div>
+                    </mat-tab>
+                    <mat-tab
+                      label="COMMUNICATION DETAILS"
+                      style="overflow: hidden !important"
+                    >
+                      <mat-tab-group>
+                        <mat-tab
+                          label="Billing Address"
+                          style="overflow: hidden !important"
+                        >
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p
+                                  style="
+                                    color: #667085;
+                                    font-weight: 600;
+                                    margin: 0px;
+                                  "
+                                >
+                                  Country
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="countryDropDownData"
+                                    [controlName]="'communicationCountry'"
+                                    [label]="'Country'"
+                                    [groupName]="customerForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p
+                                  style="
+                                    color: #667085;
+                                    font-weight: 600;
+                                    margin: 0px;
+                                  "
+                                >
+                                  State
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="stateDropDownData"
+                                    [controlName]="'communicationState'"
+                                    [label]="'State'"
+                                    [groupName]="customerForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="City"
+                                [placeholderText]="'Type City'"
+                                [controlName]="'communicationCity'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Phone Number"
+                                [placeholderText]="'Type Phone No'"
+                                [controlName]="'communicationPhone'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Address"
+                                [placeholderText]="'ADDRESS'"
+                                [controlName]="'communicationAddress'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Pincode"
+                                [placeholderText]="'Type PinCode'"
+                                [controlName]="'communicationPincode'"
+                              ></app-mat-input>
+                            </div>
+                          </div>
+                        </mat-tab>
+                        <mat-tab
+                          label="DeliveryAddress"
+                          style="overflow: hidden !important"
+                        >
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p
+                                  style="
+                                    color: #667085;
+                                    font-weight: 600;
+                                    margin: 0px;
+                                  "
+                                >
+                                  Country
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="countryDropDownData"
+                                    [controlName]="'deliveryCountry'"
+                                    [label]="'Country'"
+                                    [groupName]="customerForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <div
+                                class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              >
+                                <p
+                                  style="
+                                    color: #667085;
+                                    font-weight: 600;
+                                    margin: 0px;
+                                  "
+                                >
+                                  State
+                                </p>
+                                <div>
+                                  <app-mat-select-box
+                                    [formOptions]="stateDropDownData"
+                                    [controlName]="'deliveryState'"
+                                    [label]="'State'"
+                                    [groupName]="customerForm"
+                                    [formAppearance]="'outline'"
+                                    selectWidth="201px"
+                                  ></app-mat-select-box>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="p-0 d-flex flex-wrap justify-content-between pb-2"
+                          >
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="City"
+                                [placeholderText]="'Type City'"
+                                [controlName]="'deliveryCity'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Phone Number"
+                                [placeholderText]="'Type Phone Number'"
+                                [controlName]="'deliveryPhone'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Address"
+                                [placeholderText]="'Address'"
+                                [controlName]="'deliveryAddress'"
+                              ></app-mat-input>
+                            </div>
+                            <div class="col-lg-6 col-md-12 pb-2">
+                              <app-mat-input
+                                [groupName]="customerForm"
+                                labelText="Pincode"
+                                [placeholderText]="'Type PinCode'"
+                                [controlName]="'deliveryPincode'"
+                              ></app-mat-input>
+                            </div>
+                          </div>
+                        </mat-tab>
+                      </mat-tab-group>
+                    </mat-tab>
+                    <mat-tab
+                      label="CONTACT PERSONS"
+                      style="overflow: hidden !important"
+                    >
+                      <div
+                        class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Contact Person Name"
+                            [placeholderText]="'Name'"
+                            [controlName]="'contactName'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Designation"
+                            [placeholderText]="'Designation'"
+                            [controlName]="'contactDesignation'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Department"
+                            [placeholderText]="'Department'"
+                            [controlName]="'contactDepartment'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Mobile Number"
+                            [placeholderText]="'Mobile Number'"
+                            [controlName]="'contactMobile'"
+                          ></app-mat-input>
+                        </div>
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Email ID"
+                            [placeholderText]="'email ID'"
+                            [controlName]="'contactEmail'"
+                          ></app-mat-input>
+                        </div>
+                      </div>
+                    </mat-tab>
+                    <mat-tab label="REMARKS" style="overflow: none !important">
+                      <div
+                        class="p-0 d-flex flex-wrap justify-content-between mt-4 pb-2"
+                      >
+                        <div class="col-lg-6 col-md-12 pb-2">
+                          <app-mat-input
+                            [groupName]="customerForm"
+                            labelText="Remarks"
+                            [placeholderText]="'Remarks'"
+                            [controlName]="'remarks'"
+                          ></app-mat-input>
+                        </div>
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+              </div>
+            </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateCustomer"
+              (clickSave)="submit()"
+              (clickClearAll)="clearAll()"
+            ></app-action-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
