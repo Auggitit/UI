@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
@@ -12,6 +12,7 @@ import {
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-uom-create',
@@ -36,13 +37,17 @@ export class UomCreateComponent implements OnInit {
   displayedColumns: string[] = ['UOM_NAME', 'NO_OF', 'ACTIONS'];
   dataSource!: MatTableDataSource<any>;
   savedData: any;
+  isCreateUOM: boolean = true;
+  uomcode: any;
+  oldid: any;
 
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
     public fb: FormBuilder,
-    public router: Router
-  ) {}
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+  ) { }
 
   //Validators
   setValidations() {
@@ -59,10 +64,27 @@ export class UomCreateComponent implements OnInit {
     this.setValidations();
     this.getMaxCode();
     this.loaddata();
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateUOM = false;
+
+      this.api.get_UOMDataWithID(this.oldid).subscribe((res) => {
+        this.uomForm.patchValue({
+          cname: res.uomname,
+          cdigit: res.digits,
+        });
+        this.uomcode = res.uomcode;
+      });
+    }
   }
 
   onClickButton(): void {
     this.router.navigateByUrl('uom-list');
+  }
+
+  onClickAddButton(): void {
+    this.router.navigateByUrl('uom-create');
   }
   //Load Functions
   loaddata() {
@@ -83,155 +105,91 @@ export class UomCreateComponent implements OnInit {
     });
   }
 
-  //CRUD
-  async submit() {
-    this.loading = true;
-    setTimeout(() => {
-      this.getMaxCode().then((res) => {
-        this.uniqueID = Guid.create();
-        var postData = {
-          id: this.uniqueID.value,
-          uomcode: this.code,
-          uomname: this.name,
-          digits: this.digit,
-          rCreatedDateTime: new Date(),
-          rStatus: 'A',
-        };
-        this.api.Inser_UOMData(postData).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'UOM Successfully Saved!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-              this.getMaxCode();
-              this.loading = false;
-              this.ename?.nativeElement.focus();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
+  submit() {
+    if (this.uomForm.valid) {
+      this.loading = true;
+      setTimeout(() => {
+        this.getMaxCode().then((res) => {
+          if (this.isCreateUOM) {
+            this.save();
+          } else if (!this.isCreateUOM) {
+            this.update();
           }
-        );
+        });
+      }, 400);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Fill Mandatory Fields',
+        text: 'Plese fill all mandatory fields',
       });
-    }, 200);
+    }
   }
 
-  update() {
-    this.loading = true;
-    setTimeout(() => {
-      var postData = {
-        id: this.selectedID,
-        uomcode: this.code,
-        uomname: this.name,
-        digits: this.digit,
-        rCreatedDateTime: new Date(),
-        rStatus: 'A',
-      };
-      console.log(postData);
-      this.api.Update_UOMData(this.selectedID, postData).subscribe(
+  save() {
+    this.uniqueID = Guid.create();
+    var postData = {
+      id: this.uniqueID.value,
+      uomcode: this.uomcode,
+      uomname: this.uomForm.value.cname,
+      digits: this.uomForm.value.cdigit,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+    this.api.Inser_UOMData(postData).subscribe({
+      next:
         (data) => {
           let dialogRef = this.dialog.open(SuccessmsgComponent, {
-            //width: '350px',
-            data: 'UOM Successfully Updated!',
+            data: 'UOM Successfully Saved!',
           });
           dialogRef.afterClosed().subscribe((result) => {
             this.clear();
-            this.loaddata();
-            this.getMaxCode();
-            this.setValidations();
-            this.uomForm.reset();
             this.loading = false;
-            this.ename?.nativeElement.focus();
           });
         },
-        (err) => {
-          console.log(err);
-          alert('Some Error Occured');
-        }
-      );
-    }, 200);
-  }
-  edit(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you Modify data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log(rowdata);
-        this.selectedID = rowdata.id;
-        this.name = rowdata.uomname;
-        this.code = rowdata.uomcode;
-        const groupname = this.uomForm.get('cname');
-        groupname?.clearValidators();
-        groupname?.clearAsyncValidators();
-        groupname?.updateValueAndValidity();
-      }
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
     });
   }
-  restore(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the Restoration of this UOM data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_UOMData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Restored!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
-    });
-  }
-  delete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-      width: '350px',
-      data: 'Do you confirm the deletion of this UOM data?',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.api.Delete_UOMData(rowdata.id).subscribe(
-          (data) => {
-            let dialogRef = this.dialog.open(SuccessmsgComponent, {
-              //width: '350px',
-              data: 'Successfully Deleted!',
-            });
-            dialogRef.afterClosed().subscribe((result) => {
-              this.clear();
-              this.loaddata();
-            });
-          },
-          (err) => {
-            console.log(err);
-            alert('Some Error Occured');
-          }
-        );
-      }
+
+  update() {
+    var postdata = {
+      id: this.oldid,
+      uomcode: this.uomcode,
+      uomname: this.uomForm.value.cname,
+      digits: this.uomForm.value.cdigit,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+
+    this.api.Update_UOMData(this.oldid, postdata).subscribe({
+      next: (data) => {
+        this.loading = true;
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'UOM Successfully Updated',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.clear();
+          this.loading = false;
+          this.router.navigateByUrl('uom-list');
+        });
+      },
+      error: (err) => {
+        alert('Some Error Occured');
+        this.loading = false;
+      },
     });
   }
+
   clear() {
     this.name = '';
     this.code = '';
+    this.loading = false;
     this.selectedID = undefined;
     this.uomForm.reset();
     this.setValidations();
-    this.ename?.nativeElement.focus();
   }
 
   //Enter Key Events (Focus)

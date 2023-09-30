@@ -193,6 +193,7 @@ const routes: Routes = [
   { path: 'stock-category-create/:id', component: StockCategoryCreateComponent },
   { path: 'uom-list', component: UomListComponent },
   { path: 'uom-create', component: UomCreateComponent },
+  { path: 'uom-create/:id', component: UomCreateComponent },
   { path: 'country-master-list', component: CountryMasterListComponent },
   { path: 'country-master-create', component: CountryMasterCreateComponent },
   {

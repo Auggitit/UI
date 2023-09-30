@@ -400,32 +400,18 @@ export class ApiService {
   Inser_UOMData(postdata: any): Observable<any> {
     return this.POST(this.URL + 'api/mUoms', postdata);
   }
-  //  Update_UOMData(id:any,postdata: any): Observable<any> {
-  //    return this.http.put<any>(this.URL + "api/mUoms/"+id, postdata).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
-  Update_UOMData(postdata: any, postData?: any): Observable<any> {
-    return this.POST(this.URL + 'api/mUoms/Update_UOMData', postdata).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+
+  Update_UOMData(id: any, postdata: any): Observable<any> {
+    return this.http.put<any>(this.URL + "api/mUoms/" + id, postdata).pipe(map((res: any) => {
+      return res;
+    }))
   }
+
   Delete_UOMData(id: any): Observable<any> {
-    return this.http
-      .get<any>(this.URL + 'api/mUoms/Delete_UOMData?id=' + id)
-      .pipe(
-        map((res: any) => {
-          return res;
-        })
-      );
+    return this.http.delete<any>(this.URL + "api/mUoms/" + id).pipe(map((res: any) => {
+      return res;
+    }))
   }
-  //  Delete_UOMData(id:any): Observable<any> {
-  //    return this.http.delete<any>(this.URL + "api/mUoms/"+id).pipe(map((res:any)=>{
-  //      return res;
-  //    }))
-  //  }
   get_UOMMaxID() {
     return this.http.get<any>(this.URL + 'api/mUoms/getMaxID').pipe(
       map((res: any) => {

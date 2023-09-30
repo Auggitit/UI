@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   dropDownData,
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-uom-list',
@@ -21,6 +24,7 @@ export class UomListComponent implements OnInit {
   saveAsOptions: dropDownData[] = exportOptions;
   searchstockgroup: any;
   tableHeaderAlignValue: string = 'left';
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -42,7 +46,8 @@ export class UomListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.uomForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -114,6 +119,52 @@ export class UomListComponent implements OnInit {
       // console.log(this.vendorData);
       console.log(res, '...........response');
       this.getFilterData(formValues, res);
+    });
+  }
+
+  onClickEdit(data: any): void {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'UOM is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: msg,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.router.navigate(['uom-create/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
+  }
+
+  onClickDelete(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_UOMData(data.id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'UOM Deleted Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
     });
   }
 }

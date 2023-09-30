@@ -146,7 +146,7 @@ export class StockCategoryCreateComponent implements OnInit {
     this.uniqueID = Guid.create();
     var postData = {
       id: this.uniqueID.value,
-      catcode: this.categoryForm.value.ccatunder,
+      catcode: this.catcode,
       catname: this.categoryForm.value.ccatname,
       catunder: this.categoryForm.value.ccatunder,
       rCreatedDateTime: new Date(),
@@ -173,7 +173,7 @@ export class StockCategoryCreateComponent implements OnInit {
   update() {
     var postdata = {
       id: this.oldid,
-      catcode: this.categoryForm.value.ccatunder,
+      catcode: this.catcode,
       catname: this.categoryForm.value.ccatname,
       catunder: this.categoryForm.value.ccatunder,
       rCreatedDateTime: new Date(),
