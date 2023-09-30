@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 
 @Component({
   selector: 'app-ledger-list',
@@ -144,6 +145,32 @@ export class LedgerListComponent implements OnInit {
       );
       this.filteredData = vendorTemp;
     }
+  }
+
+  onClickDelete(rowdata: any) {
+    const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+      width: '350px',
+      data: 'Do you confirm the deletion of this ledger data?',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.delete_Ledger(rowdata.id).subscribe(
+          (data) => {
+            let dialogRef = this.dialog.open(SuccessmsgComponent, {
+              //width: '350px',
+              data: 'Successfully Deleted!',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+              this.loadData();
+            });
+          },
+          (err) => {
+            console.log(err);
+            alert('Some Error Occured');
+          }
+        );
+      }
+    });
   }
 
   loadData(formValues?: any) {
