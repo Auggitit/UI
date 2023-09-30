@@ -4,11 +4,10 @@
       <div *ngIf="isCreateCountry; else elseBlock">
         <app-reports-header
           title="CREATE COUNTRY MASTER"
-          [searchField]="true"
-          [reportFormGroupName]="countryFormNew"
-          [SelectSaveOptions]="'SelectSaveOptions'"
           buttonTitle="List of Country Master"
           (onClickCreateButton)="onClickCountyListButton()"
+          [isDownloadNeeded]="false"
+          [isReports]="false"
         ></app-reports-header>
       </div>
       <ng-template #elseBlock>
