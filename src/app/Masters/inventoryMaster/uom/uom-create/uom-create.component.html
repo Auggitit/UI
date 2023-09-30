@@ -4,10 +4,8 @@
       <div *ngIf="isCreateUOM; else elseBlock">
         <app-reports-header
           title="CREATE UOM"
-          [searchField]="true"
-          [reportFormGroupName]="uomForm"
-          [saveTypesOptions]="saveAsOptions"
-          [SelectSaveOptions]="'SelectSaveOptions'"
+          [isDownloadNeeded]="false"
+          [isReports]="false"
           buttonTitle="List of UOM"
           (onClickCreateButton)="onClickButton()"
         ></app-reports-header>
