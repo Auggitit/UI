@@ -2,12 +2,21 @@
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
       <app-reports-header
+        [title]="isCreateVendor ? 'CREATE VENDOR' : 'UPDATE VENDOR DETAILS'"
+        [reportFormGroupName]="vendorForm"
+        [buttonTitle]="isCreateVendor ? 'Vendor List' : 'Add Vendor'"
+        [isDownloadNeeded]="false"
+        (onClickCreateButton)="
+          isCreateVendor ? onClickButton() : onClickAddButton()
+        "
+      ></app-reports-header>
+      <!-- <app-reports-header
         title="CREATE VENDOR"
         buttonTitle="Vendor List"
         (onClickCreateButton)="onClickButton()"
         [isDownloadNeeded]="false"
         [isReports]="false"
-      ></app-reports-header>
+      ></app-reports-header> -->
     </div>
     <div
       style="
@@ -129,7 +138,7 @@
                 </p>
 
                 <app-mat-select-box
-                  [formOptions]="countryDropDownData"
+                  [formOptions]="currencyDropDownData"
                   [controlName]="'ccurrency'"
                   [label]="'Currency'"
                   [groupName]="vendorForm"
@@ -200,13 +209,13 @@
                                 margin: 0px;
                               "
                             >
-                              Currency
+                              Gst Treatment
                             </p>
                             <div>
                               <app-mat-select-box
-                                [formOptions]="countryDropDownData"
-                                [controlName]="'ccurrency'"
-                                [label]="'Currency'"
+                                [formOptions]="regTypeData"
+                                [controlName]="'cgstTreatment'"
+                                [label]="'Gst Treatment'"
                                 [groupName]="vendorForm"
                                 [formAppearance]="'outline'"
                                 selectWidth="201px"
@@ -583,6 +592,7 @@
             [isSave]="isCreateVendor"
             (clickSave)="submit()"
             (clickClearAll)="clearAll()"
+            (clickUpdate)="update()"
           ></app-action-button>
         </div>
       </div>

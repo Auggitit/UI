@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 import {
@@ -10,7 +9,6 @@ import {
   exportOptions,
 } from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
-// import { ApiService } from '../../../services/api.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,22 +22,39 @@ export class NewVendorComponent implements OnInit {
   isCreateVendor: boolean = true;
   ledgercode: any;
   uniqueID: any;
+  oldId: any;
   vendorForm!: FormGroup;
   salutationData = [
-    { name: 'Mr.', id: 1 },
-    { name: 'V', id: 2 },
-    { name: 'Ms.', id: 3 },
-    { name: 'Miss.', id: 4 },
-    { name: 'Dr.', id: 5 },
+    { name: 'Mr.', id: 'Mr.' },
+    { name: 'Ms.', id: 'Ms.' },
+    { name: 'Miss.', id: 'Miss.' },
+    { name: 'Dr.', id: 'Dr.' },
   ];
+
+  regTypeData = [
+    {
+      name: 'Registred Business - Regular',
+      id: 'Registred Business - Regular',
+    },
+    {
+      name: 'Registred Business - Composition',
+      id: 'Registred Business - Composition',
+    },
+    { name: 'Unregistred Business', id: 'Unregistred Business' },
+    { name: 'Overseas Business', id: 'Overseas Business' },
+    { name: 'Deemed Export', id: 'Deemed Export' },
+  ];
+
   countryDropDownData: dropDownData[] = [];
   stateDropDownData: dropDownData[] = [];
+  currencyDropDownData: dropDownData[] = [];
 
   constructor(
     public api: ApiService,
     public fb: FormBuilder,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public activatedRoute: ActivatedRoute
   ) {}
 
   setValidations(): void {
@@ -50,7 +65,10 @@ export class NewVendorComponent implements OnInit {
       clastName: [''],
       cdisplayName: ['', Validators.required],
       cmobile: ['', Validators.required],
-      cemail: [''],
+      cemail: [
+        '',
+        Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/),
+      ],
       cwebsite: [''],
       ccurrency: [''],
       cbalanceToPay: [''],
@@ -61,7 +79,7 @@ export class NewVendorComponent implements OnInit {
       cgstTreatment: [''],
       cgstNo: [''],
       cstate: ['', Validators.required],
-      cstatecode: [''],
+      cStateName: [''],
       cpanNo: [''],
       ccinNo: [''],
       cbAddress: [''],
@@ -81,7 +99,10 @@ export class NewVendorComponent implements OnInit {
       ccpDesignation: [''],
       ccpDepartment: [''],
       ccpMobile: [''],
-      ccpEmail: [''],
+      ccpEmail: [
+        '',
+        Validators.pattern(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/),
+      ],
       cremarks: [''],
     });
   }
@@ -90,46 +111,109 @@ export class NewVendorComponent implements OnInit {
     this.setValidations();
     this.loadCountrydata();
     this.loadStatedata();
+    this.oldId = this.activatedRoute.snapshot.paramMap.get('id');
 
-    this.vendorForm.get('cstatecode')?.valueChanges.subscribe((value) => {
+    this.vendorForm.get('cstate')?.valueChanges.subscribe((value) => {
       let stateCode = this.stateDropDownData.filter(
         (item) => item.id === value
       );
-      this.vendorForm.get('cstate')?.setValue(stateCode[0].name);
+      this.vendorForm.get('cStateName')?.setValue(stateCode[0].name);
     });
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateVendor = false;
+      {
+        this.api.get_LedgerDataWithID(this.oldId).subscribe((res) => {
+          console.log('Previous', res);
+          this.vendorForm.patchValue({
+            ctype: res.type,
+            csalutation: res.salutation,
+            cfirstName: res.firstName,
+            clastName: res.lastName,
+            cdisplayName: res.companyDisplayName,
+            cmobile: res.companyMobileNo,
+            cemail: res.companyEmailID,
+            cwebsite: res.companyWebSite,
+            ccurrency: res.currency,
+            cbalanceToPay: res.balancetoPay,
+            cbalanceToColl: res.balancetoCollect,
+            cpaymentTerm: res.paaymentTerm,
+            ccreditLimit: res.creditLimit,
+            cbankDetails: res.bankDetails,
+            cgstTreatment: res.gstTreatment,
+            cgstNo: res.gstNo,
+            cstate: res.stateCode,
+            cpanNo: res.panNo,
+            ccinNo: res.cinNo,
+            cbAddress: res.bilingAddress,
+            cbCountry: res.bilingCountry,
+            cbCity: res.bilingCity,
+            cbState: res.bilingState,
+            cbPincode: res.bilingPincode,
+            cbPhone: res.bilingPhone,
+            cdAddress: res.deliveryAddress,
+            cdCountry: res.deliveryCountry,
+            cdCity: res.deliveryCity,
+            cdState: res.deliveryState,
+            cdPincode: res.deliveryPinCode,
+            cdPhone: res.deliveryPhone,
+            ccpName: res.contactPersonName,
+            ccpPhone: res.contactPhone,
+            ccpDesignation: res.designation,
+            ccpDepartment: res.department,
+            ccpMobile: res.mobileNo,
+            ccpEmail: res.emailID,
+            cremarks: res.notes,
+          });
+        });
+      }
+    }
   }
 
   onClickButton(): void {
     this.router.navigateByUrl('vendor-list');
   }
 
+  onClickAddButton(): void {
+    this.router.navigateByUrl('vendor-ledger');
+  }
+
   loadCountrydata() {
     this.api.get_CountryData().subscribe((res) => {
-      const newMap = new Map();
-      res
-        .map((item: any) => {
-          return {
-            name: item.countryname,
-            id: item.countryname,
-          };
-        })
-        .forEach((item: any) => newMap.set(item.id, item));
-      this.countryDropDownData = [...newMap.values()];
+      console.log(res, 'reeeeeeeeee');
+
+      let countryData = res.length
+        ? res.map((item: any) => {
+            return {
+              name: item.countryname,
+              id: item.countryname,
+            };
+          })
+        : [];
+      let currencyData = res.length
+        ? res.map((item: any) => {
+            return {
+              name: item.currencyname,
+              id: item.currencyname,
+            };
+          })
+        : [];
+      this.countryDropDownData = countryData;
+      this.currencyDropDownData = currencyData;
     });
   }
 
   loadStatedata() {
     this.api.get_StateData().subscribe((res) => {
-      const newMap = new Map();
-      res
-        .map((item: any) => {
-          return {
-            name: item.statename,
-            id: item.stetecode,
-          };
-        })
-        .forEach((item: any) => newMap.set(item.id, item));
-      this.stateDropDownData = [...newMap.values()];
+      let sData = res.length
+        ? res.map((item: any) => {
+            return {
+              name: item.statename,
+              id: item.stetecode,
+            };
+          })
+        : [];
+      this.stateDropDownData = sData;
     });
   }
 
@@ -188,8 +272,8 @@ export class NewVendorComponent implements OnInit {
       paaymentTerm: formValue.cpaymentTerm,
       creditLimit: formValue.ccreditLimit,
       bankDetails: formValue.cbankDetails,
-      stateName: formValue.cstate,
-      stateCode: formValue.cstatecode,
+      stateName: formValue.cStateName,
+      stateCode: formValue.cstate,
       gstTreatment: formValue.cgstTreatment,
       gstNo: formValue.cgstNo,
       panNo: formValue.cpanNo,
@@ -225,6 +309,73 @@ export class NewVendorComponent implements OnInit {
       error: (err) => {
         alert('Some Error Occured');
         this.loading = false;
+      },
+    });
+  }
+
+  update() {
+    const formValue = this.vendorForm.value;
+    var postdata = {
+      id: this.oldId,
+      type: formValue.ctype,
+      salutation: formValue.csalutation,
+      firstName: formValue.cfirstName,
+      lastName: formValue.clastName,
+      ledgerCode: this.ledgercode,
+      companyDisplayName: formValue.cdisplayName,
+      companyMobileNo: formValue.cmobile,
+      companyEmailID: formValue.cemail,
+      companyWebSite: formValue.cwebsite,
+      groupName: 'SUNDRY CREDITOR',
+      groupCode: 'LG0031',
+      contactPersonName: formValue.ccpName,
+      contactPhone: formValue.ccpPhone,
+      designation: formValue.ccpDesignation,
+      department: formValue.ccpDepartment,
+      mobileNo: formValue.ccpPhone,
+      emailID: formValue.ccpEmail,
+      currency: formValue.ccurrency,
+      balancetoPay: formValue.cbalanceToPay,
+      balancetoCollect: formValue.cbalanceToColl,
+      paaymentTerm: formValue.cpaymentTerm,
+      creditLimit: formValue.ccreditLimit,
+      bankDetails: formValue.cbankDetails,
+      stateName: formValue.cStateName,
+      stateCode: formValue.cstate,
+      gstTreatment: formValue.cgstTreatment,
+      gstNo: formValue.cgstNo,
+      panNo: formValue.cpanNo,
+      cinNo: formValue.ccinNo,
+      bilingAddress: formValue.cbAddress,
+      bilingCountry: formValue.cbCountry,
+      bilingCity: formValue.cbCity,
+      bilingState: formValue.cbState,
+      bilingPincode: formValue.cbPincode,
+      bilingPhone: formValue.cbPhone,
+      deliveryAddress: formValue.cdAddress,
+      deliveryCountry: formValue.cdCountry,
+      deliveryCity: formValue.cdCity,
+      deliveryState: formValue.cdState,
+      deliveryPinCode: formValue.cdPincode,
+      deliveryPhone: formValue.cdPhone,
+      notes: formValue.cremarks,
+      rCreatedDateTime: new Date(),
+      rStatus: 'A',
+    };
+
+    this.api.Update_LedgerData(this.oldId, postdata).subscribe({
+      next: (data) => {
+        this.loading = false;
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'Successfully Updated!',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.router.navigateByUrl('/customer-list');
+        });
+      },
+      error: (err) => {
+        console.log(err);
+        alert('Some Error Occured');
       },
     });
   }

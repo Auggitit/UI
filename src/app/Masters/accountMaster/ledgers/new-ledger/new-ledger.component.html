@@ -1,16 +1,18 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
     <div class="pb-3">
-      <div *ngIf="isCreateLedger; else elseBlock">
-        <app-reports-header
-          title="CREATE LEDGERS"
-          [reportFormGroupName]="ledgerForm"
-          buttonTitle="Ledger List"
-          [isDownloadNeeded]="false"
-          (onClickCreateButton)="onClickButton()"
-        ></app-reports-header>
-      </div>
-      <ng-template #elseBlock>
+      <!-- <div *ngIf="isCreateLedger; else elseBlock"> -->
+      <app-reports-header
+        [title]="isCreateLedger ? 'CREATE LEDGERS' : 'UPDATE LEDGER DETAILS'"
+        [reportFormGroupName]="ledgerForm"
+        [buttonTitle]="isCreateLedger ? 'Ledger List' : 'Add Ledger'"
+        [isDownloadNeeded]="false"
+        (onClickCreateButton)="
+          isCreateLedger ? onClickButton() : onClickAddButton()
+        "
+      ></app-reports-header>
+      <!-- </div> -->
+      <!-- <ng-template #elseBlock>
         <app-reports-header
           title="UPDATE LEDGER DETAILS"
           [reportFormGroupName]="ledgerForm"
@@ -18,7 +20,7 @@
           buttonTitle="Add Ledger"
           (onClickCreateButton)="onClickAddButton()"
         ></app-reports-header>
-      </ng-template>
+      </ng-template> -->
     </div>
     <div
       style="

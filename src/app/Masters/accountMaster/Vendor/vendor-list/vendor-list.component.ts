@@ -10,6 +10,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-vendor-list',
@@ -77,7 +79,8 @@ export class VendorListComponent implements OnInit {
   constructor(
     public api: ApiService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.vendorForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -139,6 +142,28 @@ export class VendorListComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigateByUrl('create-vendor');
+  }
+
+  onClickEdit(data: any) {
+    var msg = '';
+    if (data.pending == 0) {
+      msg = 'SO is Completed! It is not possible to  Edit';
+    } else {
+      msg = 'Do you Modify data?';
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: msg,
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.router.navigate(['create-vendor/' + data.id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
   }
 
   getFilterData(formValues: any, serverData: any) {
