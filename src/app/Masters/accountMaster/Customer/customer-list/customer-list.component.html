@@ -76,7 +76,7 @@
               min-width: 151px;
               max-width: 151px;
               border-top: 1px solid #f0f1f3;
-              
+
               padding-right: 10px;
               align-items: center;
               justify-content: left;
@@ -125,7 +125,7 @@
               justify-content: left;
             "
           >
-            {{ data.mobileNo }}
+            {{ data.companyMobileNo }}
           </td>
           <td
             *ngIf="columns[2].needToShow"
@@ -212,7 +212,7 @@
                   width: 80%;
                   color: #ec3900;
                 "
-                 (click)="onClickDelete(data)"
+                (click)="onClickDelete(data)"
               >
                 Delete
               </button>

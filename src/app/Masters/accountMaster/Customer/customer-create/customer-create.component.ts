@@ -210,7 +210,7 @@ export class CustomerCreateComponent implements OnInit {
             };
           })
         : [];
-      this.stateDropDownData = [stateData];
+      this.stateDropDownData = stateData;
     });
   }
 
