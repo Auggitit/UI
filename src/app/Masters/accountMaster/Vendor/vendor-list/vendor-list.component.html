@@ -125,7 +125,7 @@
               justify-content: left;
             "
           >
-            {{ data.mobileNo }}
+            {{ data.companyMobileNo }}
           </td>
           <td
             *ngIf="columns[2].needToShow"
@@ -212,6 +212,7 @@
                   width: 80%;
                   color: #ec3900;
                 "
+                (click)="onClickDelete(data)"
               >
                 Delete
               </button>
