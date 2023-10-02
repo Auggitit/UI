@@ -608,4 +608,30 @@ export class ApiService {
         })
       );
   }
+
+  
+  PostHsn(Postdata:any): Observable<any> {
+    return this.http.post( this.URL + "api/HSN", Postdata);
+  } 
+
+  GetHsn()
+  {
+    return this.http.get<any>(this.URL + "api/HSN").pipe(map((res:any) =>
+    {
+      return res;
+    }));
+  }
+
+  update_Hsn(id:any,postdata:any):Observable<any>
+  {
+    return this.http.patch(`${this.URL}api/HSN/${id}`, postdata);
+  }
+  // DeleteHsn(id:any):Observable<any>
+  // {
+  //   return this.http.delete(this.api.URL +"api/HSN/" + id);
+  // }
+  Delete_Hsn(id:any):Observable<any>
+  {
+    return this.http.delete<any>(this.URL +"api/HSN/" + id);
+  }
 }

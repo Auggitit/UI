@@ -90,6 +90,8 @@ import { StockCategoryCreateComponent } from './Masters/inventoryMaster/stockCat
 import { UomCreateComponent } from './Masters/inventoryMaster/uom/uom-create/uom-create.component';
 import { CountryMasterCreateComponent } from './Masters/otherMaster/country-master-create/country-master-create.component';
 import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-create/state-master-create.component';
+import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-list.component';
+import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -209,6 +211,10 @@ const routes: Routes = [
   { path: 'state-master-list', component: StateMasterListComponent },
   { path: 'state-master-create', component: StateMasterCreateComponent },
   { path: 'state-master-create/:id', component: StateMasterCreateComponent },
+
+  { path: 'hsn-list', component: HsnListComponent},
+  { path: 'hsn-create', component: HsnCreateComponent},
+  { path: 'hsn-create/:id', component: HsnCreateComponent}
 ];
 
 @NgModule({

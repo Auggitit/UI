@@ -134,6 +134,8 @@ import { CountryMasterListComponent } from './Masters/otherMaster/country-master
 import { CountryMasterCreateComponent } from './Masters/otherMaster/country-master-create/country-master-create.component';
 import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-create/state-master-create.component';
 import { StateMasterListComponent } from './Masters/otherMaster/state-master-list/state-master-list.component';
+import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-list.component';
+import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
 
 @NgModule({
   declarations: [
@@ -243,6 +245,8 @@ import { StateMasterListComponent } from './Masters/otherMaster/state-master-lis
     CountryMasterCreateComponent,
     StateMasterCreateComponent,
     StateMasterListComponent,
+    HsnListComponent,
+    HsnCreateComponent,
   ],
   imports: [
     BrowserModule,
