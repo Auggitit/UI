@@ -126,50 +126,51 @@
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600">Country</p>
-                  <div
-                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                  >
+                  <p style="color: #667085; font-weight: 600; margin: 0px;">Country</p>
+                  <div>
                     <app-mat-select-box
                       [formOptions]="countryDropDownData"
                       [controlName]="'ccountry'"
                       [label]="'Country'"
                       [groupName]="ledgerForm"
                       [formAppearance]="'outline'"
+                      selectWidth="201px"
                     ></app-mat-select-box>
-                  </div>
+               </div>
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600">State</p>
-                  <div
-                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                  >
+                  <p style="color: #667085; font-weight: 600;margin: 0px;">State</p>
+<div>
                     <app-mat-select-box
                       [formOptions]="stateDropDownData"
                       [controlName]="'cstate'"
                       [label]="'State'"
                       [groupName]="ledgerForm"
                       [formAppearance]="'outline'"
+                      selectWidth="201px"
                     ></app-mat-select-box>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+
               <div
                 class="col-12 d-flex flex-wrap align-items-center justify-content-between"
               >
+              <div class="col-3">
                 <p style="color: #667085; font-weight: 600">Address</p>
+                </div>
                 <div class="col-9">
                   <mat-form-field
                     class="example-full-width"
                     appearance="outline"
-                    style="width: 100%; margin-top: 6px !important"
+                    style="width: 98%; margin-top: 6px !important;margin-left: 20px;"
                   >
+                  <div>
                     <textarea
                       style="height: 68px; vertical-align: super"
                       placeholder="Address"
@@ -179,11 +180,11 @@
                       [(ngModel)]="address"
                       autocomplete="off"
                     ></textarea>
+                  </div>
                   </mat-form-field>
                 </div>
               </div>
-            </div>
-
+     
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
               <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input

@@ -4,7 +4,8 @@
       <div *ngIf="isCreateState; else elseBlock">
         <app-reports-header
           title="CREATE STATE MASTER"
-          [searchField]="true"
+          [searchField]="false"
+          [isDownloadNeeded]="false"
           [reportFormGroupName]="stateForm"
           [saveTypesOptions]="saveAsOptions"
           buttonTitle="List of State Master"
@@ -16,6 +17,7 @@
           title="UPDATE STATE MASTER"
           [reportFormGroupName]="stateForm"
           [isDownloadNeeded]="false"
+          [searchField]="false"
           buttonTitle="List of State Master"
           (onClickCreateButton)="onClickButton()"
         ></app-reports-header>

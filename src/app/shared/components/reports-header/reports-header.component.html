@@ -1,9 +1,9 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center">
   <app-mat-header title="{{ title }}"></app-mat-header>
-  <div class="d-flex flex-wrap align-items-center" style="gap: 8px">
+  <div class="d-flex flex-wrap align-items-center">
     <div *ngIf="searchField; else elseBlock">
       <form [formGroup]="reportFormGroupName">
-        <mat-form-field appearance="outline" [ngStyle]="{ width: '160px' }">
+        <mat-form-field appearance="outline" [ngStyle]="{ width: '160px',paddingRight: '4px' }">
           <input
             type="text"
             [formControlName]="searchControlName"
