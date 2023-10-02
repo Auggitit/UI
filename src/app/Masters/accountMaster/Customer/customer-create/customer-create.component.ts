@@ -145,6 +145,7 @@ export class CustomerCreateComponent implements OnInit {
             cgstTreatment: res.gstTreatment,
             cgstNo: res.gstNo,
             cstate: res.stateCode,
+            cStateName: res.stateName,
             cpanNo: res.panNo,
             ccinNo: res.cinNo,
             cbAddress: res.bilingAddress,

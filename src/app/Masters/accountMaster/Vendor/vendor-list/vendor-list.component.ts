@@ -12,6 +12,8 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 
 @Component({
   selector: 'app-vendor-list',
@@ -164,6 +166,33 @@ export class VendorListComponent implements OnInit {
         });
       }
     });
+  }
+
+  onClickDelete(data: any) {
+    {
+      const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+        width: '350px',
+        data: 'Do you confirm the deletion of this Ledger data?',
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.api.DeleteMledger(data).subscribe({
+            next: (data) => {
+              let dialogRef = this.dialog.open(SuccessmsgComponent, {
+                data: 'Successfully Deleted!',
+              });
+              dialogRef.afterClosed().subscribe((result) => {
+                this.loadData();
+              });
+            },
+            error: (err) => {
+              console.log(err);
+              //  alert("Some Error Occured");
+            },
+          });
+        }
+      });
+    }
   }
 
   getFilterData(formValues: any, serverData: any) {

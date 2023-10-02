@@ -40,8 +40,8 @@ export class StockItemCreateComponent implements OnInit {
   rateofduty: any = 1;
   groupData: any;
   groupDropDownData: dropDownData[] = [];
-  categoryData: any;
-  uomData: any;
+  categoryData: dropDownData[] = [];
+  uomData: dropDownData[] = [];
   gstapplicable: any = 'NO';
   typeofsupply: any = 'Goods';
   itemForm!: FormGroup;
@@ -53,6 +53,17 @@ export class StockItemCreateComponent implements OnInit {
   oldid: any;
   gstreadonly: boolean = true;
   cessreadonly: boolean = true;
+  taxableData: dropDownData[] = [
+    { name: 'Taxable', id: 'Taxable' },
+    { name: 'Nil Rated', id: 'Nil Rated' },
+    { name: 'Exempt', id: 'Exempt' },
+    { name: 'Not Applicable', id: 'Not Applicable' },
+  ];
+
+  supplyData: dropDownData[] = [
+    { name: 'Goods', id: 'Goods' },
+    { name: 'Services', id: 'Services' },
+  ];
 
   constructor(
     public api: ApiService,
@@ -60,7 +71,23 @@ export class StockItemCreateComponent implements OnInit {
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute
-  ) { }
+  ) {}
+
+  setValidations() {
+    this.itemForm = this.fb.group({
+      citemname: ['', [Validators.required]],
+      citemsku: ['', [Validators.nullValidator]],
+      citemhsn: ['', [Validators.nullValidator]],
+      citemunder: ['', [Validators.required]],
+      cItemUnderName: [''],
+      citemcatcode: ['', [Validators.required]],
+      citemuomcode: ['', [Validators.required]],
+      ctaxabletype: ['', [Validators.required]],
+      cgst: ['', [Validators.nullValidator]],
+      ccess: ['', [Validators.nullValidator]],
+      ctypeofsupply: ['', [Validators.nullValidator]],
+    });
+  }
 
   ngAfterViewInit() {
     this.eitemname?.nativeElement.focus();
@@ -73,10 +100,19 @@ export class StockItemCreateComponent implements OnInit {
     this.loaduom();
     this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
 
+    this.itemForm.get('citemunder')?.valueChanges.subscribe((value) => {
+      let stateCode = this.groupDropDownData.filter(
+        (item) => item.id === value
+      );
+      this.itemForm.get('cItemUnderName')?.setValue(stateCode[0].name);
+    });
+
     if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
       this.isCreateStockItem = false;
 
       this.api.get_ItemDataWithID(this.oldid).subscribe((res) => {
+        console.log(res, 'previous');
+
         this.itemForm.patchValue({
           citemname: res.itemname,
           citemunder: res.itemunder,
@@ -90,6 +126,7 @@ export class StockItemCreateComponent implements OnInit {
           ccess: res.cess,
         });
         this.itemcode = res.itemcode;
+        console.log(this.itemcode, 'reeeeeeeeeeeeeeeee code');
       });
     }
   }
@@ -104,41 +141,34 @@ export class StockItemCreateComponent implements OnInit {
 
   loadgroup() {
     this.api.get_GroupData().subscribe((res) => {
-      this.groupData = res;
-      const newMap = new Map();
-      res.map((item: any) => {
-        return {
-          name: item.groupname,
-          id: item.groupcode,
-        };
-      })
-        .forEach((item: any) => newMap.set(item.id, item));
-      this.groupDropDownData = [...newMap.values()];
+      let gData = res.length
+        ? res.map((item: any) => {
+            return {
+              name: item.groupname,
+              id: item.groupcode,
+            };
+          })
+        : [];
+      this.groupDropDownData = gData;
     });
   }
+
   loadcategory() {
     this.api.get_CategoryData().subscribe((res) => {
-      this.categoryData = res;
+      this.categoryData = res.length
+        ? res.map((item: any) => {
+            return { name: item.catname, id: item.catcode };
+          })
+        : [];
     });
   }
   loaduom() {
     this.api.get_UOMData().subscribe((res) => {
-      this.uomData = res;
-    });
-  }
-
-  setValidations() {
-    this.itemForm = this.fb.group({
-      citemname: ['', [Validators.required]],
-      citemsku: ['', [Validators.nullValidator]],
-      citemhsn: ['', [Validators.nullValidator]],
-      citemunder: ['', [Validators.required]],
-      citemcatcode: ['', [Validators.required]],
-      citemuomcode: ['', [Validators.required]],
-      ctaxabletype: ['', [Validators.required]],
-      cgst: ['', [Validators.nullValidator]],
-      ccess: ['', [Validators.nullValidator]],
-      ctypeofsupply: ['', [Validators.nullValidator]],
+      this.uomData = res.length
+        ? res.map((item: any) => {
+            return { name: item.uomname, id: item.uomcode };
+          })
+        : [];
     });
   }
 
@@ -295,7 +325,7 @@ export class StockItemCreateComponent implements OnInit {
       itemunder: this.itemForm.value.citemunder,
       itemcategory: this.itemForm.value.citemcatcode,
       uom: this.itemForm.value.citemuomcode,
-      gstApplicable: '',
+      gstApplicable: 'NO',
       gstCalculationtype: 'N/A',
       taxable: this.itemForm.value.ctaxabletype,
       gst: this.itemForm.value.cgst,
@@ -309,16 +339,15 @@ export class StockItemCreateComponent implements OnInit {
       itemhsn: this.itemForm.value.citemhsn,
     };
     this.api.Insert_ItemData(postData).subscribe({
-      next:
-        (data) => {
-          let dialogRef = this.dialog.open(SuccessmsgComponent, {
-            data: 'Stock Item Successfully Saved!',
-          });
-          dialogRef.afterClosed().subscribe((result) => {
-            this.clear();
-            this.loading = false;
-          });
-        },
+      next: (data) => {
+        let dialogRef = this.dialog.open(SuccessmsgComponent, {
+          data: 'Stock Item Successfully Saved!',
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          this.clear();
+          this.loading = false;
+        });
+      },
       error: (err) => {
         alert('Some Error Occured');
         this.loading = false;

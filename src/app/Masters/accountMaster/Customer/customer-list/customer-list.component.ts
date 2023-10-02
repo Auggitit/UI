@@ -83,7 +83,7 @@ export class CustomerListComponent implements OnInit {
     public api: ApiService,
     private fb: FormBuilder,
     private router: Router,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {
     this.customerForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
@@ -212,13 +212,31 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  onClickDelete(rowdata: any) {
-    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
-      data: {
-        iconToDisplay: 'DeleteFile',
-        contentText: 'Do You Want To Delete Data ?',
-      },
-    });
+  onClickDelete(data: any) {
+    {
+      const dialogRef = this.dialog.open(ConfirmmsgComponent, {
+        width: '350px',
+        data: 'Do you confirm the deletion of this Ledger data?',
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.api.DeleteMledger(data).subscribe({
+            next: (data) => {
+              let dialogRef = this.dialog.open(SuccessmsgComponent, {
+                data: 'Successfully Deleted!',
+              });
+              dialogRef.afterClosed().subscribe((result) => {
+                this.loadData();
+              });
+            },
+            error: (err) => {
+              console.log(err);
+              //  alert("Some Error Occured");
+            },
+          });
+        }
+      });
+    }
   }
 
   downloadAsPDF() {
