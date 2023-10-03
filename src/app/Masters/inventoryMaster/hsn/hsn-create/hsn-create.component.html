@@ -1,1 +1,82 @@
-<p>hsn-create works!</p>
+<div class="content-wrapper">
+    <div class="p-4" style="background-color: #f9f9fc">
+      <div class="pb-3">
+        <div *ngIf="isCreateHsn; else elseBlock">
+          <app-reports-header
+            title="CREATE HSN"
+            [searchField]="false"
+            [isDownloadNeeded]="false"
+            [reportFormGroupName]="hsnForm"
+            [saveTypesOptions]="saveAsOptions"
+            buttonTitle="List of HSN"
+            (onClickCreateButton)="onClickButton()"
+          ></app-reports-header>
+        </div>
+        <ng-template #elseBlock>
+          <app-reports-header
+            title="UPDATE HSN"
+            [reportFormGroupName]="hsnForm"
+            [isDownloadNeeded]="false"
+            [searchField]="false"
+            buttonTitle="List of HSN"
+            (onClickCreateButton)="onClickButton()"
+          ></app-reports-header>
+        </ng-template>
+      </div>
+      <div
+        style="
+          background-color: white;
+          border-radius: 8px;
+          padding: 20px;
+          border: 1px solid #e0e2e7;
+          margin-bottom: 4px;
+        "
+      >
+        <form [formGroup]="hsnForm">
+          <div class="row">
+            <div class="col-12">
+              <p
+                style="
+                  padding-bottom: 12px;
+                  font-size: 1.125rem;
+                  font-weight: 600;
+                  color: black;
+                "
+              >
+                ID#
+              </p>
+
+              <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+                <div class="col-lg-6 col-md-12 pb-2">
+                  <app-mat-input
+                    [groupName]="hsnForm"
+                    labelText="HSN"
+                    [placeholderText]="'HSN'"
+                    [controlName]="'hsnValue'"
+                  ></app-mat-input>
+                </div>
+  
+                <div class="col-lg-6 col-md-12 pb-2">
+                  <app-mat-input
+                    [groupName]="hsnForm"
+                    labelText="GST %"
+                    [placeholderText]="'GST %'"
+                    [controlName]="'gstValue'"
+                  ></app-mat-input>
+                </div>
+              </div>
+  
+              <app-action-button
+                [loading]="loading"
+                [isSave]="isCreateHsn"
+                (clickSave)="submit()"
+                (clickUpdate)="update()"
+                (clickClearAll)="clear()"
+              ></app-action-button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

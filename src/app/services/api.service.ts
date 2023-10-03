@@ -366,6 +366,12 @@ export class ApiService {
     }))
   }
 
+  delete_GroupData(id: any): Observable<any> {
+    console.log("id deleter",id)
+    return this.http.delete<any>(this.URL + "api/mItemgroups/" + id).pipe(map((res: any) => {
+      return res;
+    }))
+  }
   get_GroupMaxID() {
     return this.http.get<any>(this.URL + 'api/mItemgroups/getMaxID').pipe(
       map((res: any) => {
@@ -622,9 +628,16 @@ export class ApiService {
     }));
   }
 
+  GetHsn_withId(id:any)
+  {
+    return this.http.get<any>(this.URL + "api/HSN/"+id).pipe(map((res:any) =>
+    {
+      return res;
+    }));
+  }
   update_Hsn(id:any,postdata:any):Observable<any>
   {
-    return this.http.patch(`${this.URL}api/HSN/${id}`, postdata);
+    return this.http.put(`${this.URL}api/HSN/${id}`, postdata);
   }
   // DeleteHsn(id:any):Observable<any>
   // {
