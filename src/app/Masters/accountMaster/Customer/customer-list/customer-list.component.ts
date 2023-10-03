@@ -213,30 +213,30 @@ export class CustomerListComponent implements OnInit {
   }
 
   onClickDelete(data: any) {
-    {
-      const dialogRef = this.dialog.open(ConfirmmsgComponent, {
-        width: '350px',
-        data: 'Do you confirm the deletion of this Ledger data?',
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.api.DeleteMledger(data).subscribe({
-            next: (data) => {
-              let dialogRef = this.dialog.open(SuccessmsgComponent, {
-                data: 'Successfully Deleted!',
-              });
-              dialogRef.afterClosed().subscribe((result) => {
-                this.loadData();
-              });
-            },
-            error: (err) => {
-              console.log(err);
-              //  alert("Some Error Occured");
-            },
-          });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.DeleteMledger(data).subscribe({
+          next: (data) => {
+            let dialogRef = this.dialog.open(SuccessmsgComponent, {
+              data: 'Successfully Deleted!',
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+              this.loadData();
+            });
+          },
+          error: (err) => {
+            console.log(err);
+            //  alert("Some Error Occured");
+          },
+        });
+      }
+    });
   }
 
   downloadAsPDF() {
