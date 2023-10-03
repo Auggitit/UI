@@ -152,4 +152,28 @@ export class StockGroupItemsComponent implements OnInit {
       }
     });
   }
+
+  onClickRestore(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'RestoreFile',
+        contentText: 'Do You Want To Restore Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_GroupData(data.id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Restored!',
+              text: 'Stock Group Restored Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
+    });
+  }
 }

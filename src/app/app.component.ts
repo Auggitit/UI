@@ -64,6 +64,12 @@ export class AppComponent {
       )
     );
     this.matIconRegistry.addSvgIcon(
+      'RestoreFile',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/icons/restore-file.svg'
+      )
+    );
+    this.matIconRegistry.addSvgIcon(
       'EditData',
       this.domSanitizer.bypassSecurityTrustResourceUrl(
         '../assets/icons/data-edit.svg'

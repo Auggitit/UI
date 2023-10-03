@@ -106,9 +106,9 @@
                   width: 80%;
                   color: #ec3900;
                 "
-                (click)="onClickDelete(data)"
-              >
-                Delete
+                (click)="data.rStatus === 'A' ? onClickDelete(data) : onClickRestore(data)"
+                >
+                {{ data.rStatus === 'A' ? 'Delete' : 'Restore' }}
               </button>
             </mat-menu>
           </td>

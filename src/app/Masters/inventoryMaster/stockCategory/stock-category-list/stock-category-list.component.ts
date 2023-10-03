@@ -118,6 +118,30 @@ export class StockCategoryListComponent implements OnInit {
     });
   }
 
+  onClickRestore(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'RestoreFile',
+        contentText: 'Do You Want To Restore Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_CateData(data.id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Restored!',
+              text: 'Stock Category Restored Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
+    });
+  }
+
   getFilterData(formValues: any, serverData: any) {
     let newArr: any[] = [];
     let rowIndex = 0;

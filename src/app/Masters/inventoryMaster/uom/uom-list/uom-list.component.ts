@@ -167,4 +167,28 @@ export class UomListComponent implements OnInit {
       }
     });
   }
+
+  onClickRestore(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'RestoreFile',
+        contentText: 'Do You Want To Restore Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_UOMData(data.id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Restored!',
+              text: 'UOM Restored Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
+    });
+  }
 }
