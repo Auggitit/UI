@@ -1,0 +1,123 @@
+<div class="content-wrapper">
+    <div class="p-4" style="background-color: #f9f9fc">
+      <div id="contentToSave" #contentToSave></div>
+      <div class="pb-3">
+        <app-reports-header
+          title="LIST OF LEDGER GROUP"
+          [searchField]="true"
+          [reportFormGroupName]="LedgerGroupForm"
+          [saveTypesOptions]="saveAsOptions"
+          [SelectSaveOptions]="'SelectSaveOptions'"
+          [searchControlName]="'searchValues'"
+          buttonTitle="Add Ledger Group"
+          (onClickCreateButton)="onClickButton()"
+          (onClickDownload)="downloadAsPDF()"
+        ></app-reports-header>
+      </div>
+  
+      <app-mat-table
+        id="LedgerGroupTable"
+        [columns]="columns"
+        [filteredData]="filteredData"
+        [paginationIndex]="paginationIndex"
+        [pageCount]="pageCount"
+        [selectAllCheckbox]="selectAllCheckbox"
+        [tableGroupName]="LedgerGroupForm"
+        [isSelectAll]="selectAll"
+        [tableHeaderAlign]="tableHeaderAlignValue"
+      >
+        <ng-template let-item>
+          <tr
+            *ngFor="let data of item; let i = index"
+            style="background-color: white"
+          >
+            <td
+              scope="row"
+              class="d-flex pl-3"
+              style="
+                color: #667085;
+                min-width: 86px;
+                /* max-width: 86px; */
+                align-items: center;
+                justify-content: left;
+                height: inherit;
+                border-top: 1px solid #f0f1f3;
+              "
+            >
+              <input
+                type="checkbox"
+                id="customCheck1"
+                style="min-height: 18px; min-width: 18px"
+                [checked]="selectAll.isSelected"
+              />
+              <p class="m-0 pl-2" scope="row">
+                {{ i + 1 + paginationIndex * pageCount }}
+              </p>
+            </td>
+            <td
+              *ngIf="columns[0].needToShow"
+              scope="row"
+              style="
+                border-top: 1px solid #f0f1f3;
+                min-width: 128px;
+                max-width: 128px;
+                padding-right: 10px;
+                align-items: center;
+                justify-content: left;
+              "
+            >
+              {{ data.groupname }}
+            </td>
+            <td
+              *ngIf="columns[1].needToShow"
+              scope="col"
+              style="
+                color: #667085;
+                min-width: 75px;
+                max-width: 75px;
+                border-top: 1px solid #f0f1f3;
+                padding-left: 15px;
+              "
+            >
+              <i
+                style="
+                  background-color: rgba(84, 130, 10, 0.6);
+                  border-radius: 4px;
+                  padding-top: 2px;
+                "
+                class="bi bi-three-dots-vertical"
+                [matMenuTriggerFor]="threeDotOptions"
+              >
+              </i>
+              <mat-menu #threeDotOptions="matMenu" style="width: 200%">
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                  "
+                   (click)="onClickEdit(data)"
+                >
+                  Edit
+                </button>
+                <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickDelete(data)"
+                >
+                  Delete
+                </button>
+              </mat-menu>
+            </td>
+          </tr></ng-template
+        ></app-mat-table
+      >
+    </div>
+  </div>
+  

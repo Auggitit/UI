@@ -1,0 +1,83 @@
+<div class="content-wrapper">
+    <div class="p-4" style="background-color: #f9f9fc">
+      <div class="pb-3">
+        <div *ngIf="isCreateLedgerGroup; else elseBlock">
+          <app-reports-header
+            title="CREATE A LEDGER GROUP"
+            [isDownloadNeeded]="false"
+            [isReports]="false"
+            buttonTitle="List of Ledger Group"
+            (onClickCreateButton)="onClickButton()"
+          ></app-reports-header>
+        </div>
+        <ng-template #elseBlock>
+          <app-reports-header
+            title="UPDATE LEDGER GROUP"
+            [reportFormGroupName]="LedgerGroupForm"
+            [isDownloadNeeded]="false"
+            buttonTitle="List of Ledger Group"
+            (onClickCreateButton)="onClickButton()"
+          ></app-reports-header>
+        </ng-template>
+      </div>
+      <div
+        style="
+          background-color: white;
+          border-radius: 8px;
+          padding: 20px;
+          border: 1px solid #e0e2e7;
+          margin-bottom: 4px;
+        "
+      >
+        <form [formGroup]="LedgerGroupForm">
+          <div class="row">
+            <div class="col-12">
+              <p style="font-size: 1.125rem; font-weight: 600; color: black">
+                ID #
+              </p>
+              <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+                <div class="col-lg-6 col-md-12 pb-2">
+                  <app-mat-input
+                    #ename
+                    (keyup.enter)="NameEnter($event)"
+                    [groupName]="LedgerGroupForm"
+                    labelText="Ledger Group Name"
+                    [placeholderText]="'Name'"
+                    [controlName]="'lgroupname'"
+                  ></app-mat-input>
+                </div>
+  
+                <div class="col-lg-6 col-md-12 pb-2">
+                    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between">
+                      <p style="color: #667085; font-weight: 600">Ledger Group Under</p>
+                      <div
+                        class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
+                      >
+                        <app-mat-select-box
+                        [formOptions]="groupDropDownData"
+                        [controlName]="'lgroupunder'"
+                        [label]="'Group Under'"
+                        [groupName]="LedgerGroupForm"
+                        [formAppearance]="'outline'"
+                        ></app-mat-select-box>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+  
+              <app-action-button
+                [loading]="loading"
+                [isSave]="isCreateLedgerGroup"
+                (clickSave)="submit()"
+                (clickClearAll)="clear()"
+                (clickUpdate)="update()"
+              ></app-action-button>
+            </div>
+            </div>
+          <!-- </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+  

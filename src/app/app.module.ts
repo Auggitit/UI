@@ -136,6 +136,8 @@ import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-c
 import { StateMasterListComponent } from './Masters/otherMaster/state-master-list/state-master-list.component';
 import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-list.component';
 import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
+import { LedgerGroupListComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-list/LedgerGroup-list.component';
+import { LedgerGroupCreateComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-create/LedgerGroup-create.component';
 
 @NgModule({
   declarations: [
@@ -247,6 +249,8 @@ import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn
     StateMasterListComponent,
     HsnListComponent,
     HsnCreateComponent,
+    LedgerGroupListComponent,
+    LedgerGroupCreateComponent,
   ],
   imports: [
     BrowserModule,

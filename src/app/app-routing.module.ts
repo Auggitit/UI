@@ -92,6 +92,8 @@ import { CountryMasterCreateComponent } from './Masters/otherMaster/country-mast
 import { StateMasterCreateComponent } from './Masters/otherMaster/state-master-create/state-master-create.component';
 import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-list.component';
 import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
+import { LedgerGroupListComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-list/LedgerGroup-list.component';
+import { LedgerGroupCreateComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-create/LedgerGroup-create.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -214,7 +216,10 @@ const routes: Routes = [
 
   { path: 'hsn-list', component: HsnListComponent},
   { path: 'hsn-create', component: HsnCreateComponent},
-  { path: 'hsn-create/:id', component: HsnCreateComponent}
+  { path: 'hsn-create/:id', component: HsnCreateComponent},
+  { path: 'LedgerGroup-list', component: LedgerGroupListComponent},
+  { path: 'LedgerGroup-create', component:LedgerGroupCreateComponent},
+  { path: 'LedgerGroup-create/:id', component: LedgerGroupCreateComponent},
 ];
 
 @NgModule({
