@@ -370,7 +370,7 @@
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="City"
-                              [placeholderText]="'TYPE CITY'"
+                              [placeholderText]="'Type City'"
                               [controlName]="'cbCity'"
                               [isRequired]="false"
                             ></app-mat-input>
@@ -379,25 +379,52 @@
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="Phone Number"
-                              [placeholderText]="'TYPE P.NO'"
+                              [placeholderText]="'Type P.No'"
                               [controlName]="'cbPhone'"
                               [isRequired]="false"
                             ></app-mat-input>
                           </div>
-                          <div class="col-lg-6 col-md-12 pb-2">
-                            <app-mat-input
-                              [groupName]="customerForm"
-                              labelText="Address"
-                              [placeholderText]="'ADDRESS'"
-                              [controlName]="'cbAddress'"
-                              [isRequired]="false"
-                            ></app-mat-input>
+                          <div class="col-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                            >
+                              <div class="col-lg-3 col-md-12" style="padding-left: 0px">
+                                <p style="color: #667085; font-weight: 600">
+                                  Address
+                                </p>
+                              </div>
+                              <div class="col-lg-9 col-md-12" style="display: contents">
+                                <mat-form-field
+                                  [formGroup]="customerForm"
+                                  class="example-full-width"
+                                  appearance="outline"
+                                  style="
+                                    width: calc(50% + 216px);
+                                    margin-top: 6px !important;
+                                  "
+                                >
+                                  <div>
+                                    <textarea
+                                      style="
+                                        height: 68px;
+                                        vertical-align: super;
+                                      "
+                                      placeholder="Address"
+                                      type="text"
+                                      matInput
+                                      formControlName="cbAddress"
+                                      autocomplete="off"
+                                    ></textarea>
+                                  </div>
+                                </mat-form-field>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="Pincode"
-                              [placeholderText]="'TYPE PinCode'"
+                              [placeholderText]="'Type PinCode'"
                               [controlName]="'cbPincode'"
                               [isRequired]="false"
                             ></app-mat-input>
@@ -405,7 +432,7 @@
                         </div>
                       </mat-tab>
                       <mat-tab
-                        label="DeliveryAddress"
+                        label="Delivery Address"
                         style="overflow: hidden !important"
                       >
                         <div
@@ -469,7 +496,7 @@
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="City"
-                              [placeholderText]="'TYPE CITY'"
+                              [placeholderText]="'TYPE City'"
                               [controlName]="'cdCity'"
                               [isRequired]="false"
                             ></app-mat-input>
@@ -478,28 +505,67 @@
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="Phone Number"
-                              [placeholderText]="'TYPE P.NO'"
+                              [placeholderText]="'type P.No'"
                               [controlName]="'cdPhone'"
                               [isRequired]="false"
                             ></app-mat-input>
                           </div>
-                          <div class="col-lg-6 col-md-12 pb-2">
-                            <app-mat-input
-                              [groupName]="customerForm"
-                              labelText="Address"
-                              [placeholderText]="'ADDRESS'"
-                              [controlName]="'cdAddress'"
-                              [isRequired]="false"
-                            ></app-mat-input>
+                          <div class="col-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                            >
+                              <div class="col-lg-3 col-md-12" style="padding-left: 0px">
+                                <p style="color: #667085; font-weight: 600">
+                                  Address
+                                </p>
+                              </div>
+                              <div class="col-lg-9 col-md-12" style="display: contents">
+                                <mat-form-field
+                                  [formGroup]="customerForm"
+                                  class="example-full-width"
+                                  appearance="outline"
+                                  style="
+                                    width: calc(50% + 216px);
+                                    margin-top: 6px !important;
+                                  "
+                                >
+                                  <div>
+                                    <textarea
+                                      style="
+                                        height: 68px;
+                                        vertical-align: super;
+                                      "
+                                      placeholder="Address"
+                                      type="text"
+                                      matInput
+                                      formControlName="cdAddress"
+                                      autocomplete="off"
+                                    ></textarea>
+                                  </div>
+                                </mat-form-field>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-lg-6 col-md-12 pb-2">
                             <app-mat-input
                               [groupName]="customerForm"
                               labelText="Pincode"
-                              [placeholderText]="'TYPE PinCode'"
+                              [placeholderText]="'Type PinCode'"
                               [controlName]="'cdPincode'"
                               [isRequired]="false"
                             ></app-mat-input>
+                          </div>
+                          <div class="col-lg-6 col-md-12 pb-2">
+                            <div
+                              class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                              style="height: 100%"
+                            >
+                              <mat-checkbox
+                                [checked]="isDeliveryAddressSame"
+                                (change)="toggleRepeatAddress($event.checked)"
+                                >Same as Billing Address</mat-checkbox
+                              >
+                            </div>
                           </div>
                         </div>
                       </mat-tab>

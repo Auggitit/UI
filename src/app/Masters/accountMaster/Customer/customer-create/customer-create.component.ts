@@ -49,6 +49,7 @@ export class CustomerCreateComponent implements OnInit {
   countryDropDownData: dropDownData[] = [];
   stateDropDownData: dropDownData[] = [];
   currencyDropDownData: dropDownData[] = [];
+  isDeliveryAddressSame: boolean = false;
 
   constructor(
     public api: ApiService,
@@ -175,6 +176,36 @@ export class CustomerCreateComponent implements OnInit {
 
   onClickButton(): void {
     this.router.navigateByUrl('customer-list');
+  }
+
+  toggleRepeatAddress(event: any): void {
+    console.log('Clicked', event);
+    this.isDeliveryAddressSame = event;
+    console.log(
+      'this.customerForm.value.cbAddress,',
+      this.customerForm.value.cbAddress,
+      this.customerForm.value.cdAddress,
+
+    );
+    if (event == true) {
+      this.customerForm.patchValue({
+        cdAddress: this.customerForm.value.cbAddress,
+        cdCountry: this.customerForm.value.cbCountry,
+        cdState: this.customerForm.value.cbState,
+        cdCity: this.customerForm.value.cbCity,
+        cdPincode: this.customerForm.value.cbPincode,
+        cdPhone: this.customerForm.value.cbPhone,
+      });
+    } else {
+      this.customerForm.patchValue({
+        cdAddress: '',
+        cdCountry: '',
+        cdCity: '',
+        cdPincode: '',
+        cdPhone: '',
+        cdState: '',
+      });
+    }
   }
 
   loadCountrydata() {

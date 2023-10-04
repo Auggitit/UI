@@ -48,6 +48,7 @@ export class NewVendorComponent implements OnInit {
   countryDropDownData: dropDownData[] = [];
   stateDropDownData: dropDownData[] = [];
   currencyDropDownData: dropDownData[] = [];
+  isDeliveryAddressSame: boolean = false;
 
   constructor(
     public api: ApiService,
@@ -168,6 +169,37 @@ export class NewVendorComponent implements OnInit {
           });
         });
       }
+    }
+  }
+
+  
+  toggleRepeatAddress(event: any): void {
+    console.log('Clicked', event);
+    this.isDeliveryAddressSame = event;
+    console.log(
+      'this.vendorForm.value.cbAddress,',
+      this.vendorForm.value.cbAddress,
+      this.vendorForm.value.cdAddress,
+
+    );
+    if (event == true) {
+      this.vendorForm.patchValue({
+        cdAddress: this.vendorForm.value.cbAddress,
+        cdCountry: this.vendorForm.value.cbCountry,
+        cdState: this.vendorForm.value.cbState,
+        cdCity: this.vendorForm.value.cbCity,
+        cdPincode: this.vendorForm.value.cbPincode,
+        cdPhone: this.vendorForm.value.cbPhone,
+      });
+    } else {
+      this.vendorForm.patchValue({
+        cdAddress: '',
+        cdCountry: '',
+        cdCity: '',
+        cdPincode: '',
+        cdPhone: '',
+        cdState: '',
+      });
     }
   }
 
