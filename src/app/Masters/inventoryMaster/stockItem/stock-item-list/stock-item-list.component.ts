@@ -226,4 +226,28 @@ export class StockItemListComponent implements OnInit {
       }
     });
   }
+
+  onClickRestore(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'RestoreFile',
+        contentText: 'Do You Want To Restore Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_ItemData(data.Id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Restored!',
+              text: 'Stock Item Restored Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
+    });
+  }
 }
