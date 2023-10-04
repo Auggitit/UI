@@ -94,6 +94,18 @@ import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-lis
 import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
 import { LedgerGroupListComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-list/LedgerGroup-list.component';
 import { LedgerGroupCreateComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-create/LedgerGroup-create.component';
+import { BankReceiptListComponent } from './Voucher/BankReceipt/bank-receipt-list/bank-receipt-list.component';
+import { BankReceiptCreateComponent } from './Voucher/BankReceipt/bank-receipt-create/bank-receipt-create.component';
+import { CashReceiptListComponent } from './Voucher/CashReceipt/cash-receipt-list/cash-receipt-list.component';
+import { CashReceiptCreateComponent } from './Voucher/CashReceipt/cash-receipt-create/cash-receipt-create.component';
+import { CashPaymentListComponent } from './Voucher/CashPayment/cash-payment-list/cash-payment-list.component';
+import { CashPaymentCreateComponent } from './Voucher/CashPayment/cash-payment-create/cash-payment-create.component';
+import { BankPaymentListComponent } from './Voucher/BankPayment/bank-payment-list/bank-payment-list.component';
+import { BankPaymentCreateComponent } from './Voucher/BankPayment/bank-payment-create/bank-payment-create.component';
+import { ContraVoucherListComponent } from './Voucher/ContraVoucher/contra-voucher-list/contra-voucher-list.component';
+import { ContraVoucherCreateComponent } from './Voucher/ContraVoucher/contra-voucher-create/contra-voucher-create.component';
+import { JournalVoucherListComponent } from './Voucher/JournalVoucher/journal-voucher-list/journal-voucher-list.component';
+import { JournalVoucherCreateComponent } from './Voucher/JournalVoucher/journal-voucher-create/journal-voucher-create.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -220,6 +232,24 @@ const routes: Routes = [
   { path: 'LedgerGroup-list', component: LedgerGroupListComponent},
   { path: 'LedgerGroup-create', component:LedgerGroupCreateComponent},
   { path: 'LedgerGroup-create/:id', component: LedgerGroupCreateComponent},
+  { path: 'bank-receipt-list', component: BankReceiptListComponent},
+  { path: 'bank-receipt-create', component:BankReceiptCreateComponent},
+  { path: 'bank-receipt-create/:id', component: BankReceiptCreateComponent},
+  { path: 'cash-receipt-list', component: CashReceiptListComponent},
+  { path: 'cash-receipt-create', component:CashReceiptCreateComponent},
+  { path: 'cash-receipt-create/:id', component: CashReceiptCreateComponent},
+  { path: 'cash-payment-list', component: CashPaymentListComponent},
+  { path: 'cash-payment-create', component:CashPaymentCreateComponent},
+  { path: 'cash-payment-create/:id', component: CashPaymentCreateComponent},
+  { path: 'bank-payment-list', component: BankPaymentListComponent},
+  { path: 'bank-payment-create', component:BankPaymentCreateComponent},
+  { path: 'bank-payment-create/:id', component: BankPaymentCreateComponent},
+  { path: 'contra-voucher-list', component: ContraVoucherListComponent},
+  { path: 'contra-voucher-create', component:ContraVoucherCreateComponent},
+  { path: 'contra-voucher-create/:id', component: ContraVoucherCreateComponent},
+  { path: 'journal-voucher-list', component: JournalVoucherListComponent},
+  { path: 'journal-voucher-create', component:JournalVoucherCreateComponent},
+  { path: 'journal-voucher-create/:id', component: JournalVoucherCreateComponent},
 ];
 
 @NgModule({

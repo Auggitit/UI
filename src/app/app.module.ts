@@ -138,6 +138,18 @@ import { HsnListComponent } from './Masters/inventoryMaster/hsn/hsn-list/hsn-lis
 import { HsnCreateComponent } from './Masters/inventoryMaster/hsn/hsn-create/hsn-create.component';
 import { LedgerGroupListComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-list/LedgerGroup-list.component';
 import { LedgerGroupCreateComponent } from './Masters/accountMaster/LedgerGroup/LedgerGroup-create/LedgerGroup-create.component';
+import { BankReceiptListComponent } from './Voucher/BankReceipt/bank-receipt-list/bank-receipt-list.component';
+import { CashReceiptListComponent } from './Voucher/CashReceipt/cash-receipt-list/cash-receipt-list.component';
+import { CashReceiptCreateComponent } from './Voucher/CashReceipt/cash-receipt-create/cash-receipt-create.component';
+import { BankPaymentListComponent } from './Voucher/BankPayment/bank-payment-list/bank-payment-list.component';
+import { BankPaymentCreateComponent } from './Voucher/BankPayment/bank-payment-create/bank-payment-create.component';
+import { CashPaymentListComponent } from './Voucher/CashPayment/cash-payment-list/cash-payment-list.component';
+import { CashPaymentCreateComponent } from './Voucher/CashPayment/cash-payment-create/cash-payment-create.component';
+import { ContraVoucherListComponent } from './Voucher/ContraVoucher/contra-voucher-list/contra-voucher-list.component';
+import { ContraVoucherCreateComponent } from './Voucher/ContraVoucher/contra-voucher-create/contra-voucher-create.component';
+import { JournalVoucherListComponent } from './Voucher/JournalVoucher/journal-voucher-list/journal-voucher-list.component';
+import { JournalVoucherCreateComponent } from './Voucher/JournalVoucher/journal-voucher-create/journal-voucher-create.component';
+import { BankReceiptCreateComponent } from './Voucher/BankReceipt/bank-receipt-create/bank-receipt-create.component';
 
 @NgModule({
   declarations: [
@@ -251,6 +263,18 @@ import { LedgerGroupCreateComponent } from './Masters/accountMaster/LedgerGroup/
     HsnCreateComponent,
     LedgerGroupListComponent,
     LedgerGroupCreateComponent,
+    BankReceiptListComponent,
+    CashReceiptListComponent,
+    CashReceiptCreateComponent,
+    BankPaymentListComponent,
+    BankPaymentCreateComponent,
+    CashPaymentListComponent,
+    CashPaymentCreateComponent,
+    ContraVoucherListComponent,
+    ContraVoucherCreateComponent,
+    JournalVoucherListComponent,
+    JournalVoucherCreateComponent,
+    BankReceiptCreateComponent,
   ],
   imports: [
     BrowserModule,
