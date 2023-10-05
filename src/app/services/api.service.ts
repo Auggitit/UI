@@ -658,7 +658,12 @@ export class ApiService {
       return this.http.get<any>( this.URL + "api/voucher/deleteVoucherEntry?vchno=" + vchno + "&vtype=" + vchtype + "&branch=" +branch + "&fy=" + fy  ).pipe(map((res:any)=>{
         return res;
       }));
-   }
+  }
+  
+  Delete_Voucher(id:any):Observable<any>
+  {
+    return this.http.delete<any>(this.URL +"api/voucher/" + id);
+  }
    Delete_ledger(vchno:any,vchtype:any,branch:any,fy:any)
    {
       return this.http.get<any>( this.URL + "api/accountentries/deteleAllLedger?vchno=" + vchno + "&vtype=" + vchtype + "&branch=" +branch + "&fy=" + fy  ).pipe(map((res:any)=>{

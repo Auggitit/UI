@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
 import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contra-voucher-list',
@@ -30,6 +31,7 @@ export class ContraVoucherListComponent implements OnInit {
   paginationIndex: number = 0;
   vchType = 'Contra';
   tableHeaderAlignValue: string = 'left';
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -125,8 +127,30 @@ export class ContraVoucherListComponent implements OnInit {
 
   onClickEdit(rowData: any) {}
 
-  onClickDelete(rowData: any) {}
-
+  onClickDelete(data: any) {
+    console.log(data,"datares")
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api
+          .Delete_Voucher(data.vch_id)
+          .subscribe((res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Contra Voucher Deleted Successfully',
+            });
+            this.loading = false;
+            this.loadData(data);
+          });
+      }
+    });
+  }
   getFilterData(formValues: any, serverData: any) {
     let newArr: any[] = [];
     let rowIndex = 0;
