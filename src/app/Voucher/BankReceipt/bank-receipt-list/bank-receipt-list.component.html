@@ -5,7 +5,7 @@
       <app-reports-header
         title="BANK RECEIPT LIST"
         [searchField]="true"
-        [reportFormGroupName]="bankReceiptForm"
+        [reportFormGroupName]="BankReceiptForm"
         [saveTypesOptions]="saveAsOptions"
         [SelectSaveOptions]="'SelectSaveOptions'"
         [searchControlName]="'searchValues'"
@@ -14,14 +14,13 @@
         (onClickDownload)="downloadAsPDF()"
       ></app-reports-header>
     </div>
-
     <app-mat-table
-      id="bankReceiptTable"
+      id="BankReceiptTable"
       [columns]="columns"
       [filteredData]="filteredData"
       [paginationIndex]="paginationIndex"
-      [pageCount]="pageCount"
-      [tableGroupName]="bankReceiptForm"
+      [pageCount]="pageCount"      
+      [tableGroupName]="BankReceiptForm"
       [tableHeaderAlign]="tableHeaderAlignValue"
       [needCheckBox]="false"
     >
@@ -29,7 +28,7 @@
         <tr
           *ngFor="let data of item; let i = index"
           style="background-color: white"
-        >
+        >          
           <td
             *ngIf="columns[0].needToShow"
             scope="row"
@@ -37,12 +36,13 @@
               border-top: 1px solid #f0f1f3;
               min-width: 128px;
               max-width: 128px;
-              padding-right: 10px;
               align-items: center;
               justify-content: left;
+              padding-right: 10px;
             "
           >
             {{ data.vch_no }}
+            <!-- <a style="font-weight: 600; color: #13b2e4">{{ data.account_name }}</a> -->
           </td>
           <td
             *ngIf="columns[1].needToShow"
@@ -117,59 +117,59 @@
           <td
           *ngIf="columns[6].needToShow"
           scope="col"
-          style="
-            min-width: 151px;
-            max-width: 151px;
-            border-top: 1px solid #f0f1f3;
-            padding-right: 10px;
-            align-items: center;
-            justify-content: left;
-          "
-        >
-          {{ data.chq_no }}
-        </td>
-        <td
-        *ngIf="columns[7].needToShow"
-        scope="col"
-        style="
-          min-width: 151px;
-          max-width: 151px;
-          border-top: 1px solid #f0f1f3;
-          padding-right: 10px;
-          align-items: center;
-          justify-content: left;
-        "
-      >
-        {{ data.chq_date }}
-      </td>
-      <td
-      *ngIf="columns[8].needToShow"
-      scope="col"
-      style="
-        min-width: 151px;
-        max-width: 151px;
-        border-top: 1px solid #f0f1f3;
-        padding-right: 10px;
-        align-items: center;
-        justify-content: left;
-      "
-    >
-      {{ data.online_ref }}
-    </td>
-    <td
-    *ngIf="columns[9].needToShow"
-    scope="col"
-    style="
-      min-width: 151px;
-      max-width: 151px;
-      border-top: 1px solid #f0f1f3;
-      padding-right: 10px;
-      align-items: center;
-      justify-content: left;
-    "
-  >
-    {{ data.online_ref_date }}
-  </td>
+              style="
+                min-width: 151px;
+                max-width: 151px;
+                border-top: 1px solid #f0f1f3;
+                padding-right: 10px;
+                align-items: center;
+                justify-content: left;
+              "
+          >
+            {{ data.chq_no }}
+          </td>
+          <td
+            *ngIf="columns[7].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.chq_date }}
+          </td>
+          <td
+            *ngIf="columns[8].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
+            "
+          >
+            {{ data.online_ref }}
+          </td>
+          <td
+            *ngIf="columns[9].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
+            "
+          >
+            {{ data.online_ref_date }}
+          </td>
           <td
             *ngIf="columns[10].needToShow"
             scope="col"
@@ -204,17 +204,17 @@
                 Edit
               </button>
               <button
-                mat-menu-item
-                style="
-                  border-bottom: 0.5px solid #959ba433;
-                  margin: 0px 10%;
-                  width: 80%;
-                  color: #ec3900;
-                "
-                (click)="onClickDelete(data)"
-              >
-                Delete
-              </button>
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickDelete(data)"
+                >
+                  Delete
+                </button>
             </mat-menu>
           </td>
         </tr></ng-template
@@ -222,4 +222,3 @@
     >
   </div>
 </div>
-

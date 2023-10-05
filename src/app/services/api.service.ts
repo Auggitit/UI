@@ -647,12 +647,40 @@ export class ApiService {
   {
     return this.http.delete<any>(this.URL +"api/HSN/" + id);
   }
+  GetVoucherList(fdate:any,tdate:any,type:any)
+   {
+     return this.http.get<any>( this.URL + "api/voucher/getVoucherList?fdate="+fdate+"&tdate="+tdate+"&vchtype=" + type).pipe(map((res:any)=>{
+       return res;
+     }));
+   }
+   Delete_voucher(vchno:any,vchtype:any,branch:any,fy:any)
+   {
+      return this.http.get<any>( this.URL + "api/voucher/deleteVoucherEntry?vchno=" + vchno + "&vtype=" + vchtype + "&branch=" +branch + "&fy=" + fy  ).pipe(map((res:any)=>{
+        return res;
+      }));
+   }
+   Delete_ledger(vchno:any,vchtype:any,branch:any,fy:any)
+   {
+      return this.http.get<any>( this.URL + "api/accountentries/deteleAllLedger?vchno=" + vchno + "&vtype=" + vchtype + "&branch=" +branch + "&fy=" + fy  ).pipe(map((res:any)=>{
+        return res;
+      }));
+   }
 
+   Delete_overdue(vchno:any,vchtype:any,branch:any,fy:any)
+   {
+      return this.http.get<any>( this.URL + "api/overdue/deleteOverdue?invno=" + vchno + "&vtype=" + vchtype + "&branch=" +branch + "&fy=" + fy  ).pipe(map((res:any)=>{
+        return res;
+      }));
+   }
+   fetch_voucher_list(fdate:any,tdate:any,type:any){
 
-  fetch_voucher_list(fdate:any,tdate:any,type:any){
     return this.http.get<any>(this.URL + "api/voucher/getVoucherList?fdate="+fdate+"&tdate="+tdate+"&vchtype=" + type).pipe(map((res:any) =>
+
     {
+
       return res;
+
     }));
+
   }
 }

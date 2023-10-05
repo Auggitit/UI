@@ -95,7 +95,7 @@ export class LedgerGroupListComponent implements OnInit {
       let ledgerGroupTemp = [];
       ledgerGroupTemp.push(
         serverData.filter((i: any) =>
-          i.statename
+          i.groupname
             .toLowerCase()
             .includes(formValues.searchValues.toLowerCase())
         )

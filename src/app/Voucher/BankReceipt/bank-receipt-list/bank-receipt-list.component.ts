@@ -1,20 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  dropDownData,
-  exportOptions,
-} from 'src/app/reports/stub/salesOrderStub';
 import { ApiService } from 'src/app/services/api.service';
+import { FormBuilder, FormControlName, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
-import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
+import {
+  dropDownData,
+  exportOptions,
+} from 'src/app/reports/stub/salesOrderStub';
 import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-bank-receipt-list',
@@ -23,13 +22,19 @@ import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confir
 })
 export class BankReceiptListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
-  bankReceiptForm!: FormGroup;
-  saveAsOptions: dropDownData[] = exportOptions;
+  vchno: any;
+  vchType: any;
+  branch: any;
+  fy: any;
   pageCount: number = 10;
   filteredData: any[] = [];
   paginationIndex: number = 0;
-  vchType = 'Bank Receipt';
+  selectAllCheckbox!: FormControlName;
+  BankReceiptForm!: FormGroup;
+  saveAsOptions: dropDownData[] = exportOptions;
+  searchCustomer: any;
   tableHeaderAlignValue: string = 'left';
+  loading: boolean = true;
 
   columns: any[] = [
     {
@@ -43,7 +48,7 @@ export class BankReceiptListComponent implements OnInit {
       sortable: 0,
       name: 'account_name',
       needToShow: true,
-    },
+    },    
     {
       title: 'Ledger Name',
       sortable: 0,
@@ -51,13 +56,13 @@ export class BankReceiptListComponent implements OnInit {
       needToShow: true,
     },
     {
-      title: 'Voucher Date',
+      title: 'VCH Date',
       sortable: 0,
       name: 'vch_date',
       needToShow: true,
     },
     {
-      title: 'Payment mode',
+      title: 'Payment Mode',
       sortable: 0,
       name: 'payment_mode',
       needToShow: true,
@@ -69,7 +74,7 @@ export class BankReceiptListComponent implements OnInit {
       needToShow: true,
     },
     {
-      title: 'CHQ No',
+      title: 'CHQ NO',
       sortable: 0,
       name: 'chq_no',
       needToShow: true,
@@ -94,14 +99,17 @@ export class BankReceiptListComponent implements OnInit {
     },
     { title: 'Action', sortable: 0, name: '', needToShow: true },
   ];
+  selectAll = { isSelected: false };
 
   constructor(
+    public router: Router,
     public api: ApiService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private router: Router
+    public receiptapi: ApiService
   ) {
-    this.bankReceiptForm = this.fb.group({
+    
+    this.BankReceiptForm = this.fb.group({
       selectAllCheckbox: [{ isSelected: false }],
       SelectSaveOptions: [exportOptions[0].id],
       searchValues: [''],
@@ -118,20 +126,18 @@ export class BankReceiptListComponent implements OnInit {
           name: 'account_name',
           needToShow: true,
         },
+        { title: 'Ledger Name', 
+          sortable: 0, 
+          name: 'ledger_name', 
+          needToShow: true },
         {
-          title: 'Ledger Name',
-          sortable: 0,
-          name: 'ledger_name',
-          needToShow: true,
-        },
-        {
-          title: 'Voucher Date',
+          title: 'VCH Date',
           sortable: 0,
           name: 'vch_date',
           needToShow: true,
         },
         {
-          title: 'Payment mode',
+          title: 'Payment Mode',
           sortable: 0,
           name: 'payment_mode',
           needToShow: true,
@@ -143,7 +149,7 @@ export class BankReceiptListComponent implements OnInit {
           needToShow: true,
         },
         {
-          title: 'CHQ No',
+          title: 'CHQ NO',
           sortable: 0,
           name: 'chq_no',
           needToShow: true,
@@ -167,33 +173,26 @@ export class BankReceiptListComponent implements OnInit {
           needToShow: true,
         },
         { title: 'Action', sortable: 0, name: '', needToShow: true },
-      ]
+      ],
     });
-  }
+   }
 
   ngOnInit(): void {
     this.loadData();
-    this.bankReceiptForm.valueChanges.subscribe((values) => this.loadData(values));
+    this.BankReceiptForm.valueChanges.subscribe((values) =>
+      this.loadData(values)
+    );
   }
 
-  loadData(formValues?: any) {
-    this.api.fetch_voucher_list(1, 2, this.vchType).subscribe((res) => {
-      let data = new MatTableDataSource(JSON.parse(res)).filteredData;
-      this.getFilterData(formValues, data);
-    });
+  onClickButton(): void {
+    this.router.navigateByUrl('bank-receipt-create');
   }
-
-  onClickEdit(rowData: any) {}
-
-  onClickDelete(rowData: any) {}
 
   getFilterData(formValues: any, serverData: any) {
     let newArr: any[] = [];
     let rowIndex = 0;
     let rowCount = 0;
-
     for (let data of serverData) {
-      console.log("data one",data)
       if (rowCount === this.pageCount) {
         rowCount = 0;
         rowIndex++;
@@ -201,47 +200,186 @@ export class BankReceiptListComponent implements OnInit {
       if (!newArr[rowIndex]) {
         newArr[rowIndex] = [];
       }
+      if(data.chq_no==null)
+      {
+        data.chq_no = '-';
+      }
+      if(data.chq_date == null)
+      {
+        data.chq_date = '-';
+      }
+      if(data.online_ref == null)
+      {
+        data.online_ref = '-';
+      }
+      if(data.online_ref_date == null)
+      {
+        data.online_ref_date = '-';
+      }
       newArr[rowIndex].push(data);
       rowCount++;
     }
-
     this.filteredData = newArr;
-    console.log(this.filteredData, 'filrteeeeeeee');
-
-    if (formValues?.searchValues.length > 0) {
-      let bankReceiptTemp = [];
-      bankReceiptTemp.push(
+    if (formValues.searchValues.length > 0) {
+      let BankReceiptTemp = [];
+      BankReceiptTemp.push(
         serverData.filter((i: any) =>
-          i.statename
-            .toLowerCase()
+          i.account_name?.toLowerCase()
             .includes(formValues.searchValues.toLowerCase())
         )
       );
-      this.filteredData = bankReceiptTemp;
+      this.filteredData = BankReceiptTemp;
     }
   }
 
-  onClickButton(): void {
-    this.router.navigateByUrl('contra-voucher-create');
+  loadData(formValues?: any) {
+    this.api.GetVoucherList(1,2,'Bank Receipt').subscribe((res) => {
+      let data = new MatTableDataSource(JSON.parse(res)).filteredData;
+      this.getFilterData(formValues, data);
+    });
   }
 
+  onClickEdit(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'EditData',
+        contentText: 'Do you Modify data?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.router.navigate(['bank-receipt-create/' + data.Id], {
+          queryParams: { type: 'edit' },
+        });
+      }
+    });
+  }
+
+  onClickDelete(data: any) {
+    const dialogRef = this.dialog.open(ConfirmationDialogBoxComponent, {
+      data: {
+        iconToDisplay: 'DeleteFile',
+        contentText: 'Do You Want To Delete Data ?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.vchno = data.vch_no;
+        this.vchType = data.vch_type;
+        this.branch = "001";
+        this.fy = "001";
+        this.deletesales();
+        // this.api
+        //   .Delete_voucher(data.vch_no,data.vch_type,'001','001')
+        //   .subscribe((res) => {
+        //     Swal.fire({
+        //       icon: 'success',
+        //       title: 'Deleted!',
+        //       text: 'Bank Receipt Deleted Successfully',
+        //     });
+        //     this.loading = false;
+        //     this.loadData(data);
+        //   });
+      }
+    //   if(result){
+    //     this.api
+    //       .Delete_overdue(data.vch_no,data.vch_type,'001','001')
+    //       .subscribe((res) => {
+    //         Swal.fire({
+    //           icon: 'success',
+    //           title: 'Deleted!',
+    //           text: 'Bank Receipt Deleted Successfully',
+    //         });
+    //         this.loading = false;
+    //         this.loadData(data);
+    //       });
+    //   }
+    //   if(result){
+    //     this.api
+    //       .Delete_ledger(data.vch_no,data.vch_type,'001','001')
+    //       .subscribe((res) => {
+    //         Swal.fire({
+    //           icon: 'success',
+    //           title: 'Deleted!',
+    //           text: 'Bank Receipt Deleted Successfully',
+    //         });
+    //         this.loading = false;
+    //         this.loadData(data);
+    //       });
+    //   }
+    });
+  }
+  deletesales() {
+    // this.vchno = r.vch_no;
+    // this.vchType = r.vch_type;
+    if(this.vchno && this.vchType)
+    {
+      this.deleteExistingEntries().then(res =>
+        {
+          this.loadData();
+        });
+    }
+  }
+
+  deleteExistingEntries() {
+    return new Promise((resolve) => {
+      this.deleteVoucher().then((res) => {
+        this.deleteledger().then((res) => {
+          this.deleteOverdue().then((res) => {
+            resolve({ action: 'success' });
+          });
+        });
+      });
+    });
+  }
+
+  deleteVoucher() {
+    return new Promise((resolve) => {
+      this.receiptapi
+        .Delete_voucher(this.vchno, this.vchType, this.branch, this.fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+
+  deleteledger() {
+    return new Promise((resolve) => {
+      this.receiptapi
+        .Delete_ledger(this.vchno, this.vchType, this.branch, this.fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+  deleteOverdue() {
+    return new Promise((resolve) => {
+      this.receiptapi
+        .Delete_overdue(this.vchno, this.vchType, this.branch, this.fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+// }  
   downloadAsPDF() {
-    if (
-      this.bankReceiptForm.value.SelectSaveOptions === 0 ||
-      this.bankReceiptForm.value.SelectSaveOptions == 'PDF'
-    ) {
+    console.log(
+      'this.BankReceiptForm.value.SelectSaveOptions',
+      this.BankReceiptForm.value.SelectSaveOptions
+    );
+    if (this.BankReceiptForm.value.SelectSaveOptions === 0 || this.BankReceiptForm.value.SelectSaveOptions === 'PDF') {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
 
       html2canvas(data, { scale: 2 }).then(() => {
-        let pdf = new jsPDF('l', 'pt', 'a4');
+        let pdf = new jsPDF('p', 'pt', 'a4');
 
         let tableData = this.filteredData
           .flatMap((item) => item)
           .map((item) => item);
         console.log(tableData, 'tabledata');
         pdf.setLineWidth(2);
-        pdf.text('Bank Receipt', 240, (topValue += 50));
+        pdf.text('BankReceipt Summary', 240, (topValue += 50));
         pdf.setFontSize(12);
 
         autoTable(pdf, {
@@ -260,11 +398,11 @@ export class BankReceiptListComponent implements OnInit {
               dataKey: 'ledger_name',
             },
             {
-              header: 'Voucher Date',
+              header: 'VCH Date',
               dataKey: 'vch_date',
             },
             {
-              header: 'Payment mode',
+              header: 'Payment Mode',
               dataKey: 'payment_mode',
             },
             {
@@ -272,7 +410,7 @@ export class BankReceiptListComponent implements OnInit {
               dataKey: 'amount',
             },
             {
-              header: 'CHQ No',
+              header: 'CHQ NO',
               dataKey: 'chq_no',
             },
             {
@@ -288,6 +426,7 @@ export class BankReceiptListComponent implements OnInit {
               dataKey: 'online_ref_date',
             }
           ],
+          
           startY: (topValue += 30),
           theme: 'striped',
         });
@@ -299,26 +438,20 @@ export class BankReceiptListComponent implements OnInit {
       var u = URL.createObjectURL(blob);
       window.open(u); */
 
-      let element = document.getElementById('bankReceiptTable')!;
+      let element = document.getElementById('BankReceiptTable')!;
 
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       wb.Props = {
-        Title: 'Bank Receipt List',
+        Title: 'BankReceipt List',
       };
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [{ wch: 7 }, { wch: 15 }, { wch: 45 }, { wch: 45 }];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Bank Receipt Summary']], {
-        origin: 'E1',
-      });
-      XLSX.utils.sheet_add_aoa(
-        ws,
-        [['Vch No', 'Account Name', 'Ledger Name','Voucher Date','Payment mode','Amount','CHQ No','CHQ Date','Online Ref No', 'Online Ref Date']],
-        { origin: 'A3' }
-      );
+      XLSX.utils.sheet_add_aoa(ws, [['BankReceipt Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(ws, [['Vch No', 'Account Name', 'Ledger Name', 'VCH Date', 'Payment Mode', 'Amount', 'CHQ No', 'CHQ Date', 'Online Ref No', 'Online Ref Date']], { origin: 'A3' });
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
-      XLSX.utils.book_append_sheet(wb, ws, 'Bank Receipt Summary');
-      XLSX.writeFile(wb, 'Bank Receipt Report.xlsx');
+      XLSX.utils.book_append_sheet(wb, ws, 'BankReceipt Summary');
+      XLSX.writeFile(wb, 'BankReceipt Report.xlsx');
     }
   }
 }
