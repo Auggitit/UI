@@ -1,5 +1,154 @@
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
-    <p>contra-voucher-list works!</p>
+    <div id="contentToSave" #contentToSave></div>
+    <div class="pb-3">
+      <app-reports-header
+        title="LIST OF CONTRA VOUCHER"
+        [searchField]="true"
+        [reportFormGroupName]="contraVoucherForm"
+        [saveTypesOptions]="saveAsOptions"
+        [SelectSaveOptions]="'SelectSaveOptions'"
+        [searchControlName]="'searchValues'"
+        buttonTitle="Create Contra Voucher"
+        (onClickCreateButton)="onClickButton()"
+        (onClickDownload)="downloadAsPDF()"
+      ></app-reports-header>
+    </div>
+
+    <app-mat-table
+      id="contraVoucherTable"
+      [columns]="columns"
+      [filteredData]="filteredData"
+      [paginationIndex]="paginationIndex"
+      [pageCount]="pageCount"
+      [tableGroupName]="contraVoucherForm"
+      [tableHeaderAlign]="tableHeaderAlignValue"
+      [needCheckBox]="false"
+    >
+      <ng-template let-item>
+        <tr
+          *ngFor="let data of item; let i = index"
+          style="background-color: white"
+        >
+          <td
+            *ngIf="columns[0].needToShow"
+            scope="row"
+            style="
+              border-top: 1px solid #f0f1f3;
+              min-width: 128px;
+              max-width: 128px;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.vch_no }}
+          </td>
+          <td
+            *ngIf="columns[1].needToShow"
+            scope="col"
+            style="
+              min-width: 111px;
+              max-width: 111px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.account_name }}
+          </td>
+          <td
+            *ngIf="columns[2].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.ledger_name }}
+          </td>
+          <td
+            *ngIf="columns[3].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.vch_date }}
+          </td>
+          <td
+            *ngIf="columns[4].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.amount }}
+          </td>
+          <td
+            *ngIf="columns[5].needToShow"
+            scope="col"
+            style="
+              color: #667085;
+              min-width: 75px;
+              max-width: 75px;
+              border-top: 1px solid #f0f1f3;
+              padding-left: 15px;
+            "
+          >
+            <i
+              style="
+                background-color: rgba(84, 130, 10, 0.6);
+                border-radius: 4px;
+                padding-top: 2px;
+              "
+              class="bi bi-three-dots-vertical"
+              [matMenuTriggerFor]="threeDotOptions"
+            >
+            </i>
+            <mat-menu #threeDotOptions="matMenu" style="width: 200%">
+              <button
+                mat-menu-item
+                style="
+                  border-bottom: 0.5px solid #959ba433;
+                  margin: 0px 10%;
+                  width: 80%;
+                "
+                (click)="onClickEdit(data)"
+              >
+                Edit
+              </button>
+              <button
+                mat-menu-item
+                style="
+                  border-bottom: 0.5px solid #959ba433;
+                  margin: 0px 10%;
+                  width: 80%;
+                  color: #ec3900;
+                "
+                (click)="onClickDelete(data)"
+              >
+                Delete
+              </button>
+            </mat-menu>
+          </td>
+        </tr></ng-template
+      ></app-mat-table
+    >
   </div>
 </div>

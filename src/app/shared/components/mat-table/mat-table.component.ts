@@ -22,6 +22,7 @@ export class MatTableComponent implements OnInit {
   @Input() selectAllCheckbox!: FormControlName | any;
   @Input() tableGroupName!: FormGroup;
   @Input() isSelectAll!: any;
+  @Input() needCheckBox: boolean = true;
   @ContentChild(TemplateRef) tableRowRef!: TemplateRef<any>;
   @Input() tableHeaderAlign: string = 'center';
   constructor() {}

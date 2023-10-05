@@ -647,4 +647,12 @@ export class ApiService {
   {
     return this.http.delete<any>(this.URL +"api/HSN/" + id);
   }
+
+
+  fetch_voucher_list(fdate:any,tdate:any,type:any){
+    return this.http.get<any>(this.URL + "api/voucher/getVoucherList?fdate="+fdate+"&tdate="+tdate+"&vchtype=" + type).pipe(map((res:any) =>
+    {
+      return res;
+    }));
+  }
 }

@@ -181,7 +181,7 @@ export class StateMasterListComponent implements OnInit {
   }
 
   downloadAsPDF() {
-    if (this.stateForm.value.SelectSaveOptions === 0) {
+    if (this.stateForm.value.SelectSaveOptions === 0 || this.stateForm.value.SelectSaveOptions== 'PDF') {
       let topValue = 0;
       var data = this.contentToSave.nativeElement;
 
