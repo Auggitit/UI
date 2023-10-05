@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bank-payment-list',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BankPaymentListComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) {
+
+  }
 
   ngOnInit(): void {
+  }
+
+  onClickCreate() {
+    this.router.navigateByUrl('bank-payment-create');
   }
 
 }
