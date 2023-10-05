@@ -188,16 +188,24 @@ export class ContraVoucherListComponent implements OnInit {
           body: tableData,
           columns: [
             {
-              header: 'COUNTRY',
-              dataKey: 'country',
+              header: 'Vch No',
+              dataKey: 'vch_no',
             },
             {
-              header: 'STATE_NAME',
-              dataKey: 'statename',
+              header: 'Account Name',
+              dataKey: 'account_name',
             },
             {
-              header: 'STATE_CODE',
-              dataKey: 'stetecode',
+              header: 'Ledger Name',
+              dataKey: 'ledger_name',
+            },
+            {
+              header: 'Voucher Date',
+              dataKey: 'vch_date',
+            },
+            {
+              header: 'Amount',
+              dataKey: 'amount',
             },
           ],
           startY: (topValue += 30),
@@ -225,7 +233,7 @@ export class ContraVoucherListComponent implements OnInit {
       });
       XLSX.utils.sheet_add_aoa(
         ws,
-        [['So.No', 'COUNTRY', 'STATE_NAME', 'STATE_CODE']],
+        [['Vch No','Account Name','Ledger Name','Voucher Date','Amount']],
         { origin: 'A3' }
       );
       XLSX.utils.sheet_add_dom(ws, element, { origin: 'A5' });
