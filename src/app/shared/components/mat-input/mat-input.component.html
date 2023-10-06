@@ -2,7 +2,7 @@
   <div
     class="col-12 d-flex flex-wrap align-items-center justify-content-between"
   >
-    <p style="color: #667085; font-weight: 600; margin: 0px">
+    <p style="color: #667085; font-weight: 600; margin: 0px; width:50%">
       {{ labelText }} <span *ngIf="isRequired" style="color: red">*</span>
     </p>
     <div>
@@ -16,6 +16,7 @@
           matInput
           autocomplete="off"
           [formControlName]="controlName"
+          [readonly]="readOnly"
         />
       </mat-form-field>
     </div>
