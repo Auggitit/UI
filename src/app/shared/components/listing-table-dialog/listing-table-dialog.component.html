@@ -140,7 +140,6 @@
               class="form-control text-end"
               type="number"
               [disabled]="!data.checked"
-              
               (keyup)="onAmountKeydown(i, paginationIndex, $event)"
             />
           </td></tr
@@ -165,7 +164,7 @@
       buttonWidth="100px"
       buttonColor="#419FC7"
       textColor="#FFFFFF"
-      [mat-dialog-close]="true"
+      [mat-dialog-close]="totalAmoutToPay"
       cdkFocusInitial
       >Select</app-mat-button
     >

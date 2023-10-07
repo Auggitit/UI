@@ -154,8 +154,13 @@ export class BankPaymentCreateComponent implements OnInit {
       data: {
         ledgerCode: ledgercode,
         _branch: this._branch,
-        _fy: this._fy
+        _fy: this._fy,
       },
+    });
+    dialogRef.afterClosed().subscribe((totalAmoutToPay) => {
+      if (totalAmoutToPay) {
+        console.log("fileterdata amount",totalAmoutToPay)
+      }
     });
     /*       dialogRef.afterClosed().subscribe((result) => {
         if (result) {

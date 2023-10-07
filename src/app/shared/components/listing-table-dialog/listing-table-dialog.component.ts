@@ -220,7 +220,9 @@ export class ListingTableDialogComponent implements OnInit {
 
   onClickSelect() {}
 
-  onClickCancel() {}
+  onClickCancel() {
+    this.dialogRef.close();
+  }
 
   applyFilter(event: any) {
     console.log('event', event);
