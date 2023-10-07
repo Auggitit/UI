@@ -17,6 +17,8 @@ import { map, Observable, startWith } from 'rxjs';
 import { VoucherService } from 'src/app/services/voucher.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Guid } from 'guid-typescript';
+import { MatDialog } from '@angular/material/dialog';
+import { ListingTableDialogComponent } from 'src/app/shared/components/listing-table-dialog/listing-table-dialog.component';
 
 export interface Acc {
   companyDisplayName: string;
@@ -80,6 +82,7 @@ export class BankReceiptCreateComponent implements OnInit {
     public fb: FormBuilder,
     public activatedRoute: ActivatedRoute,
     public receiptapi: VoucherService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -124,14 +127,31 @@ export class BankReceiptCreateComponent implements OnInit {
   }
 
   loadPendingInvoices(ledgercode: any) {
-    this.receiptapi.getPendingVendorInvoices(ledgercode,this._branch,this._fy).subscribe((res) => {
-      if (JSON.parse(res).length > 0) {
-        this.dataSource = new MatTableDataSource(JSON.parse(res));
-        this.datalength = JSON.parse(res).length;
-      } else {
-        this.datalength = 0;
+    console.log('ledgercode', ledgercode);
+    //this.fetchPendingData(ledgercode);
+
+    // console.log("pending data",this.dataSource)
+    const dialogRef = this.dialog.open(ListingTableDialogComponent, {
+      data: {
+        ledgerCode: ledgercode,
+        _branch: this._branch,
+        _fy: this._fy,
+      },
+    });
+    dialogRef.afterClosed().subscribe((totalAmoutToPay) => {
+      if (totalAmoutToPay) {
+        this.amount = totalAmoutToPay;
+        console.log("fileterdata amount",totalAmoutToPay)
       }
     });
+    // this.receiptapi.getPendingVendorInvoices(ledgercode,this._branch,this._fy).subscribe((res) => {
+    //   if (JSON.parse(res).length > 0) {
+    //     this.dataSource = new MatTableDataSource(JSON.parse(res));
+    //     this.datalength = JSON.parse(res).length;
+    //   } else {
+    //     this.datalength = 0;
+    //   }
+    // });
   }
 
   setValidations() {
@@ -156,6 +176,8 @@ export class BankReceiptCreateComponent implements OnInit {
     if (event == 'CHEQUE') {
       this.showChequeFields = true;
       this.showOnlineFields = false;
+      this.BankReceiptForm.controls['crefno'].setValue(null);
+      this.BankReceiptForm.controls['crefdate'].setValue(null);
     } else if ((event = 'ONLINE')) {
       this.showChequeFields = false;
       this.showOnlineFields = true;
@@ -212,11 +234,13 @@ export class BankReceiptCreateComponent implements OnInit {
   }
 
   submit() {
+    console.log(this.BankReceiptForm.value);
     if (!this.BankReceiptForm.valid) {
       this.loading = true;
       setTimeout(() => {        
           if (this.isCreateBankReceipt) {
             this.save();
+
           } else if (!this.isCreateBankReceipt) {
             this.update();
           }
@@ -232,7 +256,6 @@ export class BankReceiptCreateComponent implements OnInit {
   update() {}
 
   save() {
-    this.amount = 0;
       this.insertDRLedger().then((res) => {
         this.insertCRLedger().then((res) => {
           this.insertVoucher().then((res) => {
@@ -240,6 +263,9 @@ export class BankReceiptCreateComponent implements OnInit {
           });
         });
       });
+      // this.loading = false;
+      // this.clear();
+      // this.getVoucherMaxNo(this.vchType);
     // }
   }
 
@@ -268,7 +294,7 @@ export class BankReceiptCreateComponent implements OnInit {
         {
           id: this.getGUID(),
           acccode: this.drAccountCode.toString(),
-          vchno: this.BankReceiptForm.value.cvoucherno,
+          vchno: this.BankReceiptForm.value.cvoucherno.toString(),
           vchdate: this.vchdate,
           vchtype: this.vchType,
           entrytype: 'DR',
@@ -301,7 +327,7 @@ export class BankReceiptCreateComponent implements OnInit {
         {
           id: this.getGUID(),
           acccode: this.crAccountCode.toString(),
-          vchno: this.BankReceiptForm.value.cvoucherno,
+          vchno: this.BankReceiptForm.value.cvoucherno.toString(),
           vchdate: this.BankReceiptForm.value.vchdate,
           vchtype: this.vchType,
           entrytype: 'CR',
@@ -348,6 +374,7 @@ export class BankReceiptCreateComponent implements OnInit {
     });
   }
   insertPaymentDues() {
+    var sample = "singhu";
     // if (this.dataSource != undefined) {
     //   for (let i = 0; i < this.dataSource.filteredData.length; i++) {
     //     var invno = this.dataSource.filteredData[i].vchno;
