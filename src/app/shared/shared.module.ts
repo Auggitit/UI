@@ -45,6 +45,7 @@ import { DetailsTableComponent } from './components/details-table/details-table.
 import { ReferenceDetailsComponent } from './components/reference-details/reference-details.component';
 import { MatInputComponent } from './components/mat-input/mat-input.component';
 import { ActionButtonComponent } from './components/action-button/action-button.component';
+import { ListingTableDialogComponent } from './components/listing-table-dialog/listing-table-dialog.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { ActionButtonComponent } from './components/action-button/action-button.
     ReferenceDetailsComponent,
     MatInputComponent,
     ActionButtonComponent,
+    ListingTableDialogComponent,
   ],
   imports: [
     CommonModule,

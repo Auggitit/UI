@@ -1,0 +1,173 @@
+<div mat-dialog-content style="padding: 20px; text-align: center">
+  Unpaid Invoices
+  <div
+    mat-dialog-actions
+    class="mt-3 mb-3"
+    style="justify-content: right; gap: 20px"
+  >
+    <app-mat-table
+      id="stateTable"
+      [columns]="columns"
+      [paginationIndex]="paginationIndex"
+      [pageCount]="pageCount"
+      [selectAllCheckbox]="selectAllCheckbox"
+      [tableGroupName]="overDueSelectionForm"
+      [isSelectAll]="selectAll"
+      [tableHeaderAlign]="'tableHeaderAlignValue'"
+      [filteredData]="filteredData"
+    >
+      <ng-template let-item>
+        <tr
+          *ngFor="let data of item; let i = index"
+          style="background-color: white"
+        >
+          <td
+            scope="row"
+            class="d-flex pl-3"
+            style="
+              color: #667085;
+              min-width: 86px;
+              /* max-width: 86px; */
+              align-items: center;
+              justify-content: left;
+              height: inherit;
+              border-top: 1px solid #f0f1f3;
+            "
+          >
+            <input
+              type="checkbox"
+              id="customCheck1"
+              style="min-height: 18px; min-width: 18px"
+              [checked]="selectAll.isSelected"
+              (change)="onSelectPaymentItem(i, paginationIndex)"
+            />
+            <p class="m-0 pl-2" scope="row">
+              {{ i + 1 + paginationIndex * pageCount }}
+            </p>
+          </td>
+          <td
+            *ngIf="columns[0].needToShow"
+            scope="row"
+            style="
+              border-top: 1px solid #f0f1f3;
+              min-width: 150px;
+              max-width: 150;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.grndate.substring(0, 10) }}
+          </td>
+          <td
+            *ngIf="columns[1].needToShow"
+            scope="col"
+            style="
+              min-width: 150px;
+              max-width: 150px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.grndate.substring(0, 10) }}
+          </td>
+          <td
+            *ngIf="columns[2].needToShow"
+            scope="col"
+            style="
+              min-width: 150px;
+              max-width: 150px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.dueon.substring(0, 10) }}
+          </td>
+          <td
+            *ngIf="columns[3].needToShow"
+            scope="col"
+            style="
+              min-width: 150px;
+              max-width: 150px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.invamount }}
+          </td>
+          <td
+            *ngIf="columns[4].needToShow"
+            scope="col"
+            style="
+              min-width: 150px;
+              max-width: 150px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.dueamount }}
+          </td>
+          <td
+            *ngIf="columns[5].needToShow"
+            scope="col"
+            style="
+              min-width: 210px;
+              max-width: 210px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            <!-- <app-mat-input
+              [groupName]="overDueSelectionForm"
+              labelText=""
+              [placeholderText]="'Amount'"
+              [controlName]="'amountToPay'"
+              [isRequired]="false"
+              [readOnly]="!data.checked"
+              (onEnterText)="onAmountKeydown"
+            ></app-mat-input> -->
+            <input
+              class="form-control text-end"
+              type="number"
+              [disabled]="!data.checked"
+              
+              (keyup)="onAmountKeydown(i, paginationIndex, $event)"
+            />
+          </td></tr
+      ></ng-template>
+    </app-mat-table>
+  </div>
+  <div>
+    <app-mat-button
+      (click)="onClickCancel()"
+      title="Cancel"
+      buttonHeight="40px"
+      buttonWidth="100px"
+      buttonColor="#FFFFFF"
+      borderValues="0.5px solid #419FC7"
+      textColor="#419FC7"
+    ></app-mat-button>
+    <app-mat-button
+      (click)="onClickSelect()"
+      title="Select"
+      buttonHeight="40px"
+      maximumWidth="100px"
+      buttonWidth="100px"
+      buttonColor="#419FC7"
+      textColor="#FFFFFF"
+      [mat-dialog-close]="true"
+      cdkFocusInitial
+      >Select</app-mat-button
+    >
+  </div>
+</div>

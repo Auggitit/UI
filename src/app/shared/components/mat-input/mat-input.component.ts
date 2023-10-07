@@ -15,6 +15,7 @@ export class MatInputComponent implements OnInit {
   @Input() modelName: any;
   @Input() isRequired: boolean = true;
   @Input() readOnly: boolean = false;
+
   value: any = 'values';
 
   constructor() {}
