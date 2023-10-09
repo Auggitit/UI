@@ -1,6 +1,225 @@
-<p>cash-receipt-list works!</p>
 <div class="content-wrapper">
   <div class="p-4" style="background-color: #f9f9fc">
-    <p>cash-receipt-list works!</p>
+    <div id="contentToSave" #contentToSave></div>
+    <div class="pb-3">
+      <app-reports-header
+        title="CASH RECEIPT LIST"
+        [searchField]="true"
+        [reportFormGroupName]="CashReceiptForm"
+        [saveTypesOptions]="saveAsOptions"
+        [SelectSaveOptions]="'SelectSaveOptions'"
+        [searchControlName]="'searchValues'"
+        buttonTitle="Create Cash Receipt"
+        (onClickCreateButton)="onClickButton()"
+        (onClickDownload)="downloadAsPDF()"
+      ></app-reports-header>
+    </div>
+    <app-mat-table
+      id="CashReceiptTable"
+      [columns]="columns"
+      [filteredData]="filteredData"
+      [paginationIndex]="paginationIndex"
+      [pageCount]="pageCount"      
+      [tableGroupName]="CashReceiptForm"
+      [tableHeaderAlign]="tableHeaderAlignValue"
+      [needCheckBox]="false"
+    >
+      <ng-template let-item>
+        <tr
+          *ngFor="let data of item; let i = index"
+          style="background-color: white"
+        >          
+          <td
+            *ngIf="columns[0].needToShow"
+            scope="row"
+            style="
+              border-top: 1px solid #f0f1f3;
+              min-width: 128px;
+              max-width: 128px;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
+            "
+          >
+            {{ data.vch_no }}
+            <!-- <a style="font-weight: 600; color: #13b2e4">{{ data.account_name }}</a> -->
+          </td>
+          <td
+            *ngIf="columns[1].needToShow"
+            scope="col"
+            style="
+              min-width: 111px;
+              max-width: 111px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.account_name }}
+          </td>
+          <td
+            *ngIf="columns[2].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.ledger_name }}
+          </td>
+          <td
+            *ngIf="columns[3].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.vch_date }}
+          </td>
+          <td
+          *ngIf="columns[4].needToShow"
+          scope="col"
+          style="
+            min-width: 151px;
+            max-width: 151px;
+            border-top: 1px solid #f0f1f3;
+            padding-right: 10px;
+            align-items: center;
+            justify-content: left;
+          "
+        >
+          {{ data.payment_mode }}
+        </td>
+          <td
+            *ngIf="columns[5].needToShow"
+            scope="col"
+            style="
+              min-width: 151px;
+              max-width: 151px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.amount }}
+          </td>
+          <td
+          *ngIf="columns[6].needToShow"
+          scope="col"
+              style="
+                min-width: 151px;
+                max-width: 151px;
+                border-top: 1px solid #f0f1f3;
+                padding-right: 10px;
+                align-items: center;
+                justify-content: left;
+              "
+          >
+            {{ data.chq_no }}
+          </td>
+          <td
+            *ngIf="columns[7].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              padding-right: 10px;
+              align-items: center;
+              justify-content: left;
+            "
+          >
+            {{ data.chq_date }}
+          </td>
+          <td
+            *ngIf="columns[8].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
+            "
+          >
+            {{ data.online_ref }}
+          </td>
+          <td
+            *ngIf="columns[9].needToShow"
+            scope="col"
+            style="
+              min-width: 130px;
+              max-width: 130px;
+              border-top: 1px solid #f0f1f3;
+              align-items: center;
+              justify-content: left;
+              padding-right: 10px;
+            "
+          >
+            {{ data.online_ref_date }}
+          </td>
+          <td
+            *ngIf="columns[10].needToShow"
+            scope="col"
+            style="
+              color: #667085;
+              min-width: 75px;
+              max-width: 75px;
+              border-top: 1px solid #f0f1f3;
+              padding-left: 15px;
+            "
+          >
+            <i
+              style="
+                background-color: rgba(84, 130, 10, 0.6);
+                border-radius: 4px;
+                padding-top: 2px;
+              "
+              class="bi bi-three-dots-vertical"
+              [matMenuTriggerFor]="threeDotOptions"
+            >
+            </i>
+            <mat-menu #threeDotOptions="matMenu" style="width: 200%">
+              <button
+                mat-menu-item
+                style="
+                  border-bottom: 0.5px solid #959ba433;
+                  margin: 0px 10%;
+                  width: 80%;
+                "
+                (click)="onClickEdit(data)"
+              >
+                Edit
+              </button>
+              <button
+                  mat-menu-item
+                  style="
+                    border-bottom: 0.5px solid #959ba433;
+                    margin: 0px 10%;
+                    width: 80%;
+                    color: #ec3900;
+                  "
+                  (click)="onClickDelete(data)"
+                >
+                  Delete
+                </button>
+            </mat-menu>
+          </td>
+        </tr></ng-template
+      ></app-mat-table
+    >
   </div>
 </div>
+
