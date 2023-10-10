@@ -248,7 +248,7 @@ export class CashReceiptListComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.router.navigate(['cash-receipt-create/' + data.Id], {
+        this.router.navigate(['cash-receipt-create/' + data.vch_no], {
           queryParams: { type: 'edit' },
         });
       }

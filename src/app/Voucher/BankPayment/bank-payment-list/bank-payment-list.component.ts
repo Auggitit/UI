@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-bank-payment-list',
   templateUrl: './bank-payment-list.component.html',
-  styleUrls: ['./bank-payment-list.component.scss']
+  styleUrls: ['./bank-payment-list.component.scss'],
 })
 export class BankPaymentListComponent implements OnInit {
   @ViewChild('contentToSave', { static: false }) contentToSave!: ElementRef;
@@ -228,10 +228,16 @@ export class BankPaymentListComponent implements OnInit {
       );
       this.filteredData = BankPaymentTemp;
     }
+    console.log("fil data",this.filteredData);
+    
   }
 
   loadData(formValues?: any) {
+    console.log("load data called");
+    
     this.api.GetVoucherList(1, 2, this.vchType).subscribe((res) => {
+      console.log(res);
+      
       let data = new MatTableDataSource(JSON.parse(res)).filteredData;
       this.getFilterData(formValues, data);
     });
@@ -244,9 +250,13 @@ export class BankPaymentListComponent implements OnInit {
         contentText: 'Do you Modify data?',
       },
     });
+    console.log('data', data);
+
+    console.log('id', data.Id);
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.router.navigate(['bank-payment-create/' + data.Id], {
+        this.router.navigate(['bank-payment-create/' + data.vch_no], {
           queryParams: { type: 'edit' },
         });
       }
@@ -446,7 +456,9 @@ export class BankPaymentListComponent implements OnInit {
       var ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([['']]);
       var wsCols = [{ wch: 7 }, { wch: 15 }, { wch: 45 }, { wch: 45 }];
       ws['!cols'] = wsCols;
-      XLSX.utils.sheet_add_aoa(ws, [['Bank Payment Summary']], { origin: 'E1' });
+      XLSX.utils.sheet_add_aoa(ws, [['Bank Payment Summary']], {
+        origin: 'E1',
+      });
       XLSX.utils.sheet_add_aoa(
         ws,
         [
@@ -471,4 +483,3 @@ export class BankPaymentListComponent implements OnInit {
     }
   }
 }
-

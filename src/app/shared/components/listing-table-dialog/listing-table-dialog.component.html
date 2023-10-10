@@ -38,7 +38,9 @@
               type="checkbox"
               id="customCheck1"
               style="min-height: 18px; min-width: 18px"
-              [checked]="selectAll.isSelected"
+              [checked]="
+                selectAll.isSelected || (data.checked && data.received != 0)
+              "
               (change)="onSelectPaymentItem(i, paginationIndex)"
             />
             <p class="m-0 pl-2" scope="row">
@@ -141,6 +143,7 @@
               type="number"
               [disabled]="!data.checked"
               (keyup)="onAmountKeydown(i, paginationIndex, $event)"
+              [value]="data.isCreateBankPayment ? '' : data.received"
             />
           </td></tr
       ></ng-template>
@@ -164,7 +167,7 @@
       buttonWidth="100px"
       buttonColor="#419FC7"
       textColor="#FFFFFF"
-      [mat-dialog-close]="totalAmoutToPay"
+      [mat-dialog-close]="paymentData"
       cdkFocusInitial
       >Select</app-mat-button
     >

@@ -87,18 +87,31 @@
                   </p>
                   <mat-form-field appearance="outline" style="width: 201px">
                     <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
-                    <input matInput placeholder="Select Account" aria-label="Select Account" #eacc
-                      [formControl]="cusSearch" [matAutocomplete]="cusaccauto" [(ngModel)]="drAccount">
+                    <input
+                      matInput
+                      placeholder="Select Account"
+                      aria-label="Select Account"
+                      #eacc
+                      [formControl]="cusSearch"
+                      [matAutocomplete]="cusaccauto"
+                      [(ngModel)]="drAccount"
+                    />
                     <mat-autocomplete #cusaccauto="matAutocomplete">
-                      <cdk-virtual-scroll-viewport [ngStyle]="{height: '200px'}" itemSize="25">
-                        <mat-option *ngFor="let r of filteredCusAccounts | async" [value]="r.companyDisplayName"
-                          (onSelectionChange)="customerChanged($event,r)">
+                      <cdk-virtual-scroll-viewport
+                        [ngStyle]="{ height: '200px' }"
+                        itemSize="25"
+                      >
+                        <mat-option
+                          *ngFor="let r of filteredCusAccounts | async"
+                          [value]="r.companyDisplayName"
+                          (onSelectionChange)="customerChanged($event, r)"
+                        >
                           <span>{{ r.companyDisplayName }}</span>
                         </mat-option>
                       </cdk-virtual-scroll-viewport>
                     </mat-autocomplete>
                   </mat-form-field>
-<!--                   <app-mat-select-box
+                  <!--                   <app-mat-select-box
                     [formOptions]="customerData"
                     [controlName]="'ccustomercode'"
                     [label]="'Customer Name'"
@@ -120,12 +133,25 @@
                   </p>
                   <mat-form-field appearance="outline" style="width: 201px">
                     <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
-                    <input matInput placeholder="Select Account" aria-label="Select Account" #eacc
-                      [formControl]="accSearch" [matAutocomplete]="accauto" [(ngModel)]="crAccount">
+                    <input
+                      matInput
+                      placeholder="Select Account"
+                      aria-label="Select Account"
+                      #eacc
+                      [formControl]="accSearch"
+                      [matAutocomplete]="accauto"
+                      [(ngModel)]="crAccount"
+                    />
                     <mat-autocomplete #accauto="matAutocomplete">
-                      <cdk-virtual-scroll-viewport [ngStyle]="{height: '200px'}" itemSize="25">
-                        <mat-option *ngFor="let r of filteredAccounts | async" [value]="r.companyDisplayName"
-                          (onSelectionChange)="ledgerChanged($event,r)">
+                      <cdk-virtual-scroll-viewport
+                        [ngStyle]="{ height: '200px' }"
+                        itemSize="25"
+                      >
+                        <mat-option
+                          *ngFor="let r of filteredAccounts | async"
+                          [value]="r.companyDisplayName"
+                          (onSelectionChange)="ledgerChanged($event, r)"
+                        >
                           <span>{{ r.companyDisplayName }}</span>
                         </mat-option>
                       </cdk-virtual-scroll-viewport>

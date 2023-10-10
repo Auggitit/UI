@@ -6,7 +6,7 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   dropDownData,
   exportOptions,
@@ -16,10 +16,16 @@ import Swal from 'sweetalert2';
 import { map, Observable, startWith } from 'rxjs';
 import { VoucherService } from 'src/app/services/voucher.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { Guid } from 'guid-typescript';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmmsgComponent } from 'src/app/dialogs/confirmmsg/confirmmsg.component';
+import { SuccessmsgComponent } from 'src/app/dialogs/successmsg/successmsg.component';
+import { ConfirmationDialogBoxComponent } from 'src/app/shared/components/confirmation-dialog-box/confirmation-dialog-box.component';
 import { ListingTableDialogComponent } from 'src/app/shared/components/listing-table-dialog/listing-table-dialog.component';
-
+import { Guid } from 'guid-typescript';
+export interface Acc {
+  companyDisplayName: string;
+  ledgerCode: string;
+}
 export interface Acc {
   companyDisplayName: string;
   ledgerCode: string;
@@ -32,12 +38,12 @@ export interface Acc {
 
 
 export class BankReceiptCreateComponent implements OnInit {
-  BankReceiptForm!: FormGroup;
+  bankReceiptForm!: FormGroup;
+  oldid: any;
   vchType = 'Bank Receipt';
   vchdate: any;
   chqdate: any;
   refdate: any;
-  amount: any;
   saveAsOptions: dropDownData[] = exportOptions;
   customerData: dropDownData[] = [];
   showChequeFields: boolean = false;
@@ -47,6 +53,7 @@ export class BankReceiptCreateComponent implements OnInit {
   _company = '001';
   _branch = '001';
   _fy = '001';
+  vchno: any;
 
   drAccount: any;
   crAccount: any;
@@ -64,6 +71,7 @@ export class BankReceiptCreateComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   datalength: any;
 
+  paymentList: any = [];
   paymentTypeData: dropDownData[] = [
     { name: 'BILL BY BILL', id: 'BILL BY BILL' },
     { name: 'ON ACCOUNT', id: 'ON ACCOUNT' },
@@ -74,43 +82,120 @@ export class BankReceiptCreateComponent implements OnInit {
     { name: 'CHEQUE', id: 'CHEQUE' },
     { name: 'ONLINE', id: 'ONLINE' },
   ];
-  oldid: any;
 
   constructor(
     public api: ApiService,
     private router: Router,
     public fb: FormBuilder,
-    public activatedRoute: ActivatedRoute,
     public receiptapi: VoucherService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.getVoucherMaxNo(this.vchType);
     this.setValidations();
-    //this.loadCustomers();
     this.loadVendors();
     this.loadAccounts();
-    this.vchdate = new Date();
-    this.chqdate = new Date();
-    this.refdate = new Date();
-    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
-    this.BankReceiptForm
+    this.bankReceiptForm
       .get('cpaymentmode')
       ?.valueChanges.subscribe((change) => {
         this.onPaymentModeChange(change);
       });
+
+    this.oldid = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log('oldid', this.oldid);
+
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.isCreateBankReceipt = false;
+      if (this.oldid !== null) {
+        this.vchno = decodeURIComponent(this.oldid).trim();
+        this.loadPreviousBills();
+      }
+    } else {
+      this.vchdate = new Date();
+      this.chqdate = new Date();
+      this.refdate = new Date();
+    }
+    this.getVoucherMaxNo(this.vchType);
   }
 
-  getVoucherMaxNo(vtype: any) {
+  loadPreviousBills() {
+    this.loadSavedVoucherList(this.vchno, this.vchType).then((res) => {
+      this.loadSavedInvoicesList(this.drAccountCode, this.vchno);
+    });
+  }
+
+  loadSavedVoucherList(vchno: any, vchtype: any) {
     return new Promise((resolve) => {
-      this.receiptapi.getMaxInvoiceNo(vtype).subscribe((res) => {
-        this.BankReceiptForm.patchValue({
-          cvoucherno: res,
-        });
-        resolve({ action: 'success' });
+      this.receiptapi.getVoucherListForEdit(vchno, vchtype).subscribe((res) => {
+        if (JSON.parse(res).length > 0) {
+          var val = JSON.parse(res);
+          console.log('update fetched val', val);
+
+          this.vchdate = val[0].vchdate;
+          this.drAccountCode = val[0].ledgercode;
+          this.drAccount = val[0].ledgername;
+          this.crAccountCode = val[0].acccode;
+          this.crAccount = val[0].accname;
+          this.bankReceiptForm.patchValue({
+            cvoucherno: vchno,
+            cvchdate: val[0].vchdate,
+            //cpaymenttype: ['', [Validators.required]],
+            // ccustomercode: ['', [Validators.required]],
+            //caccountcode: ['', [Validators.required]],
+            cpaymentmode: val[0].paymode,
+            cvoucheramount: val[0].amount,
+            cremarks: val[0].remarks,
+            crefdate: new Date(val[0].refdate),
+            crefno: val[0].refno,
+            cchequeno: val[0].chqno,
+            cchequedate: new Date(val[0].chqdate),
+          });
+          this.chqdate = new Date(val[0].chqdate);
+          this.refdate = new Date(val[0].refdate);
+          resolve({ action: 'success' });
+        }
       });
     });
+  }
+
+  loadSavedInvoicesList(ledgercode: any, vchno: any) {
+    return new Promise((resolve) => {
+      this.receiptapi
+        .getPendingVendorInvoicesForEdit(ledgercode, vchno, this.vchType)
+        .subscribe((res) => {
+          if (JSON.parse(res).length > 0) {
+            this.dataSource = new MatTableDataSource(JSON.parse(res));
+            this.datalength = JSON.parse(res).length;
+            resolve({ action: 'success' });
+          } else {
+            this.datalength = 0;
+            resolve({ action: 'success' });
+          }
+        });
+    });
+  }
+
+  //to get maximum voucher number and decide new number
+  getVoucherMaxNo(vtype: any) {
+    if (this.activatedRoute.snapshot.queryParams['type'] == 'edit') {
+      this.bankReceiptForm.patchValue({
+        cvoucherno: decodeURIComponent(this.oldid).trim(),
+      });
+      return;
+    } else {
+      return new Promise((resolve) => {
+        this.receiptapi.getMaxInvoiceNo(vtype).subscribe((res) => {
+          this.bankReceiptForm.patchValue({
+            cvoucherno: res,
+          });
+          this.bankReceiptForm.patchValue({
+            cvchdate: new Date(),
+          });
+          resolve({ action: 'success' });
+        });
+      });
+    }
   }
 
   ledgerChanged(event: any, data: any) {
@@ -120,11 +205,38 @@ export class BankReceiptCreateComponent implements OnInit {
   }
 
   customerChanged(event: any, data: any) {
+    console.log('Customer Changed');
+    console.log('event', event);
+    console.log('data', data);
+
     if (event.isUserInput == true) {
       this.drAccountCode = data.ledgerCode;
       this.loadPendingInvoices(this.drAccountCode);
     }
   }
+
+  /*   fetchPendingData(ledgerCode:any){
+    return new Promise((resolve) => {
+      this.receiptapi
+      .getPendingVendorInvoices(ledgerCode, this._branch, this._fy)
+      .subscribe((res) => {
+        console.log("res",res);
+        
+        if (JSON.parse(res).length > 0) {
+          console.log("if");
+          
+          this.dataSource = new MatTableDataSource(JSON.parse(res));
+          this.datalength = JSON.parse(res).length;
+        } else {
+          console.log("else");
+          
+          this.datalength = 0;
+          this.dataSource = new MatTableDataSource(JSON.parse(res));
+        }
+        resolve({ action: 'success' });
+      });
+    })
+  } */
 
   loadPendingInvoices(ledgercode: any) {
     console.log('ledgercode', ledgercode);
@@ -136,26 +248,24 @@ export class BankReceiptCreateComponent implements OnInit {
         ledgerCode: ledgercode,
         _branch: this._branch,
         _fy: this._fy,
+        isCreate: this.isCreateBankReceipt,
+        vchno: this.vchno,
+        vchtype: this.vchType,
       },
     });
-    dialogRef.afterClosed().subscribe((totalAmoutToPay) => {
-      if (totalAmoutToPay) {
-        this.amount = totalAmoutToPay;
-        console.log("fileterdata amount",totalAmoutToPay)
+    dialogRef.afterClosed().subscribe((paymentData) => {
+      if (paymentData) {
+        console.log('fileterdata amount', paymentData);
+        this.bankReceiptForm.patchValue({
+          cvoucheramount: paymentData[1],
+        });
+        this.paymentList = paymentData[0];
       }
     });
-    // this.receiptapi.getPendingVendorInvoices(ledgercode,this._branch,this._fy).subscribe((res) => {
-    //   if (JSON.parse(res).length > 0) {
-    //     this.dataSource = new MatTableDataSource(JSON.parse(res));
-    //     this.datalength = JSON.parse(res).length;
-    //   } else {
-    //     this.datalength = 0;
-    //   }
-    // });
   }
 
   setValidations() {
-    this.BankReceiptForm = this.fb.group({
+    this.bankReceiptForm = this.fb.group({
       cvoucherno: ['', [Validators.required]],
       cvchdate: ['', [Validators.required]],
       cpaymenttype: ['', [Validators.required]],
@@ -164,8 +274,8 @@ export class BankReceiptCreateComponent implements OnInit {
       cpaymentmode: ['', [Validators.required]],
       cvoucheramount: ['', [Validators.required]],
       cremarks: ['', [Validators.required]],
-      // crefdate: ['', [Validators.required]],
-      // crefno: ['', [Validators.required]],
+      crefdate: ['', [Validators.required]],
+      crefno: ['', [Validators.required]],
       cchequeno: ['', [Validators.required]],
       cchequedate: ['', [Validators.required]],
     });
@@ -176,8 +286,6 @@ export class BankReceiptCreateComponent implements OnInit {
     if (event == 'CHEQUE') {
       this.showChequeFields = true;
       this.showOnlineFields = false;
-      this.BankReceiptForm.controls['crefno'].setValue(null);
-      this.BankReceiptForm.controls['crefdate'].setValue(null);
     } else if ((event = 'ONLINE')) {
       this.showChequeFields = false;
       this.showOnlineFields = true;
@@ -225,82 +333,51 @@ export class BankReceiptCreateComponent implements OnInit {
     this.router.navigateByUrl('bank-receipt-list');
   }
 
-  onClickAddButton(): void {
-    this.router.navigateByUrl('bank-receipt-create');
-  }
-
   clear() {
-    this.BankReceiptForm.reset();
+    this.bankReceiptForm.reset();
+    this.drAccount = '';
+    (this.drAccountCode = ''), (this.crAccount = '');
+    (this.crAccountCode = ''), this.getVoucherMaxNo(this.vchType);
+    this.showChequeFields = false;
+    this.showOnlineFields = false;
   }
 
   submit() {
-    console.log(this.BankReceiptForm.value);
-    if (!this.BankReceiptForm.valid) {
+    var res = this.validate();
+    if (res == true) {
       this.loading = true;
-      setTimeout(() => {        
-          if (this.isCreateBankReceipt) {
-            this.save();
-
-          } else if (!this.isCreateBankReceipt) {
-            this.update();
-          }
-      }, 400);
+      this.insertDRLedger().then((res) => {
+        this.insertCRLedger().then((res) => {
+          this.insertVoucher().then((res) => {
+            this.insertPaymentDues();
+            this.showSuccessMsg();
+          });
+        });
+      });
     } else {
       Swal.fire({
         icon: 'info',
         title: 'Fill Mandatory Fields',
         text: 'Plese fill all mandatory fields',
       });
-    }    
-  }
-  update() {}
-
-  save() {
-      this.insertDRLedger().then((res) => {
-        this.insertCRLedger().then((res) => {
-          this.insertVoucher().then((res) => {
-            this.insertPaymentDues();
-          });
-        });
-      });
-      // this.loading = false;
-      // this.clear();
-      // this.getVoucherMaxNo(this.vchType);
-    // }
-  }
-
-  loadCustomers() {
-    this.api.getCustomersOnly().subscribe((res) => {
-      this.customerData = res.length
-        ? res.map((item: any) => {
-            return { name: item.companyDisplayName, id: item.ledgerCode };
-          })
-        : [];
-    });
-  }
-
-  calculateNet() {
-    var total = 0;
-    for (let i = 0; i < this.dataSource.filteredData.length; i++) {
-      this.dataSource.filteredData[i].received;
-      total = total + parseFloat(this.dataSource.filteredData[i].received);
     }
-    this.amount = total;
   }
 
   insertDRLedger() {
+    console.log('inside insert dr');
+
     return new Promise((resolve) => {
       var postdata = [
         {
           id: this.getGUID(),
           acccode: this.drAccountCode.toString(),
-          vchno: this.BankReceiptForm.value.cvoucherno.toString(),
-          vchdate: this.vchdate,
+          vchno: this.bankReceiptForm.get('cvoucherno')?.value?.toString(),
+          vchdate: new Date(this.bankReceiptForm.get('cvchdate')?.value),
           vchtype: this.vchType,
           entrytype: 'DR',
           cr: 0,
-          dr: this.amount,
-          rCreatedDateTime: this.vchdate,
+          dr: this.bankReceiptForm.get('cvoucheramount')?.value,
+          rCreatedDateTime: new Date(),
           rStatus: 'A',
           comp: this._company,
           branch: this._branch,
@@ -308,30 +385,34 @@ export class BankReceiptCreateComponent implements OnInit {
           ad: '',
           gst: '',
           hsn: '',
-          remarks : this.BankReceiptForm.value.cremarks
+          remarks: this.bankReceiptForm.get('cremarks')?.value,
         },
       ];
-      this.receiptapi.Insert_Ledger(postdata).subscribe((res) => {
-        resolve({ action: 'success' });
-      });
+      console.log('postdata===1', postdata);
+      try {
+        this.receiptapi.Insert_Ledger(postdata).subscribe((res) => {
+          console.log('res---1', res);
+          resolve({ action: 'success' });
+        });
+      } catch (err) {
+        console.log(err);
+      }
     });
   }
-  getGUID() {
-    var gid: any;
-    gid = Guid.create();
-    return gid.value;
-  }
+
   insertCRLedger() {
+    console.log('inside cr insert');
+
     return new Promise((resolve) => {
       var postdata = [
         {
           id: this.getGUID(),
           acccode: this.crAccountCode.toString(),
-          vchno: this.BankReceiptForm.value.cvoucherno.toString(),
-          vchdate: this.BankReceiptForm.value.vchdate,
+          vchno: this.bankReceiptForm.get('cvoucherno')?.value?.toString(),
+          vchdate: new Date(this.bankReceiptForm.get('cvchdate')?.value),
           vchtype: this.vchType,
           entrytype: 'CR',
-          cr: this.amount,
+          cr: this.bankReceiptForm.get('cvoucheramount')?.value,
           dr: 0,
           rCreatedDateTime: new Date(),
           rStatus: 'A',
@@ -341,52 +422,251 @@ export class BankReceiptCreateComponent implements OnInit {
           ad: '',
           gst: '',
           hsn: '',
-          remarks : this.BankReceiptForm.value.cremarks
+          remarks: this.bankReceiptForm.get('cremarks')?.value,
         },
       ];
+      console.log('postdata===2', postdata);
       this.receiptapi.Insert_Ledger(postdata).subscribe((res) => {
         resolve({ action: 'success' });
       });
     });
   }
+
+  getGUID() {
+    var gid: any;
+    gid = Guid.create();
+    return gid.value;
+  }
+
   insertVoucher() {
+    console.log(
+      'in voc dtata inside voucher',
+      this.bankReceiptForm.get('cvoucherno')?.value,
+      this.drAccountCode,
+      this.crAccountCode
+    );
+
     return new Promise((resolve) => {
       var postdata = {
         id: this.getGUID(),
-        vchno: this.BankReceiptForm.value.cvoucherno,
-        vchdate: this.vchdate,
-        ledgercode: this.drAccountCode.toString(),
-        acccode: this.crAccountCode.toString(),
+        vchno: this.bankReceiptForm.get('cvoucherno')?.value?.toString(),
+        vchdate: new Date(this.bankReceiptForm.get('cvchdate')?.value),
+        ledgercode: this.drAccountCode?.toString(),
+        acccode: this.crAccountCode?.toString(),
         vchtype: this.vchType,
-        paymode: this.BankReceiptForm.value.cpaymentmode,
-        chqno: this.BankReceiptForm.value.cchequeno,
-        chqdate: this.chqdate,
-        refno: this.BankReceiptForm.value.crefno,
-        refdate: this.refdate,
-        amount: this.amount,
+        paymode: this.bankReceiptForm.get('cpaymentmode')?.value,
+        chqno: this.bankReceiptForm.get('cchequeno')?.value,
+        chqdate: new Date(this.bankReceiptForm.get('cchequedate')?.value),
+        refno: this.bankReceiptForm.get('crefno')?.value,
+        refdate: new Date(this.bankReceiptForm.get('crefdate')?.value),
+        amount: this.bankReceiptForm.get('cvoucheramount')?.value,
         rCreatedDateTime: new Date(),
         rStatus: 'A',
-        remarks : this.BankReceiptForm.value.cremarks
+        remarks: this.bankReceiptForm.get('cremarks')?.value,
       };
+      console.log('post data====vouch', postdata);
+
       this.receiptapi.Insert_Voucher(postdata).subscribe((res) => {
         resolve({ action: 'success' });
       });
     });
   }
+
   insertPaymentDues() {
-    var sample = "singhu";
-    // if (this.dataSource != undefined) {
-    //   for (let i = 0; i < this.dataSource.filteredData.length; i++) {
-    //     var invno = this.dataSource.filteredData[i].vchno;
-    //     var invdate = this.dataSource.filteredData[i].invdate;
-    //     var ledgercode = this.dataSource.filteredData[i].ledgercode;
-    //     var amount = this.dataSource.filteredData[i].received;
-    //     var dueon = this.dataSource.filteredData[i].dueon;
-    //     this.insertReciept(invno, invdate, ledgercode, amount, dueon).then(
-    //       (res) => {}
-    //     );
-    //   }
-    // }
-    // this.showSuccessMsg();
+    console.log('inside payment dues');
+
+    let paymentListTemp = this.paymentList[0];
+    console.log('paymentListTemp', paymentListTemp);
+    if (paymentListTemp != undefined) {
+      for (let i = 0; i < paymentListTemp.length; i++) {
+        var invno = paymentListTemp[i].vchno;
+        var invdate = paymentListTemp[i].grndate;
+        var ledgercode = paymentListTemp[i].ledgercode;
+        var amount = paymentListTemp[i].amountToPay;
+        var dueon = paymentListTemp[i].dueon;
+        this.insertPayment(invno, invdate, ledgercode, amount, dueon).then(
+          (res) => {
+            console.log('res=insert payment dues', res);
+          }
+        );
+      }
+    }
+  }
+
+  insertPayment(
+    invno: any,
+    invdate: any,
+    ledgercode: any,
+    amount: any,
+    dueon: any
+  ) {
+    console.log('?????', invno, invdate, ledgercode, amount, dueon);
+    return new Promise((resolve) => {
+      var postdata = {
+        id: this.getGUID(),
+        entrytype: 'VENDOR_OVERDUE',
+        vouchertype: this.vchType,
+        vchno: invno,
+        vchdate: new Date(invdate),
+        ledgercode: ledgercode.toString(),
+        amount: amount,
+        received: amount,
+        dueon: new Date(dueon),
+        status: 'UNPAID',
+        comp: this._company,
+        branch: this._branch,
+        fy: this._fy,
+        rCreatedDateTime: new Date(),
+        rStatus: 'A',
+        remarks: this.bankReceiptForm.get('cremarks')?.value,
+        entryno: this.bankReceiptForm.get('cvoucherno')?.value?.toString(),
+      };
+      console.log('insertPayment', postdata);
+      this.receiptapi.Insert_InvocieDueDetails(postdata).subscribe((res) => {
+        resolve({ action: 'success' });
+      });
+    });
+  }
+
+  showSuccessMsg() {
+    let dialogRef = this.dialog.open(SuccessmsgComponent, {
+      data: 'Payment Successfully Saved!',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.clear();
+      this.loading = false;
+    });
+  }
+
+  update() {
+    console.log('update called');
+    var res = this.validate();
+    if (res == true) {
+      this.loading = true;
+      this.deleteExistingEntries().then((res) => {
+        this.insertDRLedger().then((res) => {
+          this.insertCRLedger().then((res) => {
+            this.insertVoucher().then((res) => {
+              this.insertPaymentDues();
+              this.showSuccessMsg();
+            });
+          });
+        });
+      });
+    }
+  }
+
+  deleteExistingEntries() {
+    return new Promise((resolve) => {
+      this.deleteVoucher().then((res) => {
+        this.deleteledger().then((res) => {
+          this.deleteOverdue().then((res) => {
+            resolve({ action: 'success' });
+          });
+        });
+      });
+    });
+  }
+
+  deleteVoucher() {
+    console.log('inside delete voucher');
+
+    return new Promise((resolve) => {
+      this.receiptapi
+        .delete_voucher(this.vchno, this.vchType, this._branch, this._fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+
+  deleteledger() {
+    console.log('inside delete ledger');
+
+    return new Promise((resolve) => {
+      this.receiptapi
+        .delete_ledger(this.vchno, this.vchType, this._branch, this._fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+  deleteOverdue() {
+    console.log('inside delete overdue');
+
+    return new Promise((resolve) => {
+      this.receiptapi
+        .delete_overdue(this.vchno, this.vchType, this._branch, this._fy)
+        .subscribe((res) => {
+          resolve({ action: 'success' });
+        });
+    });
+  }
+
+  validate() {
+    //return true;
+    if (this.drAccountCode == '' || this.drAccountCode == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Select!',
+        text: 'Please Select Customer Account!',
+      });
+      return false;
+    } else if (this.crAccountCode == '' || this.crAccountCode == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Select!',
+        text: 'Please Select Account!',
+      });
+      return false;
+    } else if (
+      this.bankReceiptForm.get('cpaymentmode')?.value == '' ||
+      this.bankReceiptForm.get('cpaymentmode')?.value == undefined
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Select!',
+        text: 'Please Select Payment Mode!',
+      });
+      return false;
+    } else if (
+      this.bankReceiptForm.get('cpaymentmode')?.value == 'CHEQUE' &&
+      (this.bankReceiptForm.get('cchequeno')?.value == undefined ||
+        this.bankReceiptForm.get('cchequeno')?.value == '' ||
+        this.bankReceiptForm.get('cchequedate')?.value == undefined ||
+        this.bankReceiptForm.get('cchequedate')?.value == '')
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Fill!',
+        text: 'Please Enter Check Details!',
+      });
+      return false;
+    } else if (
+      this.bankReceiptForm.get('cpaymentmode')?.value == 'ONLINE' &&
+      (this.bankReceiptForm.get('crefno')?.value == undefined ||
+        this.bankReceiptForm.get('crefno')?.value == '' ||
+        this.bankReceiptForm.get('crefdate')?.value == undefined ||
+        this.bankReceiptForm.get('crefdate')?.value == '')
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Fill!',
+        text: 'Please Enter Online Reference Details!',
+      });
+      return false;
+    } else if (
+      this.bankReceiptForm.get('cvoucheramount')?.value == '' ||
+      this.bankReceiptForm.get('cvoucheramount')?.value == undefined
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Please Fill!',
+        text: 'Please Enter Total Amount!',
+      });
+      return false;
+    } else {
+      return true;
+    }
   }
 }

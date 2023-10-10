@@ -246,7 +246,7 @@ export class CashPaymentListComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.router.navigate(['cash-payment-create/' + data.Id], {
+        this.router.navigate(['cash-payment-create/' + data.vch_no], {
           queryParams: { type: 'edit' },
         });
       }
@@ -273,7 +273,7 @@ export class CashPaymentListComponent implements OnInit {
         //     Swal.fire({
         //       icon: 'success',
         //       title: 'Deleted!',
-        //       text: 'Bank Receipt Deleted Successfully',
+        //       text: 'Cash Receipt Deleted Successfully',
         //     });
         //     this.loading = false;
         //     this.loadData(data);
@@ -286,7 +286,7 @@ export class CashPaymentListComponent implements OnInit {
       //         Swal.fire({
       //           icon: 'success',
       //           title: 'Deleted!',
-      //           text: 'Bank Receipt Deleted Successfully',
+      //           text: 'Cash Receipt Deleted Successfully',
       //         });
       //         this.loading = false;
       //         this.loadData(data);
@@ -299,7 +299,7 @@ export class CashPaymentListComponent implements OnInit {
       //         Swal.fire({
       //           icon: 'success',
       //           title: 'Deleted!',
-      //           text: 'Bank Receipt Deleted Successfully',
+      //           text: 'Cash Receipt Deleted Successfully',
       //         });
       //         this.loading = false;
       //         this.loadData(data);

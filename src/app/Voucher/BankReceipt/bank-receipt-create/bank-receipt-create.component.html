@@ -1,163 +1,198 @@
 <div class="content-wrapper">
-    <div class="p-4" style="background-color: #f9f9fc">
-      <div class="pb-3">
-        <div *ngIf="isCreateBankReceipt; else elseBlock">
-          <app-reports-header
-            title="CREATE BANK RECEIPT"
-            [isDownloadNeeded]="false"
-            [isReports]="false"
-            buttonTitle="List of Bank Receipt"
-            (onClickCreateButton)="onClickButton()"
-          ></app-reports-header>
-        </div>
-        <ng-template #elseBlock>
-          <app-reports-header
-            title="UPDATE BANK RECEIPT"
-            [reportFormGroupName]="BankReceiptForm"
-            [isDownloadNeeded]="false"
-            buttonTitle="List of Bank Receipt"
-            (onClickCreateButton)="onClickButton()"
-          ></app-reports-header>
-        </ng-template>
-      </div>
-      <div
-        style="
-          background-color: white;
-          border-radius: 8px;
-          padding: 20px;
-          border: 1px solid #e0e2e7;
-          margin-bottom: 4px;
-        "
+  <div class="p-4" style="background-color: #f9f9fc">
+    <div class="pb-3">
+      <app-reports-header
+        title="Receipt Voucher (Bank)"
+        [isDownloadNeeded]="false"
+        [isReports]="false"
+        buttonTitle="Bank Receipt List"
+        (onClickCreateButton)="onClickButton()"
       >
-        <form [formGroup]="BankReceiptForm">
-          <div class="row">
-            <div class="col-12">
-              <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-                <div class="col-lg-6 col-md-12 pb-2">
-                  <app-mat-input
-                    [groupName]="BankReceiptForm"
-                    labelText="Voucher No"
-                    [controlName]="'cvoucherno'"
-                    [readOnly] = "true"
-                  ></app-mat-input>
-                </div>
-  
-                <div class="col-lg-6 col-md-12 pb-2">
-                    <div
-                      class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-                    >
-                      <p style="color: #667085; font-weight: 600; width: 50%">
-                        Voucher Date <span style="color: red">*</span>
-                      </p>
-                      <div class="col-6 col-sm-6" style="display: contents">
-                        <mat-form-field appearance="outline" style="width: 201px">
-                          <input
-                            matInput
-                            name="vchdate"
-                            formControlName="cvchdate"
-                            [matDatepicker]="pickervchDate"
-                            placeholder="Select"
-                            [(ngModel)]="vchdate"
-                          />
-                          <mat-datepicker-toggle matSuffix [for]="pickervchDate">
-                          </mat-datepicker-toggle>
-                          <mat-datepicker #pickervchDate></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-            </div>
+      </app-reports-header>
+    </div>
 
+    <div
+      style="
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e2e7;
+        margin-bottom: 4px;
+      "
+    >
+      <form [formGroup]="bankReceiptForm">
+        <div class="row">
+          <div class="col-12">
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-                <div class="col-lg-6 col-md-12 pb-2">
-                    <div
-                        class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-                    >
-                        <p style="color: #667085; font-weight: 600">Payment Type <span style="color: red">*</span></p>
-                        <app-mat-select-box
-                        
-                            [formOptions]="paymentTypeData"
-                            [controlName]="'cpaymenttype'"
-                            [label]="'PICK ANY ONE'"
-                            [groupName]="BankReceiptForm"
-                            [formAppearance]="'outline'"
-                            selectWidth="201px"
-                        ></app-mat-select-box>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 pb-2">
-                    <div
-                      class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-                    >
-                      <p style="color: #667085; font-weight: 600; width: 50%">
-                        Customer Name <span style="color: red">*</span>
-                      </p>
-                      <mat-form-field appearance="outline" style="width: 201px">
-                        <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
-                        <input matInput placeholder="Select Account" aria-label="Select Account" #eacc
-                          [formControl]="cusSearch" [matAutocomplete]="cusaccauto" [(ngModel)]="drAccount">
-                        <mat-autocomplete #cusaccauto="matAutocomplete">
-                          <cdk-virtual-scroll-viewport [ngStyle]="{height: '200px'}" itemSize="25">
-                            <mat-option *ngFor="let r of filteredCusAccounts | async" [value]="r.companyDisplayName"
-                              (onSelectionChange)="customerChanged($event,r)">
-                              <span>{{ r.companyDisplayName }}</span>
-                            </mat-option>
-                          </cdk-virtual-scroll-viewport>
-                        </mat-autocomplete>
-                      </mat-form-field>    
-                    </div>
-                  </div>
-            </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="bankReceiptForm"
+                  labelText="Voucher No"
+                  [placeholderText]="'Voucher No'"
+                  [controlName]="'cvoucherno'"
+                  [readOnly]="true"
+                ></app-mat-input>
+              </div>
 
-            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-                <div class="col-lg-6 col-md-12 pb-2">
-                  <div
-                    class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-                  >
-                    <p style="color: #667085; font-weight: 600; width: 50%">
-                      Account Name <span style="color: red">*</span>
-                    </p>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Voucher Date <span style="color: red">*</span>
+                  </p>
+                  <div class="col-6 col-sm-6" style="display: contents">
                     <mat-form-field appearance="outline" style="width: 201px">
-                      <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
-                      <input matInput placeholder="Select Account" aria-label="Select Account" #eacc
-                        [formControl]="accSearch" [matAutocomplete]="accauto" [(ngModel)]="crAccount">
-                      <mat-autocomplete #accauto="matAutocomplete">
-                        <cdk-virtual-scroll-viewport [ngStyle]="{height: '200px'}" itemSize="25">
-                          <mat-option *ngFor="let r of filteredAccounts | async" [value]="r.companyDisplayName"
-                            (onSelectionChange)="ledgerChanged($event,r)">
-                            <span>{{ r.companyDisplayName }}</span>
-                          </mat-option>
-                        </cdk-virtual-scroll-viewport>
-                      </mat-autocomplete>
+                      <input
+                        matInput
+                        name="vchdate"
+                        formControlName="cvchdate"
+                        [matDatepicker]="pickervchDate"
+                        placeholder="Select"
+                        [(ngModel)]="vchdate"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="pickervchDate">
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #pickervchDate></mat-datepicker>
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col-lg-6 col-md-12 pb-2">
-                  <div
-                    class="col-12 d-flex flex-wrap align-items-center justify-content-between"
-                  >
-                    <p style="color: #667085; font-weight: 600; width: 50%">
-                      Payment Mode <span style="color: red">*</span>
-                    </p>
-                    <app-mat-select-box
-                      [formOptions]="paymentModeData"
-                      [controlName]="'cpaymentmode'"
-                      [label]="'Payment Mode'"
-                      [groupName]="BankReceiptForm"
-                      [formAppearance]="'outline'"
-                      selectWidth="201px"
-                    ></app-mat-select-box>
-                  </div>
+              </div>
+            </div>
+
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Payment Type <span style="color: red">*</span>
+                  </p>
+                  <app-mat-select-box
+                    [formOptions]="paymentTypeData"
+                    [controlName]="'cpaymenttype'"
+                    [label]="'Pick any one'"
+                    [groupName]="bankReceiptForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
                 </div>
               </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Customer Name <span style="color: red">*</span>
+                  </p>
+                  <mat-form-field appearance="outline" style="width: 201px">
+                    <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
+                    <input
+                      matInput
+                      placeholder="Select Account"
+                      aria-label="Select Account"
+                      #eacc
+                      [formControl]="cusSearch"
+                      [matAutocomplete]="cusaccauto"
+                      [(ngModel)]="drAccount"
+                    />
+                    <mat-autocomplete #cusaccauto="matAutocomplete">
+                      <cdk-virtual-scroll-viewport
+                        [ngStyle]="{ height: '200px' }"
+                        itemSize="25"
+                      >
+                        <mat-option
+                          *ngFor="let r of filteredCusAccounts | async"
+                          [value]="r.companyDisplayName"
+                          (onSelectionChange)="customerChanged($event, r)"
+                        >
+                          <span>{{ r.companyDisplayName }}</span>
+                        </mat-option>
+                      </cdk-virtual-scroll-viewport>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <!--                   <app-mat-select-box
+                    [formOptions]="customerData"
+                    [controlName]="'ccustomercode'"
+                    [label]="'Customer Name'"
+                    [groupName]="bankReceiptForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box> -->
+                </div>
+              </div>
+            </div>
 
-              <div
+            <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Account Name <span style="color: red">*</span>
+                  </p>
+                  <mat-form-field appearance="outline" style="width: 201px">
+                    <!-- <input #evchaccount type="text" matInput formControlName="cvchaccount" [(ngModel)] = "vchaccount" readonly="true" autocomplete="off"> -->
+                    <input
+                      matInput
+                      placeholder="Select Account"
+                      aria-label="Select Account"
+                      #eacc
+                      [formControl]="accSearch"
+                      [matAutocomplete]="accauto"
+                      [(ngModel)]="crAccount"
+                    />
+                    <mat-autocomplete #accauto="matAutocomplete">
+                      <cdk-virtual-scroll-viewport
+                        [ngStyle]="{ height: '200px' }"
+                        itemSize="25"
+                      >
+                        <mat-option
+                          *ngFor="let r of filteredAccounts | async"
+                          [value]="r.companyDisplayName"
+                          (onSelectionChange)="ledgerChanged($event, r)"
+                        >
+                          <span>{{ r.companyDisplayName }}</span>
+                        </mat-option>
+                      </cdk-virtual-scroll-viewport>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <!-- <app-mat-select-box
+                    [formOptions]="customerData"
+                    [controlName]="'caccountcode'"
+                    [label]="'Account Name'"
+                    [groupName]="bankReceiptForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box> -->
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <div
+                  class="col-12 d-flex flex-wrap align-items-center justify-content-between"
+                >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Payment Mode <span style="color: red">*</span>
+                  </p>
+                  <app-mat-select-box
+                    [formOptions]="paymentModeData"
+                    [controlName]="'cpaymentmode'"
+                    [label]="'Payment Mode'"
+                    [groupName]="bankReceiptForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
+                </div>
+              </div>
+            </div>
+
+            <div
               *ngIf="showChequeFields"
               class="p-0 d-flex flex-wrap justify-content-between pb-2"
             >
               <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
-                  [groupName]="BankReceiptForm"
+                  [groupName]="bankReceiptForm"
                   labelText="Cheque No"
                   [placeholderText]="'Cheque No'"
                   [controlName]="'cchequeno'"
@@ -196,7 +231,7 @@
             >
               <div class="col-lg-6 col-md-12 pb-2">
                 <app-mat-input
-                  [groupName]="BankReceiptForm"
+                  [groupName]="bankReceiptForm"
                   labelText="Payment Ref No"
                   [placeholderText]="'Payment Ref No'"
                   [controlName]="'crefno'"
@@ -230,37 +265,33 @@
             </div>
 
             <div class="p-0 d-flex flex-wrap justify-content-between pb-2">
-                <div class="col-lg-6 col-md-12 pb-2">
-                  <app-mat-input
-                    [groupName]="BankReceiptForm"
-                    labelText="Voucher Amount"
-                    [placeholderText]="'Voucher Amount'"
-                    [controlName]="'cvoucheramount'"
-                  ></app-mat-input>
-                </div>
-                <div class="col-lg-6 col-md-12 pb-2">
-                  <app-mat-input
-                    [groupName]="BankReceiptForm"
-                    labelText="Remarks"
-                    [placeholderText]="'Remarks'"
-                    [controlName]="'cremarks'"
-                  ></app-mat-input>
-                </div>
-                  </div>
-                <!-- </div> -->
-  
-              <app-action-button
-                [loading]="loading"
-                [isSave]="isCreateBankReceipt"
-                (clickSave)="submit()"
-                (clickClearAll)="clear()"
-                (clickUpdate)="update()"
-              ></app-action-button>
+              <div class="col-lg-6 col-md-12 pb-2">
+                <app-mat-input
+                  [groupName]="bankReceiptForm"
+                  labelText="Voucher Amount"
+                  [placeholderText]="'Voucher Amount'"
+                  [controlName]="'cvoucheramount'"
+                ></app-mat-input>
+              </div>
+              <div class="col-md-12 col-lg-6 pb-2">
+                <app-mat-input
+                  [groupName]="bankReceiptForm"
+                  labelText="Remarks"
+                  [placeholderText]="'Remarks'"
+                  [controlName]="'cremarks'"
+                ></app-mat-input>
+              </div>
             </div>
-            </div>
-          <!-- </div> -->
-        </form>
-      </div>
+            <app-action-button
+              [loading]="loading"
+              [isSave]="isCreateBankReceipt"
+              (clickSave)="submit()"
+              (clickUpdate)="update()"
+              (clickClearAll)="clear()"
+            ></app-action-button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  
+</div>

@@ -34,7 +34,7 @@ export class ListingTableDialogComponent implements OnInit {
   selectAllCheckbox!: FormControlName;
   tableHeaderAlignValue: string = 'left';
   selectAll = { isSelected: false };
-  paymentData = [];
+  paymentData: any = [];
   totalAmoutToPay: number = 0;
   /*   displayedColumns: string[] = [
     'Select',
@@ -145,9 +145,11 @@ export class ListingTableDialogComponent implements OnInit {
     console.log('item Selection Change method', itemIndex, pageIndex);
     console.log('this.filteredData', this.filteredData);
     console.log('this.filteredData', this.filteredData[pageIndex][itemIndex]);
-
-    this.filteredData[pageIndex][itemIndex].checked =
-      !this.filteredData[pageIndex][itemIndex].checked;
+    if (this.filteredData[pageIndex][itemIndex].checked) {
+      this.filteredData[pageIndex][itemIndex].checked = false;
+    } else {
+      this.filteredData[pageIndex][itemIndex].checked = true;
+    }
     /*     if (!this.filteredData[pageIndex][itemIndex].checked) {
       this.filteredData[pageIndex][itemIndex].amountToPay = 0;
     } */
@@ -160,9 +162,38 @@ export class ListingTableDialogComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('inside dialogdata', this.data);
-    this.fetchPendingData(this.data.ledgerCode);
-    this.overDueSelectionForm.valueChanges.subscribe((res) => {
-      console.log('value changes sub', res);
+    if (this.data.isCreate) {
+      this.fetchPendingData(this.data.ledgerCode);
+      this.overDueSelectionForm.valueChanges.subscribe((res) => {
+        console.log('value changes sub', res);
+      });
+    } else {
+      this.fetchPendingDataForUpdate(
+        this.data.ledgerCode,
+        this.data.vchno,
+        this.data.vchtype
+      );
+    }
+  }
+  fetchPendingDataForUpdate(ledgerCode: any, vchNo: any, vchType: any) {
+    return new Promise((resolve) => {
+      this.receiptapi
+        .getPendingVendorInvoicesForEdit(ledgerCode, vchNo, vchType)
+        .subscribe((res) => {
+          if (JSON.parse(res).length > 0) {
+            this.dataSource = new MatTableDataSource(JSON.parse(res));
+            this.datalength = JSON.parse(res).length;
+            let data = new MatTableDataSource(JSON.parse(res)).filteredData;
+            this.getFilterData(data);
+            resolve({ action: 'success' });
+          } else {
+            this.datalength = 0;
+            this.dataSource = new MatTableDataSource(JSON.parse(res));
+            let data = new MatTableDataSource(JSON.parse(res)).filteredData;
+            this.getFilterData(data);
+            resolve({ action: 'success' });
+          }
+        });
     });
   }
 
@@ -233,21 +264,26 @@ export class ListingTableDialogComponent implements OnInit {
   onAmountKeydown(itemIndex: any, pageIndex: any, event: any) {
     let amountEntered: number = event.target.value;
     console.log(amountEntered);
-    this.filteredData[pageIndex][itemIndex].amountToPay = amountEntered;
+    this.filteredData[pageIndex][itemIndex].amountToPay = Number(amountEntered);
     console.log('After Amount Entered', this.filteredData);
+    this.paymentData[0] = this.filteredData;
     this.calculateNetAmount();
   }
   calculateNetAmount() {
     let amountArray = this.filteredData
       .flatMap((item) => item)
-      .filter((item) => item.checked == true);
+      .filter((item) => item.checked == true && item?.amountToPay != undefined);
     console.log('amountArray', amountArray);
     let amount: number = 0;
     for (let i = 0; i < amountArray.length; i++) {
+      console.log("amountArray[i].amountToPay)",amountArray[i].amountToPay);
+      
       amount += Number(amountArray[i].amountToPay);
     }
 
     console.log('Amount', amount);
+    this.paymentData[0] = this.filteredData;
+    this.paymentData[1] = amount;
     this.totalAmoutToPay = amount;
   }
 }

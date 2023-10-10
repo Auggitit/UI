@@ -248,7 +248,7 @@ export class BankReceiptListComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.router.navigate(['bank-receipt-create/' + data.Id], {
+        this.router.navigate(['bank-receipt-create/' + data.vch_no], {
           queryParams: { type: 'edit' },
         });
       }
