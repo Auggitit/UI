@@ -48,23 +48,18 @@ export class CashReceiptCreateComponent implements OnInit {
   _branch = '001';
   _fy = '001';
   vchno: any;
-
   drAccount: any;
   crAccount: any;
   drAccountCode: any;
   crAccountCode: any;
-
   cusSearch = new FormControl('');
-
   filteredCusAccounts!: Observable<Acc[]>;
   cusArray: Acc[] = [];
   accSearch = new FormControl('');
   filteredAccounts!: Observable<Acc[]>;
   accArray: Acc[] = [];
-
   dataSource!: MatTableDataSource<any>;
   datalength: any;
-
   paymentList: any = [];
   paymentTypeData: dropDownData[] = [
     { name: 'BILL BY BILL', id: 'BILL BY BILL' },
@@ -564,7 +559,6 @@ export class CashReceiptCreateComponent implements OnInit {
 
   deleteVoucher() {
     console.log('inside delete voucher');
-
     return new Promise((resolve) => {
       this.receiptapi
         .delete_voucher(this.vchno, this.vchType, this._branch, this._fy)

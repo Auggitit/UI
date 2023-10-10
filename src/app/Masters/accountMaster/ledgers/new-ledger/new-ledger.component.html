@@ -58,14 +58,14 @@
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600">Ledger Under</p>
-                  <div
-                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                  >
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Ledger Under
+                  </p>
+                  <div class="col-6 col-sm-6" style="display: contents">
                     <mat-form-field
                       class="example-full-width"
                       appearance="outline"
-                      style="width: 100%; margin-top: 6px !important"
+                      style="width: 201px; margin-top: 6px !important"
                     >
                       <input
                         type="text"
@@ -126,7 +126,9 @@
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600; margin: 0px;">Country</p>
+                  <p style="color: #667085; font-weight: 600; margin: 0px; width: 50%">
+                    Country
+                  </p>
                   <div>
                     <app-mat-select-box
                       [formOptions]="countryDropDownData"
@@ -136,15 +138,17 @@
                       [formAppearance]="'outline'"
                       selectWidth="201px"
                     ></app-mat-select-box>
-               </div>
+                  </div>
                 </div>
               </div>
               <div class="col-lg-6 col-md-12 pb-2">
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600;margin: 0px;">State</p>
-<div>
+                  <p style="color: #667085; font-weight: 600; margin: 0px; width: 50%">
+                    State
+                  </p>
+                  <div>
                     <app-mat-select-box
                       [formOptions]="stateDropDownData"
                       [controlName]="'cstate'"
@@ -163,26 +167,18 @@
                 class="col-12 d-flex flex-wrap align-items-center justify-content-between"
               >
                 <div class="col-lg-3 col-md-12" style="padding-left: 0px">
-                  <p style="color: #667085; font-weight: 600">
-                    Address
-                  </p>
+                  <p style="color: #667085; font-weight: 600; width: 50%">Address</p>
                 </div>
                 <div class="col-lg-9 col-md-12" style="display: contents">
                   <mat-form-field
                     [formGroup]="ledgerForm"
                     class="example-full-width"
                     appearance="outline"
-                    style="
-                      width: calc(50% + 216px);
-                      margin-top: 6px !important;
-                    "
+                    style="width: calc(50% + 216px); margin-top: 6px !important"
                   >
                     <div>
                       <textarea
-                        style="
-                          height: 68px;
-                          vertical-align: super;
-                        "
+                        style="height: 68px; vertical-align: super"
                         placeholder="Address"
                         type="text"
                         matInput

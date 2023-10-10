@@ -49,18 +49,18 @@
                 <div
                   class="col-12 d-flex flex-wrap align-items-center justify-content-between"
                 >
-                  <p style="color: #667085; font-weight: 600">Category Name</p>
-                  <div
-                    class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6"
-                  >
-                    <app-mat-select-box
-                      [formOptions]="categetoryDropDownData"
-                      [controlName]="'ccatunder'"
-                      [label]="'Category Name'"
-                      [groupName]="categoryForm"
-                      [formAppearance]="'outline'"
-                    ></app-mat-select-box>
-                  </div>
+                  <p style="color: #667085; font-weight: 600; width: 50%">
+                    Category Name
+                  </p>
+
+                  <app-mat-select-box
+                    [formOptions]="categetoryDropDownData"
+                    [controlName]="'ccatunder'"
+                    [label]="'Category Name'"
+                    [groupName]="categoryForm"
+                    [formAppearance]="'outline'"
+                    selectWidth="201px"
+                  ></app-mat-select-box>
                 </div>
               </div>
             </div>
